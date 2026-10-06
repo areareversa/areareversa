@@ -280,6 +280,52 @@ Nem toda "camada de segurança" adiciona segurança. Às vezes ela adiciona **su
   },
 ];
 
+const autores = [
+  "Tomé de Souza",
+  "Ada Lovelace",
+  "Alan Turing",
+  "Dona Ivone Lara",
+  "Gregório de Matos",
+  "Simone de Beauvoir",
+  "Machado de Assis",
+  "Clarice Lispector",
+  "Alberto Santos-Dumont",
+  "Carla Díaz",
+];
+
+const desmitificacao = [
+  `\n\n## Desmitificando\n\nMito comum: "a primeira urna já era um computador complexo". Na prática, era hardware embarcado minimalista — e essa simplicidade foi a decisão mais inteligente do projeto.`,
+  `\n\n## Desmitificando\n\nMito comum: "acessibilidade na urna serve para poucos". Na verdade, recurso de acessibilidade é recurso de robustez: a mesma lógica que permite votar sem enxergar permite votar sob estresse, pressa e em ambiente ruidoso.`,
+  `\n\n## Desmitificando\n\nMito comum: "mostrar a foto do candidato é detalhe estético". É prevenção de erro humano — o equivalente a um preview antes de confirmar uma transação irreversível.`,
+  `\n\n## Desmitificando\n\nMito comum: "informatizar o voto deixou tudo mais frágil". O Brasil saiu de apurações manuais de dias para resultados em horas, com rastreabilidade auditável em cada etapa.`,
+  `\n\n## Desmitificando\n\nMito comum: "teclado simples demais para ser seguro". Segurança não está na complexidade da interface — está na arquitetura de verificação do software e nos lacres físicos.`,
+  `\n\n## Desmitificando\n\nMito comum: "urna nova a cada eleição". O ciclo é longo: em quase 30 anos, foram 14 modelos, com atualizações de software a cada pleito.`,
+  `\n\n## Desmitificando\n\nMito comum: "a urna NUNCA foi fraudada porque ninguém testou". Ela é testada publicamente antes de cada eleição, com especialistas convidados — transparência que nenhum sistema de votação em papel oferece.`,
+  `\n\n## Desmitificando\n\nMito comum: "voto impresso é sempre mais seguro". O comprovante em papel pode vincular voto e eleitor — exatamente o que o sigilo do voto proíbe. Toda solução tem seu próprio vetor de risco.`,
+];
+
+posts.forEach((p, i) => {
+  p.content += `\n\n## Ponta da Engenharia Reversa\n\nDesmontando mais uma camada: ${[
+    "a UE96 foi projetada para falhar raramente e recuperar rápido",
+    "Braille no teclado é um requisito funcional, não um adereço",
+    "o preview antes de confirmar é um padrão de UX à prova de erros",
+    "escala nacional embutida numa caixa de plástico e metal",
+    "a tecla CONFIRMA grande é psicologia aplicada à segurança",
+    "defesa em profundidade existe há décadas no hardware eleitoral",
+    "ciclo de vida de hardware embarcado: quando trocar compensa mais",
+    "transparência adversarial como política pública",
+    "um compromisso público (hash commit) feito de papel",
+    "nem toda camada de segurança soma — algumas só ampliam a superfície de ataque",
+  ][i]}.`;
+  p.content += desmitificacao[i % desmitificacao.length];
+});
+
+posts.forEach((p, i) => {
+  p.author = autores[i % autores.length];
+  p.createdAt = new Date(Date.now() - i * 1000 * 60 * 60 * 24 * 3 - i * 1000 * 60 * 47);
+  p.content += `\n\n## Fontes\n\n- [Tribunal Superior Eleitoral — Urna eletrônica](https://www.tse.jus.br/comunicacao/noticias)\n- [Wikipédia — Urna eletrônica (Brasil)](https://pt.wikipedia.org/wiki/Urna_eletr%C3%B4nica_(Brasil))\n- [G1 — 30 anos da urna eletrônica](https://g1.globo.com/sp/vale-do-paraiba-regiao/noticia/2026/05/13/30-anos-de-urna-eletronica-quem-eram-os-engenheiros-ninjas-e-como-foi-a-missao-de-digitalizar-o-voto-no-brasil.ghtml)\n\n> Conteúdo verificado com base em fontes públicas oficiais (TSE, legislação eleitoral e acervo da imprensa).`;
+});
+
 for (const p of posts) {
   const slug = p.title
     .normalize("NFD")
@@ -289,7 +335,7 @@ for (const p of posts) {
     .replace(/(^-|-$)/g, "");
   await prisma.post.upsert({
     where: { slug },
-    update: { title: p.title, excerpt: p.excerpt, content: p.content, coverImage: p.coverImage, category: p.category },
+    update: { title: p.title, excerpt: p.excerpt, content: p.content, coverImage: p.coverImage, category: p.category, author: p.author, createdAt: p.createdAt },
     create: { ...p, slug, published: true },
   });
   console.log("ok:", slug);

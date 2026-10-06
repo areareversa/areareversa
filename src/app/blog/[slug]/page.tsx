@@ -36,7 +36,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
   return (
     <article className="mx-auto flex max-w-2xl flex-col gap-6">
       <p className="font-mono text-xs text-neutral-400">
-        {new Date(post.createdAt).toLocaleDateString("pt-BR")} · {post.category}
+        {new Date(post.createdAt).toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" })} · {new Date(post.createdAt).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })} · {post.author} · {post.category}
       </p>
       <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl">{post.title}</h1>
       {post.coverImage && (

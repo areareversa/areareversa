@@ -11,6 +11,7 @@ type Post = {
   category: string;
   coverImage: string | null;
   createdAt: string | Date;
+  author: string;
 };
 
 export function PostGrid({ posts }: { posts: Post[] }) {
@@ -43,7 +44,7 @@ export function PostGrid({ posts }: { posts: Post[] }) {
               <div className="aspect-video w-full bg-neutral-100 dark:bg-neutral-900" />
             )}
             <div className="flex flex-col gap-2 p-5">
-              <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-neutral-400">{p.category}</span>
+              <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-neutral-400">{p.category} · {p.author}</span>
               <span className="text-lg font-semibold leading-snug tracking-tight">{p.title}</span>
             </div>
           </button>
@@ -64,6 +65,9 @@ export function PostGrid({ posts }: { posts: Post[] }) {
           >
             <span className="font-mono text-xs uppercase text-neutral-400">{ativo.category}</span>
             <h2 className="mt-2 text-2xl font-bold">{ativo.title}</h2>
+            <p className="mt-1 font-mono text-xs text-neutral-400">
+              {new Date(ativo.createdAt).toLocaleDateString("pt-BR")} · {new Date(ativo.createdAt).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })} · {ativo.author}
+            </p>
             <p className="mt-3 text-neutral-600 dark:text-neutral-400">{ativo.excerpt}</p>
             <div className="mt-6 flex gap-4">
               <Link href={`/blog/${ativo.slug}`} className="rounded-lg bg-neutral-900 px-4 py-2 text-white dark:bg-neutral-100 dark:text-neutral-900">

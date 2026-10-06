@@ -1,3 +1,5 @@
+import { CoverUpload } from "./CoverUpload";
+
 type Post = {
   title: string;
   excerpt: string;
@@ -33,6 +35,7 @@ export function PostForm({
         Imagem de capa (URL do Pinterest)
         <input name="coverImage" defaultValue={post?.coverImage ?? ""} placeholder="https://i.pinimg.com/..." className={input} />
       </label>
+      <CoverUpload />
       <label className="flex flex-col gap-1 text-sm">
         Conteúdo (Markdown)
         <textarea name="content" required rows={16} defaultValue={post?.content} className={`${input} font-mono text-sm`} />

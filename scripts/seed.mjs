@@ -323,7 +323,7 @@ posts.forEach((p, i) => {
 posts.forEach((p, i) => {
   p.author = autores[i % autores.length];
   p.createdAt = new Date(Date.now() - i * 1000 * 60 * 60 * 24 * 3 - i * 1000 * 60 * 47);
-  p.content += `\n\n## Fontes\n\n- [Tribunal Superior Eleitoral — Urna eletrônica](https://www.tse.jus.br/comunicacao/noticias)\n- [Wikipédia — Urna eletrônica (Brasil)](https://pt.wikipedia.org/wiki/Urna_eletr%C3%B4nica_(Brasil))\n- [G1 — 30 anos da urna eletrônica](https://g1.globo.com/sp/vale-do-paraiba-regiao/noticia/2026/05/13/30-anos-de-urna-eletronica-quem-eram-os-engenheiros-ninjas-e-como-foi-a-missao-de-digitalizar-o-voto-no-brasil.ghtml)\n\n> Conteúdo verificado com base em fontes públicas oficiais (TSE, legislação eleitoral e acervo da imprensa).`;
+  p.content += `\n\n## Fontes\n\n- [Tribunal Superior Eleitoral — Urna eletrônica](https://www.tse.jus.br/comunicacao/noticias)\n- [G1 — 30 anos da urna eletrônica](https://g1.globo.com/sp/vale-do-paraiba-regiao/noticia/2026/05/13/30-anos-de-urna-eletronica-quem-eram-os-engenheiros-ninjas-e-como-foi-a-missao-de-digitalizar-o-voto-no-brasil.ghtml)\n\n> Conteúdo verificado com base em fontes oficiais e jornalismo de referência (TSE, G1, legislação federal). Não utilizamos Wikipédia como fonte.`;
 });
 
 for (const p of posts) {

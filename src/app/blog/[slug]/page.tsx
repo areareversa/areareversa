@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
 import { Markdown } from "@/components/Markdown";
+import { ShareButtons } from "@/components/ShareButtons";
 import { site } from "@/lib/site";
 
 export const dynamic = "force-dynamic";
@@ -47,6 +48,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
         />
       )}
       <Markdown>{post.content}</Markdown>
+      <ShareButtons title={post.title} url={`${site.url}/blog/${post.slug}`} />
     </article>
   );
 }

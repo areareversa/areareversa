@@ -13,7 +13,7 @@ export function ShareButtons({ title, url }: { title: string; url: string }) {
     setTimeout(() => setCopiado(false), 2000);
   }
 
-  const btn = "rounded-full border border-neutral-300 px-4 py-2 font-mono text-xs hover:bg-neutral-100 dark:border-neutral-700 dark:hover:bg-neutral-900";
+  const btn = "rounded-full border border-neutral-300 px-4 py-2 font-mono text-xs hover:bg-neutral-100 dark:border-[#6272a4] dark:hover:bg-neutral-900";
 
   return (
     <div className="flex flex-wrap items-center gap-3">

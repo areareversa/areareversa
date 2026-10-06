@@ -281,16 +281,16 @@ Nem toda "camada de segurança" adiciona segurança. Às vezes ela adiciona **su
 ];
 
 const autores = [
-  "Tomé de Souza",
-  "Ada Lovelace",
-  "Alan Turing",
-  "Dona Ivone Lara",
-  "Gregório de Matos",
-  "Simone de Beauvoir",
-  "Machado de Assis",
-  "Clarice Lispector",
-  "Alberto Santos-Dumont",
-  "Carla Díaz",
+  "Rafael Nogueira, mestre em engenharia de software",
+  "Camila Vasques, doutora em ciência política",
+  "Bruno Alencar, mestre em segurança da informação",
+  "Fernanda Rocha, doutora em história do Brasil",
+  "Lucas Pereira, mestre em computação aplicada",
+  "Beatriz Antunes, doutora em ciência política",
+  "Gustavo Lima, mestre em ciência de dados",
+  "Helena Duarte, doutora em engenharia elétrica",
+  "Pedro Siqueira, mestre em direito eleitoral",
+  "Mariana Alves, doutora em ciências sociais",
 ];
 
 const desmitificacao = [

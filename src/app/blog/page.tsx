@@ -53,21 +53,21 @@ export default async function BlogIndex({
           name="q"
           defaultValue={q}
           placeholder="buscar por título ou resumo..."
-          className="w-full max-w-md rounded-lg border border-neutral-300 bg-transparent px-4 py-2 text-sm dark:border-neutral-700"
+          className="w-full max-w-md rounded-lg border border-neutral-300 bg-transparent px-4 py-2 text-sm dark:border-[#6272a4]"
         />
         {categoria && <input type="hidden" name="categoria" value={categoria} />}
-        <button className="rounded-lg border border-neutral-300 px-4 py-2 font-mono text-sm dark:border-neutral-700">buscar</button>
+        <button className="rounded-lg border border-neutral-300 px-4 py-2 font-mono text-sm dark:border-[#6272a4]">buscar</button>
       </form>
 
       <div className="flex flex-wrap gap-3 font-mono text-xs">
-        <Link href={q ? `/blog?q=${encodeURIComponent(q)}` : "/blog"} className={`rounded-full border px-3 py-1 ${!categoria ? "bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900" : "border-neutral-300 dark:border-neutral-700"}`}>
+        <Link href={q ? `/blog?q=${encodeURIComponent(q)}` : "/blog"} className={`rounded-full border px-3 py-1 ${!categoria ? "bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900" : "border-neutral-300 dark:border-[#6272a4]"}`}>
           todas
         </Link>
         {grouped.map((c) => (
           <Link
             key={c.category}
             href={`/blog?categoria=${encodeURIComponent(c.category)}${q ? `&q=${encodeURIComponent(q)}` : ""}`}
-            className={`rounded-full border px-3 py-1 ${categoria === c.category ? "bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900" : "border-neutral-300 dark:border-neutral-700"}`}
+            className={`rounded-full border px-3 py-1 ${categoria === c.category ? "bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900" : "border-neutral-300 dark:border-[#6272a4]"}`}
           >
             {c.category} ({c._count._all})
           </Link>

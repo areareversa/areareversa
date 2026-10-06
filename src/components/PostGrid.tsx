@@ -35,13 +35,13 @@ export function PostGrid({ posts }: { posts: Post[] }) {
           <button
             key={p.id}
             onClick={() => setAtivo(p)}
-            className="flex flex-col overflow-hidden rounded-xl border border-neutral-200 text-left transition hover:shadow-md dark:border-neutral-800"
+            className="flex flex-col overflow-hidden rounded-xl border border-neutral-200 text-left transition hover:shadow-md dark:border-[#44475a]"
           >
             {p.coverImage ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img src={p.coverImage} alt="" className="aspect-video w-full object-cover" />
             ) : (
-              <div className="aspect-video w-full bg-neutral-100 dark:bg-neutral-900" />
+              <div className="aspect-video w-full bg-neutral-100 dark:bg-[#44475a]" />
             )}
             <div className="flex flex-col gap-2 p-5">
               <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-neutral-400">{p.category} · {p.author}</span>
@@ -60,7 +60,7 @@ export function PostGrid({ posts }: { posts: Post[] }) {
           onClick={() => setAtivo(null)}
         >
           <div
-            className="max-w-lg animate-[slideUp_.25s_ease] rounded-2xl bg-white p-8 dark:bg-neutral-950"
+            className="max-w-lg animate-[slideUp_.25s_ease] rounded-2xl bg-white p-8 dark:bg-[#282a36]"
             onClick={(e) => e.stopPropagation()}
           >
             <span className="font-mono text-xs uppercase text-neutral-400">{ativo.category}</span>
@@ -68,7 +68,7 @@ export function PostGrid({ posts }: { posts: Post[] }) {
             <p className="mt-1 font-mono text-xs text-neutral-400">
               {new Date(ativo.createdAt).toLocaleDateString("pt-BR")} · {new Date(ativo.createdAt).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })} · {ativo.author}
             </p>
-            <p className="mt-3 text-neutral-600 dark:text-neutral-400">{ativo.excerpt}</p>
+            <p className="mt-3 text-neutral-600 dark:text-[#6272a4]">{ativo.excerpt}</p>
             <div className="mt-6 flex gap-4">
               <Link href={`/blog/${ativo.slug}`} className="rounded-lg bg-neutral-900 px-4 py-2 text-white dark:bg-neutral-100 dark:text-neutral-900">
                 ler post completo →

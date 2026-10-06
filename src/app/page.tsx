@@ -45,7 +45,7 @@ export default async function Home() {
         <h2 className="font-mono text-sm uppercase tracking-widest text-neutral-400">Onde nos encontrar</h2>
         <div className="flex flex-wrap gap-5 font-mono text-sm">
           {Object.entries(site.links).map(([k, v]) => (
-            <a key={k} href={v} target="_blank" rel="noreferrer" className="rounded-full border border-neutral-200 px-4 py-2 hover:bg-neutral-100 dark:border-neutral-800 dark:hover:bg-neutral-900">
+            <a key={k} href={v} target="_blank" rel="noreferrer" className="rounded-full border border-neutral-200 px-4 py-2 hover:bg-neutral-100 dark:border-[#44475a] dark:hover:bg-neutral-900">
               {k}
             </a>
           ))}

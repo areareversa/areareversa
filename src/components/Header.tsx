@@ -4,7 +4,7 @@ import { ThemeToggle } from "./ThemeToggle";
 
 export function Header() {
   return (
-    <header className="border-b border-neutral-200 dark:border-neutral-800">
+    <header className="border-b border-neutral-200 dark:border-[#44475a]">
       <div className="mx-auto flex max-w-5xl items-center justify-between px-6 py-5">
         <Link href="/" className="font-mono text-lg font-bold tracking-tight">
           área<span className="text-neutral-400">reversa</span>
@@ -23,7 +23,7 @@ export function Header() {
 export function Footer() {
   const links = Object.entries(site.links);
   return (
-    <footer id="contato" className="border-t border-neutral-200 dark:border-neutral-800">
+    <footer id="contato" className="border-t border-neutral-200 dark:border-[#44475a]">
       <div className="mx-auto flex max-w-5xl flex-col gap-4 px-6 py-10 text-sm text-neutral-500">
         <div className="flex flex-wrap gap-5 font-mono">
           {links.map(([k, v]) => (

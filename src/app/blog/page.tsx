@@ -45,7 +45,7 @@ export default async function BlogIndex({
 
   return (
     <div className="flex flex-col gap-8">
-      <h1 className="text-4xl font-bold tracking-tight">blog</h1>
+      <h1 className="text-5xl font-bold tracking-tighter">blog</h1>
 
       <form action="/blog" method="get" className="flex gap-2">
         <input

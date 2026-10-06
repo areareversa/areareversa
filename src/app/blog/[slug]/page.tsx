@@ -38,7 +38,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
       <p className="font-mono text-xs text-neutral-400">
         {new Date(post.createdAt).toLocaleDateString("pt-BR")} · {post.category}
       </p>
-      <h1 className="text-4xl font-bold tracking-tight">{post.title}</h1>
+      <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl">{post.title}</h1>
       {post.coverImage && (
         // eslint-disable-next-line @next/next/no-img-element
         <img

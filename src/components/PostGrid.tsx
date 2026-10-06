@@ -42,9 +42,9 @@ export function PostGrid({ posts }: { posts: Post[] }) {
             ) : (
               <div className="aspect-video w-full bg-neutral-100 dark:bg-neutral-900" />
             )}
-            <div className="flex flex-col gap-2 p-4">
-              <span className="font-mono text-xs uppercase text-neutral-400">{p.category}</span>
-              <span className="text-lg font-semibold leading-snug">{p.title}</span>
+            <div className="flex flex-col gap-2 p-5">
+              <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-neutral-400">{p.category}</span>
+              <span className="text-lg font-semibold leading-snug tracking-tight">{p.title}</span>
             </div>
           </button>
         ))}

@@ -17,10 +17,10 @@ export default async function Home() {
 
   return (
     <div className="flex flex-col gap-16">
-      <section className="flex flex-col gap-6 pt-10">
-        <p className="font-mono text-sm uppercase tracking-widest text-neutral-400">Método • Contexto • Sem filtro</p>
-        <h1 className="text-5xl font-bold tracking-tight sm:text-6xl">{site.tagline}</h1>
-        <p className="max-w-xl text-lg text-neutral-500">
+      <section className="flex flex-col gap-6 pt-16">
+        <p className="font-mono text-xs uppercase tracking-[0.3em] text-neutral-400">Método • Contexto • Sem filtro</p>
+        <h1 className="text-5xl font-bold tracking-tighter sm:text-7xl">{site.tagline}</h1>
+        <p className="max-w-xl text-lg leading-relaxed text-neutral-500">
           Engenharia reversa de ideias, discursos e políticas. De qualquer lado.
         </p>
         <Link href="/blog" className="font-mono text-sm underline underline-offset-4">↓ ir para o blog</Link>

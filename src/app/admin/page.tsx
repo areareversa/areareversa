@@ -17,6 +17,7 @@ export default async function AdminPage() {
         <h1 className="text-3xl font-bold">postagens</h1>
         <div className="flex gap-4">
           <Link href="/admin/new" className="rounded-lg bg-neutral-900 px-4 py-2 text-sm text-white dark:bg-neutral-100 dark:text-neutral-900">+ nova</Link>
+          <Link href="/admin/ai" className="rounded-lg border border-neutral-300 px-4 py-2 text-sm dark:border-neutral-700">IA</Link>
           <form action={logoutAction}>
             <button className="text-sm underline underline-offset-4">sair</button>
           </form>

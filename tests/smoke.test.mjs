@@ -6,6 +6,7 @@ const cases = [
   { path: "/podcast", expect: 200, name: "podcast" },
   { path: "/admin/login", expect: 200, name: "admin login" },
   { path: "/admin", expect: [307, 308], name: "admin redireciona p/ login", redirect: "manual" },
+  { path: "/admin/ai", expect: [307, 308], name: "admin ai redireciona p/ login", redirect: "manual" },
   { path: "/blog/post-que-nao-existe", expect: 404, name: "post inexistente 404" },
 ];
 

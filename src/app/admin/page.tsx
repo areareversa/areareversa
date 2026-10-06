@@ -2,7 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { isAuthed } from "@/lib/auth";
-import { logoutAction, deletePost } from "./actions";
+import { deletePost } from "./actions";
 
 export const metadata = { title: "Admin" };
 export const dynamic = "force-dynamic";
@@ -15,13 +15,7 @@ export default async function AdminPage() {
     <div className="flex flex-col gap-8">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold">postagens</h1>
-        <div className="flex gap-4">
-          <Link href="/admin/new" className="rounded-lg bg-neutral-900 px-4 py-2 text-sm text-white dark:bg-neutral-100 dark:text-neutral-900">+ nova</Link>
-          <Link href="/admin/ai" className="rounded-lg border border-neutral-300 px-4 py-2 text-sm dark:border-neutral-700">IA</Link>
-          <form action={logoutAction}>
-            <button className="text-sm underline underline-offset-4">sair</button>
-          </form>
-        </div>
+        <Link href="/admin/new" className="rounded-lg bg-neutral-900 px-4 py-2 text-sm text-white dark:bg-neutral-100 dark:text-neutral-900">+ nova</Link>
       </div>
       <ul className="divide-y divide-neutral-200 dark:divide-neutral-800">
         {posts.map((p) => (

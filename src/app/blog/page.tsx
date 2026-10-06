@@ -22,8 +22,8 @@ export default async function BlogIndex({
     })
     .catch(() => []);
 
-  const categories = await prisma.post
-    .findMany({ where: { published: true }, select: { category: true }, distinct: ["category"] })
+  const grouped = await prisma.post
+    .groupBy({ by: ["category"], where: { published: true }, _count: { _all: true }, orderBy: { category: "asc" } })
     .catch(() => []);
 
   return (
@@ -33,13 +33,13 @@ export default async function BlogIndex({
         <Link href="/blog" className={`rounded-full border px-3 py-1 ${!categoria ? "bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900" : "border-neutral-300 dark:border-neutral-700"}`}>
           todas
         </Link>
-        {categories.map((c) => (
+        {grouped.map((c) => (
           <Link
             key={c.category}
             href={`/blog?categoria=${encodeURIComponent(c.category)}`}
             className={`rounded-full border px-3 py-1 ${categoria === c.category ? "bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900" : "border-neutral-300 dark:border-neutral-700"}`}
           >
-            {c.category}
+            {c.category} ({c._count._all})
           </Link>
         ))}
       </div>

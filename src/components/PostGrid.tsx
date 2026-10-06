@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 
 type Post = {
@@ -15,6 +15,15 @@ type Post = {
 
 export function PostGrid({ posts }: { posts: Post[] }) {
   const [ativo, setAtivo] = useState<Post | null>(null);
+
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setAtivo(null);
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
   if (posts.length === 0) {
     return <p className="py-4 text-neutral-500">Nenhuma postagem encontrada.</p>;
   }
@@ -46,11 +55,11 @@ export function PostGrid({ posts }: { posts: Post[] }) {
           role="dialog"
           aria-modal="true"
           aria-label={ativo.title}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-6"
+          className="fixed inset-0 z-50 flex animate-[fadeIn_.2s_ease] items-center justify-center bg-black/60 p-6 backdrop-blur-sm"
           onClick={() => setAtivo(null)}
         >
           <div
-            className="max-w-lg rounded-2xl bg-white p-8 dark:bg-neutral-950"
+            className="max-w-lg animate-[slideUp_.25s_ease] rounded-2xl bg-white p-8 dark:bg-neutral-950"
             onClick={(e) => e.stopPropagation()}
           >
             <span className="font-mono text-xs uppercase text-neutral-400">{ativo.category}</span>

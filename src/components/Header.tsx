@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { site } from "@/lib/site";
+import { ThemeToggle } from "./ThemeToggle";
 
 export function Header() {
   return (
@@ -8,10 +9,11 @@ export function Header() {
         <Link href="/" className="font-mono text-lg font-bold tracking-tight">
           área<span className="text-neutral-400">reversa</span>
         </Link>
-        <nav aria-label="Navegação principal" className="flex gap-6 font-mono text-sm">
+        <nav aria-label="Navegação principal" className="flex items-center gap-6 font-mono text-sm">
           <Link href="/blog" className="hover:underline underline-offset-4">blog</Link>
           <Link href="/podcast" className="hover:underline underline-offset-4">podcast</Link>
           <a href="#contato" className="hover:underline underline-offset-4">contato</a>
+          <ThemeToggle />
         </nav>
       </div>
     </header>

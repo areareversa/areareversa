@@ -67,3 +67,24 @@ export async function deletePost(id: string) {
   revalidatePath("/blog");
   redirect("/admin");
 }
+
+export async function toggleCommentHidden(id: string) {
+  if (!(await isAuthed())) redirect("/admin/login");
+  const c = await prisma.comment.findUnique({ where: { id } }).catch(() => null);
+  if (c) await prisma.comment.update({ where: { id }, data: { hidden: !c.hidden } });
+  revalidatePath("/admin/comentarios");
+}
+
+export async function deleteComment(id: string) {
+  if (!(await isAuthed())) redirect("/admin/login");
+  await prisma.comment.delete({ where: { id } }).catch(() => {});
+  revalidatePath("/admin/comentarios");
+}
+
+export async function replyComment(id: string, formData: FormData) {
+  if (!(await isAuthed())) redirect("/admin/login");
+  const reply = String(formData.get("reply") ?? "").trim();
+  await prisma.comment.update({ where: { id }, data: { adminReply: reply || null } }).catch(() => {});
+  revalidatePath("/admin/comentarios");
+  revalidatePath("/blog");
+}

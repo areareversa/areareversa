@@ -7,8 +7,7 @@ import { ShareButtons } from "@/components/ShareButtons";
 import { ReadingProgress } from "@/components/ReadingProgress";
 import { ReadingMode } from "@/components/ReadingMode";
 import { ViewsCounter } from "@/components/ViewsCounter";
-import { AiPostTools } from "@/components/AiPostTools";
-import { Giscus } from "@/components/Giscus";
+import { CommentSection } from "@/components/CommentSection";
 import { readingTimeMinutes } from "@/lib/readingTime";
 import { site } from "@/lib/site";
 
@@ -40,14 +39,19 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
   const post = await prisma.post.findUnique({ where: { slug } }).catch(() => null);
   if (!post || !post.published) notFound();
 
-  const related = await prisma.post
-    .findMany({
-      where: { published: true, category: post.category, NOT: { id: post.id } },
-      orderBy: { createdAt: "desc" },
-      take: 3,
-      select: { slug: true, title: true, excerpt: true },
-    })
-    .catch(() => []);
+  const [related, comments] = await Promise.all([
+    prisma.post
+      .findMany({
+        where: { published: true, category: post.category, NOT: { id: post.id } },
+        orderBy: { createdAt: "desc" },
+        take: 3,
+        select: { slug: true, title: true, excerpt: true },
+      })
+      .catch(() => []),
+    prisma.comment
+      .findMany({ where: { postId: post.id, hidden: false }, orderBy: { createdAt: "desc" } })
+      .catch(() => []),
+  ]);
 
   return (
     <article className="mx-auto flex max-w-2xl flex-col gap-6">
@@ -66,9 +70,8 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
       )}
       <ReadingMode />
       <Markdown>{post.content}</Markdown>
-      <AiPostTools slug={post.slug} />
       <ShareButtons title={post.title} url={`${site.url}/blog/${post.slug}`} />
-      <Giscus />
+      <CommentSection slug={post.slug} initialComments={comments} />
 
       {related.length > 0 && (
         <section className="flex flex-col gap-4">

@@ -1,3 +1,4 @@
+import { CountriesMap } from "@/components/CountriesMap";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { isAuthed } from "@/lib/auth";
@@ -54,7 +55,11 @@ export default async function AnalyticsPage({ searchParams }: { searchParams: Pr
     <div className="flex flex-col gap-10">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold tracking-[-0.02em]">analytics</h1>
-        <div className="flex gap-2 text-xs">
+        <div className="flex items-center gap-3">
+          <a href={`/admin/analytics/export?dias=${periodDays}`} className="rounded-full border border-[#e5e7eb] px-3 py-1.5 text-xs dark:border-[#2a2a30]">
+            exportar CSV
+          </a>
+          <div className="flex gap-2 text-xs">
           {[7, 30, 90].map((d) => (
             <a
               key={d}
@@ -64,6 +69,7 @@ export default async function AnalyticsPage({ searchParams }: { searchParams: Pr
               {d}d
             </a>
           ))}
+          </div>
         </div>
       </div>
 
@@ -91,6 +97,11 @@ export default async function AnalyticsPage({ searchParams }: { searchParams: Pr
           <span>{days[0]?.date}</span>
           <span>{days[days.length - 1]?.date}</span>
         </div>
+      </section>
+
+      <section className="flex flex-col gap-4">
+        <h2 className={sectionTitle}>Mapa de acessos</h2>
+        <CountriesMap counts={byCountry} />
       </section>
 
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">

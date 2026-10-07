@@ -345,11 +345,4 @@ for (const p of posts) {
 
 await prisma.$disconnect();
 
-// remove posts antigos que não estão na nova lista
-const slugs = posts.map((p) =>
-  p.title.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")
-);
-const prisma2 = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL }) });
-const removed = await prisma2.post.deleteMany({ where: { slug: { notIn: slugs } } });
-console.log("removidos:", removed.count);
-await prisma2.$disconnect();
+// não remove mais posts fora da lista do seed (preserva posts criados pelo admin)

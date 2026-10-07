@@ -26,7 +26,7 @@ export default function AiForm() {
   }
 
   function usarNaPostagem() {
-    sessionStorage.setItem("ar_ai_content", texto);
+    sessionStorage.setItem("ar_ai_content", JSON.stringify({ texto, tema }));
     router.push("/admin/new");
   }
 

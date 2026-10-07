@@ -7,7 +7,7 @@
         "build": "next build",
         "start": "next start",
         "lint": "eslint",
-        "test": "node tests/smoke.test.mjs",
+        "test": "node tests/smoke.test.mjs && tsx tests/units.test.ts",
         "postinstall": "prisma generate",
         "seed": "tsx scripts/seed.mjs"
     },
@@ -44,3 +44,4 @@
         "pg@8.23.1": true
     }
 }
+

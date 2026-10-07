@@ -1,5 +1,6 @@
 import { readingTimeMinutes } from "@/lib/readingTime";
 import { NewsletterForm } from "@/components/NewsletterForm";
+import { publishedFilter } from "@/lib/posts";
 import Link from "next/link";
 import { site } from "@/lib/site";
 import { prisma } from "@/lib/prisma";
@@ -11,19 +12,27 @@ export default async function Home() {
   let categories: string[] = [];
   try {
     posts = await prisma.post.findMany({
-      where: { published: true },
+      where: publishedFilter(),
       orderBy: { createdAt: "desc" },
       take: 6,
       select: { slug: true, title: true, excerpt: true, createdAt: true, content: true },
     });
     const grouped = await prisma.post.groupBy({
       by: ["category"],
-      where: { published: true },
+      where: publishedFilter(),
       _count: { _all: true },
       orderBy: { category: "asc" },
     });
     categories = grouped.map((g) => g.category);
   } catch {}
+
+  const topClicks = await prisma.event
+    .groupBy({ by: ["target"], where: { type: "click", createdAt: { gte: new Date(Date.now() - 7 * 86400000) } }, _count: { _all: true }, orderBy: { _count: { target: "desc" } }, take: 5 })
+    .catch(() => []);
+  const topPostSlugs = topClicks.map((t) => t.target).filter(Boolean) as string[];
+  const topPosts = topPostSlugs.length
+    ? await prisma.post.findMany({ where: { slug: { in: topPostSlugs } }, select: { slug: true, title: true, excerpt: true } }).catch(() => [])
+    : [];
 
   return (
     <div className="flex flex-col gap-24">
@@ -84,6 +93,24 @@ export default async function Home() {
           {posts.length === 0 && <p className="text-[#4b5563] dark:text-[#d4d4d8]">Em breve as primeiras postagens.</p>}
         </div>
       </section>
+
+      {topPosts.length > 0 && (
+        <section className="flex flex-col gap-8">
+          <h2 className="text-sm font-semibold uppercase tracking-[0.22em] text-[#9ca3af]">Mais lidas da semana</h2>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {topPosts.map((p) => (
+              <Link
+                key={p.slug}
+                href={`/blog/${p.slug}`}
+                className="flex flex-col gap-3 rounded-2xl border border-[#9333ea]/30 bg-[#9333ea]/5 p-6 transition hover:-translate-y-0.5 hover:shadow-[0_8px_24px_#9333ea22]"
+              >
+                <h3 className="text-lg font-semibold leading-snug tracking-tight">{p.title}</h3>
+                <p className="text-sm text-[#4b5563] dark:text-[#d4d4d8]">{p.excerpt}</p>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
 
       <section className="flex flex-col gap-8">
         <h2 className="text-sm font-semibold uppercase tracking-[0.22em] text-[#9ca3af]">Onde nos encontrar</h2>

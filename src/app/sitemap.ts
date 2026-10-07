@@ -1,11 +1,12 @@
 import { prisma } from "@/lib/prisma";
 import { site } from "@/lib/site";
 
+import { publishedFilter } from "@/lib/posts";
 export const dynamic = "force-dynamic";
 
 export default async function sitemap() {
   const posts = await prisma.post
-    .findMany({ where: { published: true }, select: { slug: true, updatedAt: true } })
+    .findMany({ where: publishedFilter(), select: { slug: true, updatedAt: true } })
     .catch(() => []);
 
   return [

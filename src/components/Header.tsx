@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { site } from "@/lib/site";
 import { ThemeToggle } from "./ThemeToggle";
+import { SearchModal } from "./SearchModal";
 
 export function Header() {
   return (
@@ -12,8 +13,10 @@ export function Header() {
         <nav aria-label="Navegação principal" className="flex items-center gap-6 text-sm">
           <Link href="/blog" className="text-[#4b5563] hover:text-[#9333ea] dark:text-[#d4d4d8]">blog</Link>
           <Link href="/podcast" className="text-[#4b5563] hover:text-[#9333ea] dark:text-[#d4d4d8]">podcast</Link>
+          <Link href="/salvos" className="text-[#4b5563] hover:text-[#9333ea] dark:text-[#d4d4d8]">salvos</Link>
           <a href="#contato" className="text-[#4b5563] hover:text-[#9333ea] dark:text-[#d4d4d8]">contato</a>
           <ThemeToggle />
+          <SearchModal />
           <Link
             href="/blog"
             className="rounded-full bg-[#0f0f12] px-4 py-2 text-sm font-semibold text-white transition hover:scale-105 active:scale-95 dark:bg-white dark:text-[#0f0f12]"

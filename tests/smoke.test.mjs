@@ -8,6 +8,8 @@ const cases = [
   { path: "/admin", expect: [307, 308], name: "admin redireciona p/ login", redirect: "manual" },
   { path: "/admin/ai", expect: [307, 308], name: "admin ai redireciona p/ login", redirect: "manual" },
   { path: "/blog/post-que-nao-existe", expect: 404, name: "post inexistente 404" },
+  { path: "/salvos", expect: 200, name: "salvos" },
+  { path: "/sobre", expect: 200, name: "sobre" },
   { path: "/rss.xml", expect: 200, name: "rss feed" },
   { path: "/sitemap.xml", expect: 200, name: "sitemap" },
 ];

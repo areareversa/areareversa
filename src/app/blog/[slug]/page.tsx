@@ -1,3 +1,4 @@
+import { publishedFilter, isVisible } from "@/lib/posts";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -10,6 +11,7 @@ import { ViewsCounter } from "@/components/ViewsCounter";
 import { CommentSection } from "@/components/CommentSection";
 import { readingTimeMinutes } from "@/lib/readingTime";
 import { site } from "@/lib/site";
+import { BookmarkButton } from "@/components/BookmarkButton";
 
 export const dynamic = "force-dynamic";
 
@@ -37,12 +39,12 @@ export async function generateMetadata({
 export default async function PostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const post = await prisma.post.findUnique({ where: { slug } }).catch(() => null);
-  if (!post || !post.published) notFound();
+  if (!post || !isVisible(post)) notFound();
 
   const [related, comments] = await Promise.all([
     prisma.post
       .findMany({
-        where: { published: true, category: post.category, NOT: { id: post.id } },
+        where: { ...publishedFilter(), category: post.category, NOT: { id: post.id } },
         orderBy: { createdAt: "desc" },
         take: 3,
         select: { slug: true, title: true, excerpt: true },
@@ -68,9 +70,19 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           className="aspect-video w-full rounded-2xl object-cover"
         />
       )}
+      {post.tags.length > 0 && (
+        <div className="flex flex-wrap gap-2">
+          {post.tags.map((t) => (
+            <a key={t} href={`/tag/${encodeURIComponent(t)}`} className="rounded-full border border-[#e5e7eb] px-3 py-1 text-xs text-[#4b5563] transition hover:border-[#9333ea] hover:text-[#9333ea] dark:border-[#2a2a30] dark:text-[#d4d4d8]">
+              #{t}
+            </a>
+          ))}
+        </div>
+      )}
       <ReadingMode />
       <Markdown>{post.content}</Markdown>
       <ShareButtons title={post.title} url={`${site.url}/blog/${post.slug}`} />
+      <BookmarkButton slug={post.slug} title={post.title} />
       <CommentSection slug={post.slug} initialComments={comments} />
 
       {related.length > 0 && (

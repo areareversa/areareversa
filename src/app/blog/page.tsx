@@ -1,3 +1,4 @@
+import { publishedFilter } from "@/lib/posts";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { PostGrid } from "@/components/PostGrid";
@@ -20,7 +21,7 @@ export default async function BlogIndex({
   const page = Math.max(1, parseInt(pagina ?? "1", 10) || 1);
 
   const where = {
-    published: true,
+    ...publishedFilter(),
     ...(categoria ? { category: categoria } : {}),
     ...(q
       ? { OR: [{ title: { contains: q, mode: "insensitive" as const } }, { excerpt: { contains: q, mode: "insensitive" as const } }] }
@@ -30,7 +31,7 @@ export default async function BlogIndex({
   const [posts, total, grouped] = await Promise.all([
     prisma.post.findMany({ where, orderBy: { createdAt: "desc" }, skip: (page - 1) * PAGE_SIZE, take: PAGE_SIZE }).catch(() => []),
     prisma.post.count({ where }).catch(() => 0),
-    prisma.post.groupBy({ by: ["category"], where: { published: true }, _count: { _all: true }, orderBy: { category: "asc" } }).catch(() => []),
+    prisma.post.groupBy({ by: ["category"], where: publishedFilter(), _count: { _all: true }, orderBy: { category: "asc" } }).catch(() => []),
   ]);
 
   const pages = Math.max(1, Math.ceil(total / PAGE_SIZE));

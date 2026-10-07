@@ -1,11 +1,12 @@
 import { prisma } from "@/lib/prisma";
 import { site } from "@/lib/site";
+import { publishedFilter } from "@/lib/posts";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
   const posts = await prisma.post
-    .findMany({ where: { published: true }, orderBy: { createdAt: "desc" }, take: 20 })
+    .findMany({ where: publishedFilter(), orderBy: { createdAt: "desc" }, take: 20 })
     .catch(() => []);
 
   const items = posts

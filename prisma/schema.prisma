@@ -30,6 +30,8 @@ model Event {
   path      String
   target    String?
   device    String   // "desktop" | "mobile" | "tablet"
+  country   String?
+  city      String?
   createdAt DateTime @default(now())
 
   @@index([createdAt])

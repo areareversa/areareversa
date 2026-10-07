@@ -5,10 +5,12 @@ import { isAuthed } from "@/lib/auth";
 export const metadata = { title: "Analytics" };
 export const dynamic = "force-dynamic";
 
-export default async function AnalyticsPage() {
+export default async function AnalyticsPage({ searchParams }: { searchParams: Promise<{ dias?: string }> }) {
   if (!(await isAuthed())) redirect("/admin/login");
 
-  const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+  const { dias } = await searchParams;
+  const periodDays = [7, 30, 90].includes(Number(dias)) ? Number(dias) : 30;
+  const since = new Date(Date.now() - periodDays * 24 * 60 * 60 * 1000);
   const events = await prisma.event
     .findMany({ where: { createdAt: { gte: since } }, orderBy: { createdAt: "desc" } })
     .catch(() => []);
@@ -23,7 +25,7 @@ export default async function AnalyticsPage() {
     byDay.set(d, (byDay.get(d) ?? 0) + 1);
   }
   const days: { date: string; count: number }[] = [];
-  for (let i = 29; i >= 0; i--) {
+  for (let i = periodDays - 1; i >= 0; i--) {
     const d = new Date(Date.now() - i * 86400000).toISOString().slice(0, 10);
     days.push({ date: d, count: byDay.get(d) ?? 0 });
   }
@@ -41,6 +43,7 @@ export default async function AnalyticsPage() {
   const topPosts = topBy(clicks, (e) => e.target);
   const topPages = topBy(pageviews, (e) => e.path);
   const byDevice = topBy(events, (e) => e.device);
+  const byCountry = topBy(events, (e) => e.country);
   const deviceTotal = Math.max(1, events.length);
   const recent = events.slice(0, 20);
 
@@ -49,7 +52,20 @@ export default async function AnalyticsPage() {
 
   return (
     <div className="flex flex-col gap-10">
-      <h1 className="text-3xl font-bold tracking-[-0.02em]">analytics</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-3xl font-bold tracking-[-0.02em]">analytics</h1>
+        <div className="flex gap-2 text-xs">
+          {[7, 30, 90].map((d) => (
+            <a
+              key={d}
+              href={`/admin/analytics?dias=${d}`}
+              className={`rounded-full border px-3 py-1.5 ${d === periodDays ? "border-[#9333ea] bg-[#9333ea]/10 text-[#9333ea]" : "border-[#e5e7eb] dark:border-[#2a2a30]"}`}
+            >
+              {d}d
+            </a>
+          ))}
+        </div>
+      </div>
 
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
         <div className={card}><p className="text-3xl font-bold">{pageviews.length}</p><p className="text-xs text-[#9ca3af]">acessos (30d)</p></div>
@@ -59,7 +75,7 @@ export default async function AnalyticsPage() {
       </div>
 
       <section className="flex flex-col gap-4">
-        <h2 className={sectionTitle}>Acessos por dia (30 dias)</h2>
+        <h2 className={sectionTitle}>Acessos por dia ({periodDays} dias)</h2>
         <div className="flex h-40 items-end gap-1">
           {days.map((d) => (
             <div key={d.date} className="group relative flex-1">
@@ -123,6 +139,22 @@ export default async function AnalyticsPage() {
           ))}
           {byDevice.length === 0 && <p className="text-sm text-[#9ca3af]">sem dados ainda</p>}
         </section>
+
+        <section className="flex flex-col gap-3">
+          <h2 className={sectionTitle}>País</h2>
+          {byCountry.map(([country, n]) => (
+            <div key={country} className="flex flex-col gap-1">
+              <div className="flex justify-between text-sm">
+                <span>{country}</span>
+                <span className="text-[#9ca3af]">{Math.round((n / deviceTotal) * 100)}%</span>
+              </div>
+              <div className="h-2 w-full rounded-full bg-[#e5e7eb] dark:bg-[#2a2a30]">
+                <div className="h-2 rounded-full bg-[#9333ea]" style={{ width: `${(n / deviceTotal) * 100}%` }} />
+              </div>
+            </div>
+          ))}
+          {byCountry.length === 0 && <p className="text-sm text-[#9ca3af]">sem dados ainda</p>}
+        </section>
       </div>
 
       <section className="flex flex-col gap-3">
@@ -135,6 +167,7 @@ export default async function AnalyticsPage() {
               <th className="pb-2">página</th>
               <th className="pb-2">alvo</th>
               <th className="pb-2">dispositivo</th>
+              <th className="pb-2">país</th>
             </tr>
           </thead>
           <tbody>
@@ -145,10 +178,11 @@ export default async function AnalyticsPage() {
                 <td className="py-2 font-mono text-xs">{e.path}</td>
                 <td className="py-2 font-mono text-xs">{e.target ?? "—"}</td>
                 <td className="py-2">{e.device}</td>
+                <td className="py-2">{e.country ?? "—"}{e.city ? ` · ${e.city}` : ""}</td>
               </tr>
             ))}
             {recent.length === 0 && (
-              <tr><td colSpan={5} className="py-4 text-[#9ca3af]">nenhum evento registrado ainda — navegue pelo site para gerar dados.</td></tr>
+              <tr><td colSpan={6} className="py-4 text-[#9ca3af]">nenhum evento registrado ainda — navegue pelo site para gerar dados.</td></tr>
             )}
           </tbody>
         </table>

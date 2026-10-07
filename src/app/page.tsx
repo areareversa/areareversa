@@ -1,3 +1,5 @@
+import { readingTimeMinutes } from "@/lib/readingTime";
+import { NewsletterForm } from "@/components/NewsletterForm";
 import Link from "next/link";
 import { site } from "@/lib/site";
 import { prisma } from "@/lib/prisma";
@@ -5,14 +7,14 @@ import { prisma } from "@/lib/prisma";
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  let posts: { slug: string; title: string; excerpt: string; createdAt: Date }[] = [];
+  let posts: { slug: string; title: string; excerpt: string; createdAt: Date; content: string }[] = [];
   let categories: string[] = [];
   try {
     posts = await prisma.post.findMany({
       where: { published: true },
       orderBy: { createdAt: "desc" },
       take: 6,
-      select: { slug: true, title: true, excerpt: true, createdAt: true },
+      select: { slug: true, title: true, excerpt: true, createdAt: true, content: true },
     });
     const grouped = await prisma.post.groupBy({
       by: ["category"],
@@ -76,6 +78,7 @@ export default async function Home() {
             >
               <h3 className="text-lg font-semibold leading-snug tracking-tight">{p.title}</h3>
               <p className="text-sm text-[#4b5563] dark:text-[#d4d4d8]">{p.excerpt}</p>
+              <p className="text-xs text-[#9ca3af]">{readingTimeMinutes(p.content)} min de leitura</p>
             </Link>
           ))}
           {posts.length === 0 && <p className="text-[#4b5563] dark:text-[#d4d4d8]">Em breve as primeiras postagens.</p>}
@@ -97,6 +100,12 @@ export default async function Home() {
             </a>
           ))}
         </div>
+      </section>
+
+      <section className="flex flex-col gap-5 rounded-3xl border border-[#e5e7eb] bg-[#f9f7fa] p-10 dark:border-[#2a2a30] dark:bg-[#17171c]">
+        <h2 className="text-2xl font-bold tracking-[-0.02em]">Receba as análises por e-mail</h2>
+        <p className="text-sm text-[#4b5563] dark:text-[#d4d4d8]">Sem spam. Só quando sair post novo.</p>
+        <NewsletterForm />
       </section>
 
       <section className="flex flex-col items-start gap-6 rounded-3xl border border-[#9333ea]/40 bg-[#9333ea]/5 p-10">

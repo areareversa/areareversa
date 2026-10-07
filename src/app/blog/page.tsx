@@ -74,7 +74,7 @@ export default async function BlogIndex({
         ))}
       </div>
 
-      <PostGrid posts={posts} />
+      <PostGrid posts={posts} q={q} />
 
       {pages > 1 && (
         <nav aria-label="Paginação" className="flex items-center gap-4 text-sm">

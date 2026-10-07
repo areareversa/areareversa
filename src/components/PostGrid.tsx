@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Highlight } from "./Highlight";
+import { readingTimeMinutes } from "@/lib/readingTime";
 import Link from "next/link";
 
 type Post = {
@@ -12,9 +14,10 @@ type Post = {
   coverImage: string | null;
   createdAt: string | Date;
   author: string;
+  content?: string;
 };
 
-export function PostGrid({ posts }: { posts: Post[] }) {
+export function PostGrid({ posts, q }: { posts: Post[]; q?: string }) {
   const [ativo, setAtivo] = useState<Post | null>(null);
 
   useEffect(() => {
@@ -44,8 +47,8 @@ export function PostGrid({ posts }: { posts: Post[] }) {
               <div className="aspect-video w-full bg-[#f9f7fa] dark:bg-[#1a1a20]" />
             )}
             <div className="flex flex-col gap-2 p-5">
-              <span className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#9ca3af]">{p.category} · {p.author}</span>
-              <span className="text-lg font-semibold leading-snug tracking-tight">{p.title}</span>
+              <span className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#9ca3af]">{p.category} · {p.author}{p.content ? ` · ${readingTimeMinutes(p.content)} min` : ""}</span>
+              <span className="text-lg font-semibold leading-snug tracking-tight"><Highlight text={p.title} q={q} /></span>
             </div>
           </button>
         ))}

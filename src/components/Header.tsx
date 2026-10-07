@@ -32,6 +32,11 @@ export function Footer() {
     <footer id="contato" className="border-t border-[#e5e7eb] dark:border-[#2a2a30]">
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 px-6 py-12 text-sm text-[#4b5563] dark:text-[#d4d4d8]">
         <p className="font-semibold text-[#0f0f12] dark:text-white">área<span className="text-[#9333ea]">reversa</span></p>
+        <nav className="flex gap-5 text-xs">
+          <Link href="/sobre" className="hover:text-[#9333ea]">sobre</Link>
+          <a href="/rss.xml" className="hover:text-[#9333ea]">rss</a>
+          <a href="/sitemap.xml" className="hover:text-[#9333ea]">sitemap</a>
+        </nav>
         <div className="flex flex-wrap gap-5">
           {links.map(([k, v]) => (
             <a key={k} href={v} target="_blank" rel="noreferrer" className="hover:text-[#9333ea]">

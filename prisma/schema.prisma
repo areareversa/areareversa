@@ -17,8 +17,17 @@ model Post {
   category  String   @default("Geral")
   author    String   @default("área reversa")
   published Boolean  @default(false)
+  views     Int      @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@map("posts")
+}
+
+model EmailSubscriber {
+  id    String   @id @default(cuid())
+  email String   @unique
+  createdAt DateTime @default(now())
+
+  @@map("email_subscribers")
 }

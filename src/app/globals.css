@@ -3,36 +3,66 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --background: #f8f8f2;
-  --foreground: #282a36;
+  --bg: #ffffff;
+  --bg-subtle: #f9f7fa;
+  --text: #0f0f12;
+  --text-muted: #4b5563;
+  --border: #e5e7eb;
+  --border-subtle: #f3f4f6;
+  --accent: #9333ea;
+  --accent-hover: #7e22ce;
+  color-scheme: light;
 }
 
 .dark {
-  --background: #282a36;
-  --foreground: #f8f8f2;
+  --bg: #0f0f12;
+  --bg-subtle: #17171c;
+  --text: #ffffff;
+  --text-muted: #d4d4d8;
+  --border: #2a2a30;
+  --border-subtle: #1a1a20;
+  --accent: #9333ea;
+  --accent-hover: #a855f7;
+  color-scheme: dark;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-inter);
-  --font-mono: var(--font-jetbrains);
+  --color-background: var(--bg);
+  --color-foreground: var(--text);
+  --color-subtle: var(--bg-subtle);
+  --color-muted: var(--text-muted);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --font-sans: var(--font-jakarta), system-ui, "Segoe UI", Roboto, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-inter), Arial, Helvetica, sans-serif;
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: var(--font-jakarta), system-ui, "Segoe UI", Roboto, sans-serif;
+  transition: background-color 0.2s cubic-bezier(.2, .8, .2, 1), color 0.2s cubic-bezier(.2, .8, .2, 1);
+}
+
+.dark body {
+  background-image:
+    radial-gradient(90% 50% at 50% -5%, #9333ea0f, transparent 60%),
+    radial-gradient(60% 35% at 92% 102%, #6366f10a, transparent 65%);
+  background-attachment: fixed;
 }
 
 ::selection {
-  background: #bd93f9;
-  color: #282a36;
+  background: #9333ea2e;
+  color: inherit;
 }
 
 .dark ::selection {
-  background: #bd93f9;
-  color: #282a36;
+  background: #9333ea47;
+  color: inherit;
 }
 
 @keyframes fadeIn {

@@ -18,7 +18,7 @@ export function PostForm({
   action: (formData: FormData) => Promise<void>;
   post?: Post;
 }) {
-  const input = "rounded-lg border border-neutral-300 bg-transparent px-4 py-2 dark:border-[#6272a4]";
+  const input = "rounded-lg border border-neutral-300 bg-transparent px-4 py-2 dark:border-[#2a2a30]";
   const [cover, setCover] = useState(post?.coverImage ?? "");
   return (
     <form action={action} className="flex max-w-2xl flex-col gap-4">

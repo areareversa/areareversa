@@ -323,6 +323,8 @@ posts.forEach((p, i) => {
 posts.forEach((p, i) => {
   p.author = autores[i % autores.length];
   p.createdAt = new Date(Date.now() - i * 1000 * 60 * 60 * 24 * 3 - i * 1000 * 60 * 47);
+  p.content += `\n\n## Leitura complementar\n\n- Memorial da Urna Eletrônica do TSE/TRE-RS — acervo oficial com modelos UE96 a UE2022\n- G1 — série especial "30 anos da urna eletrônica" (2026)\n- Lei nº 9.100/1995 — instituição da informatização do voto\n- Lei nº 10.740/2003 — fim da impressão do voto pelo eleitor\`;
+
   p.content += `\n\n## Fontes\n\n- [Tribunal Superior Eleitoral — Urna eletrônica](https://www.tse.jus.br/comunicacao/noticias)\n- [G1 — 30 anos da urna eletrônica](https://g1.globo.com/sp/vale-do-paraiba-regiao/noticia/2026/05/13/30-anos-de-urna-eletronica-quem-eram-os-engenheiros-ninjas-e-como-foi-a-missao-de-digitalizar-o-voto-no-brasil.ghtml)\n\n> Conteúdo verificado com base em fontes oficiais e jornalismo de referência (TSE, G1, legislação federal). Não utilizamos Wikipédia como fonte.`;
 });
 

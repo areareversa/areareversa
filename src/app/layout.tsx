@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import { Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const jakarta = Plus_Jakarta_Sans({ subsets: ["latin"], weight: ["400", "600", "700"], variable: "--font-jakarta" });
 const jetbrains = JetBrains_Mono({ subsets: ["latin"], variable: "--font-jetbrains" });
 import { Header, Footer } from "@/components/Header";
 import { site } from "@/lib/site";
@@ -23,15 +23,15 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="pt-BR" className={`${inter.variable} ${jetbrains.variable}`}>
-      <body className="bg-white text-neutral-900 antialiased dark:bg-[#282a36] dark:text-[#f8f8f2]">
+    <html lang="pt-BR" className={`${jakarta.variable} ${jetbrains.variable} dark`}>
+      <body className="bg-white text-[#0f0f12] antialiased dark:bg-[#0f0f12] dark:text-white">
         <script
           dangerouslySetInnerHTML={{
-            __html: `try{var t=localStorage.getItem('ar_theme');if(t!=='light'){document.documentElement.classList.add('dark')}}catch(e){document.documentElement.classList.add('dark')}`,
+            __html: `try{var t=localStorage.getItem('ar_theme');if(t==='light'){document.documentElement.classList.remove('dark')}}catch(e){}`,
           }}
         />
         <Header />
-        <main className="mx-auto min-h-[60vh] max-w-5xl px-6 py-12">{children}</main>
+        <main className="mx-auto min-h-[60vh] w-full max-w-6xl px-6 pt-24 pb-16">{children}</main>
         <Footer />
       </body>
     </html>

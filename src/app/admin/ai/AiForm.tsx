@@ -30,7 +30,7 @@ export default function AiForm() {
     router.push("/admin/new");
   }
 
-  const input = "rounded-lg border border-neutral-300 bg-transparent px-4 py-2 dark:border-[#6272a4]";
+  const input = "rounded-lg border border-neutral-300 bg-transparent px-4 py-2 dark:border-[#2a2a30]";
 
   return (
     <div className="flex max-w-2xl flex-col gap-5">
@@ -50,7 +50,7 @@ export default function AiForm() {
       {texto && (
         <>
           <textarea readOnly rows={18} value={texto} className={`${input} font-mono text-sm`} />
-          <button onClick={usarNaPostagem} className="rounded-lg border border-neutral-300 px-4 py-2 dark:border-[#6272a4]">
+          <button onClick={usarNaPostagem} className="rounded-lg border border-neutral-300 px-4 py-2 dark:border-[#2a2a30]">
             usar este texto na nova postagem →
           </button>
         </>

@@ -45,7 +45,7 @@ export default async function BlogIndex({
 
   return (
     <div className="flex flex-col gap-8">
-      <h1 className="text-5xl font-bold tracking-tighter">blog</h1>
+      <h1 className="text-5xl font-bold tracking-[-0.04em]">blog</h1>
 
       <form action="/blog" method="get" className="flex gap-2">
         <input
@@ -53,21 +53,21 @@ export default async function BlogIndex({
           name="q"
           defaultValue={q}
           placeholder="buscar por título ou resumo..."
-          className="w-full max-w-md rounded-lg border border-neutral-300 bg-transparent px-4 py-2 text-sm dark:border-[#6272a4]"
+          className="w-full max-w-md rounded-xl border border-[#e5e7eb] bg-[#f9f7fa] px-4 py-2.5 text-sm outline-none focus:border-[#9333ea] dark:border-[#2a2a30] dark:bg-[#17171c]"
         />
         {categoria && <input type="hidden" name="categoria" value={categoria} />}
-        <button className="rounded-lg border border-neutral-300 px-4 py-2 font-mono text-sm dark:border-[#6272a4]">buscar</button>
+        <button className="rounded-xl border border-[#e5e7eb] px-4 py-2 text-sm font-semibold transition hover:border-[#9333ea] hover:text-[#9333ea] dark:border-[#2a2a30]">buscar</button>
       </form>
 
-      <div className="flex flex-wrap gap-3 font-mono text-xs">
-        <Link href={q ? `/blog?q=${encodeURIComponent(q)}` : "/blog"} className={`rounded-full border px-3 py-1 ${!categoria ? "bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900" : "border-neutral-300 dark:border-[#6272a4]"}`}>
+      <div className="flex flex-wrap gap-2 text-xs">
+        <Link href={q ? `/blog?q=${encodeURIComponent(q)}` : "/blog"} className={`rounded-full border px-3 py-1.5 ${!categoria ? "border-[#9333ea] bg-[#9333ea]/10 text-[#9333ea]" : "border-[#e5e7eb] text-[#4b5563] dark:border-[#2a2a30] dark:text-[#d4d4d8]"}`}>
           todas
         </Link>
         {grouped.map((c) => (
           <Link
             key={c.category}
             href={`/blog?categoria=${encodeURIComponent(c.category)}${q ? `&q=${encodeURIComponent(q)}` : ""}`}
-            className={`rounded-full border px-3 py-1 ${categoria === c.category ? "bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900" : "border-neutral-300 dark:border-[#6272a4]"}`}
+            className={`rounded-full border px-3 py-1.5 ${categoria === c.category ? "border-[#9333ea] bg-[#9333ea]/10 text-[#9333ea]" : "border-[#e5e7eb] text-[#4b5563] dark:border-[#2a2a30] dark:text-[#d4d4d8]"}`}
           >
             {c.category} ({c._count._all})
           </Link>
@@ -77,10 +77,10 @@ export default async function BlogIndex({
       <PostGrid posts={posts} />
 
       {pages > 1 && (
-        <nav aria-label="Paginação" className="flex items-center gap-4 font-mono text-sm">
-          {page > 1 && <Link href={qs(String(page - 1))} className="underline underline-offset-4">← anterior</Link>}
-          <span className="text-neutral-400">página {page} de {pages}</span>
-          {page < pages && <Link href={qs(String(page + 1))} className="underline underline-offset-4">próxima →</Link>}
+        <nav aria-label="Paginação" className="flex items-center gap-4 text-sm">
+          {page > 1 && <Link href={qs(String(page - 1))} className="text-[#9333ea] underline underline-offset-4">← anterior</Link>}
+          <span className="text-[#9ca3af]">página {page} de {pages}</span>
+          {page < pages && <Link href={qs(String(page + 1))} className="text-[#9333ea] underline underline-offset-4">próxima →</Link>}
         </nav>
       )}
     </div>

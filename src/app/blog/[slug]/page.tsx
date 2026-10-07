@@ -35,16 +35,16 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
 
   return (
     <article className="mx-auto flex max-w-2xl flex-col gap-6">
-      <p className="font-mono text-xs text-neutral-400">
-        {new Date(post.createdAt).toLocaleDateString("pt-BR", { day: "2-digit", month: "long", year: "numeric" })} · {new Date(post.createdAt).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })} · {post.author} · {post.category}
+      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#9333ea]">
+        {post.category} · {post.author} · {new Date(post.createdAt).toLocaleDateString("pt-BR")}
       </p>
-      <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl">{post.title}</h1>
+      <h1 className="text-4xl font-bold tracking-[-0.04em] sm:text-5xl">{post.title}</h1>
       {post.coverImage && (
         // eslint-disable-next-line @next/next/no-img-element
         <img
           src={post.coverImage}
           alt=""
-          className="aspect-video w-full rounded-xl object-cover"
+          className="aspect-video w-full rounded-2xl object-cover"
         />
       )}
       <Markdown>{post.content}</Markdown>

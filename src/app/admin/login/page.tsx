@@ -19,7 +19,7 @@ export default async function LoginPage({
             type="password"
             name="password"
             required
-            className="rounded-lg border border-neutral-300 bg-transparent px-4 py-2 dark:border-[#6272a4]"
+            className="rounded-lg border border-neutral-300 bg-transparent px-4 py-2 dark:border-[#2a2a30]"
           />
         </label>
         <button className="rounded-lg bg-neutral-900 px-4 py-2 text-white dark:bg-neutral-100 dark:text-neutral-900">

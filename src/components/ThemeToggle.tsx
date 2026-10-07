@@ -23,7 +23,7 @@ export function ThemeToggle() {
     <button
       onClick={toggle}
       aria-label={dark ? "Modo claro" : "Modo escuro"}
-      className="rounded-full border border-neutral-300 px-3 py-1 font-mono text-xs dark:border-[#6272a4]"
+      className="rounded-full border border-[#e5e7eb] px-3 py-1 text-xs transition hover:border-[#9333ea] dark:border-[#2a2a30]"
     >
       {dark ? "☀ claro" : "☾ escuro"}
     </button>

@@ -24,6 +24,19 @@ model Post {
   @@map("posts")
 }
 
+model Event {
+  id        String   @id @default(cuid())
+  type      String   // "pageview" | "click"
+  path      String
+  target    String?
+  device    String   // "desktop" | "mobile" | "tablet"
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([path])
+  @@map("events")
+}
+
 model EmailSubscriber {
   id    String   @id @default(cuid())
   email String   @unique

@@ -57,4 +57,4 @@ npm test   # smoke HTTP (tests/smoke.test.mjs) + unitários (tests/units.test.ts
 
 ## Deploy
 
-Next.js 16 na Vercel. Configure as mesmas envs do `.env` no painel da Vercel. O/app é PWA-instalável pelo navegador.
+Next.js 16 na Vercel. Configure as mesmas envs do `.env` no painel da Vercel. O app é PWA-instalável pelo navegador.

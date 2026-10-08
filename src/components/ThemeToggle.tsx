@@ -6,7 +6,7 @@ export function ThemeToggle() {
   const [dark, setDark] = useState(true);
 
   useEffect(() => {
-    const saved = localStorage.getItem("ar_theme");
+    const saved = localStorage.getItem("ar_theme_v2");
     const isDark = saved ? saved === "dark" : true;
     document.documentElement.classList.toggle("dark", isDark);
     setDark(isDark);
@@ -15,7 +15,7 @@ export function ThemeToggle() {
   function toggle() {
     const next = !dark;
     document.documentElement.classList.toggle("dark", next);
-    localStorage.setItem("ar_theme", next ? "dark" : "light");
+    localStorage.setItem("ar_theme_v2", next ? "dark" : "light");
     setDark(next);
   }
 

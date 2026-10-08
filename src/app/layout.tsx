@@ -28,7 +28,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="bg-white text-[#0f0f12] antialiased dark:bg-[#0f0f12] dark:text-white">
         <script
           dangerouslySetInnerHTML={{
-            __html: `try{var t=localStorage.getItem('ar_theme');if(t==='light'){document.documentElement.classList.remove('dark')}}catch(e){}`,
+            __html: `try{var t=localStorage.getItem('ar_theme_v2');if(t==='light'){document.documentElement.classList.remove('dark')}}catch(e){}`,
           }}
         />
         <Header />

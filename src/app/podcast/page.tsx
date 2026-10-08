@@ -35,16 +35,6 @@ export default async function PodcastPage() {
       <p className="max-w-xl text-[#4b5563] dark:text-[#d4d4d8]">
         Bastidores, ideias e discursos desmontados ao vivo. Ouça os episódios mais recentes do canal da área reversa:
       </p>
-      <div className="aspect-video w-full overflow-hidden rounded-2xl border border-[#e5e7eb] dark:border-[#2a2a30]">
-        <iframe
-          title="Podcast área reversa no YouTube"
-          src="https://www.youtube.com/embed?listType=search&list=área+reversa+podcast"
-          className="h-full w-full"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-        />
-      </div>
-
       <section className="flex flex-col gap-4">
         <h2 className="text-sm font-semibold uppercase tracking-[0.22em] text-[#9ca3af]">Episódios</h2>
         {episodes.map((ep) => (
@@ -61,12 +51,12 @@ export default async function PodcastPage() {
       </section>
 
       <a
-        href="https://www.youtube.com/@areareversa?sub_confirmation=1"
+        href="https://anchor.fm/s/118427fe8/podcast"
         target="_blank"
         rel="noreferrer"
         className="text-[#9333ea] underline underline-offset-4"
       >
-        inscrever-se no canal →
+        ouvir no Anchor →
       </a>
     </div>
   );

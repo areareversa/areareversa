@@ -49,7 +49,8 @@ export function Footer() {
         </p>
         <nav className="flex gap-5 text-xs">
           <Link href="/sobre" className="hover:text-[#9333ea]">sobre</Link>
-          <a href="/rss.xml" className="hover:text-[#9333ea]">rss</a>
+          <a href="/rss.xml" className="hover:text-[#9333ea]">rss blog</a>
+          <a href="https://anchor.fm/s/118427fe8/podcast/rss" target="_blank" rel="noreferrer" className="hover:text-[#9333ea]">rss podcast</a>
           <a href="/sitemap.xml" className="hover:text-[#9333ea]">sitemap</a>
         </nav>
         <div className="flex flex-wrap gap-5">

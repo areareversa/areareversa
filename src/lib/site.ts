@@ -11,5 +11,6 @@ export const site = {
     facebook: "https://www.facebook.com/areareversa.channel.5",
     pinterest: "https://br.pinterest.com/areareversa/",
     podcast: "https://areareversa.com.br/podcast",
+    spotify: "https://open.spotify.com/show/55306llwlxedD2t6FzzSr9",
   },
 };

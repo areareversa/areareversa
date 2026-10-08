@@ -51,12 +51,12 @@ export default async function PodcastPage() {
       </section>
 
       <a
-        href="https://anchor.fm/s/118427fe8/podcast"
+        href="https://open.spotify.com/show/55306llwlxedD2t6FzzSr9"
         target="_blank"
         rel="noreferrer"
         className="text-[#9333ea] underline underline-offset-4"
       >
-        ouvir no Anchor →
+        ouvir no Spotify →
       </a>
     </div>
   );

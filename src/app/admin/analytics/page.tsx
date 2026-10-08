@@ -46,7 +46,10 @@ export default async function AnalyticsPage({ searchParams }: { searchParams: Pr
   const byDevice = topBy(events, (e) => e.device);
   const byCountry = topBy(events, (e) => e.country);
   const deviceTotal = Math.max(1, events.length);
-  const recent = events.slice(0, 20);
+  const [recent, subscribers] = await Promise.all([
+    Promise.resolve(events.slice(0, 20)),
+    prisma.emailSubscriber.findMany({ orderBy: { createdAt: "desc" } }).catch(() => []),
+  ]);
 
   const card = "rounded-2xl border border-[#e5e7eb] p-5 dark:border-[#2a2a30]";
   const sectionTitle = "text-sm font-semibold uppercase tracking-[0.22em] text-[#9ca3af]";
@@ -73,11 +76,12 @@ export default async function AnalyticsPage({ searchParams }: { searchParams: Pr
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
         <div className={card}><p className="text-3xl font-bold">{pageviews.length}</p><p className="text-xs text-[#9ca3af]">acessos (30d)</p></div>
         <div className={card}><p className="text-3xl font-bold">{clicks.length}</p><p className="text-xs text-[#9ca3af]">cliques em posts (30d)</p></div>
         <div className={card}><p className="text-3xl font-bold">{new Set(pageviews.map((e) => e.path)).size}</p><p className="text-xs text-[#9ca3af]">páginas distintas</p></div>
         <div className={card}><p className="text-3xl font-bold">{byDevice[0]?.[0] ?? "—"}</p><p className="text-xs text-[#9ca3af]">dispositivo mais comum</p></div>
+        <div className={card}><p className="text-3xl font-bold">{subscribers.length}</p><p className="text-xs text-[#9ca3af]">inscritos na newsletter</p></div>
       </div>
 
       <section className="flex flex-col gap-4">
@@ -167,6 +171,29 @@ export default async function AnalyticsPage({ searchParams }: { searchParams: Pr
           {byCountry.length === 0 && <p className="text-sm text-[#9ca3af]">sem dados ainda</p>}
         </section>
       </div>
+
+      <section className="flex flex-col gap-3">
+        <h2 className={sectionTitle}>Inscritos na newsletter</h2>
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="text-left text-xs text-[#9ca3af]">
+              <th className="pb-2">e-mail</th>
+              <th className="pb-2">inscrito em</th>
+            </tr>
+          </thead>
+          <tbody>
+            {subscribers.map((s) => (
+              <tr key={s.id} className="border-t border-[#e5e7eb] dark:border-[#2a2a30]">
+                <td className="py-2">{s.email}</td>
+                <td className="py-2 text-xs text-[#9ca3af]">{s.createdAt.toLocaleString("pt-BR")}</td>
+              </tr>
+            ))}
+            {subscribers.length === 0 && (
+              <tr><td colSpan={2} className="py-4 text-[#9ca3af]">nenhum inscrito ainda.</td></tr>
+            )}
+          </tbody>
+        </table>
+      </section>
 
       <section className="flex flex-col gap-3">
         <h2 className={sectionTitle}>Últimos acessos</h2>

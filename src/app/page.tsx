@@ -1,5 +1,6 @@
 import { readingTimeMinutes } from "@/lib/readingTime";
 import { NewsletterForm } from "@/components/NewsletterForm";
+import { ShareButtons } from "@/components/ShareButtons";
 import { publishedFilter } from "@/lib/posts";
 import Link from "next/link";
 import { site } from "@/lib/site";
@@ -127,6 +128,11 @@ export default async function Home() {
             </a>
           ))}
         </div>
+      </section>
+
+      <section className="flex flex-col gap-5 rounded-3xl border border-[#e5e7eb] bg-[#f9f7fa] p-10 dark:border-[#2a2a30] dark:bg-[#17171c]">
+        <h2 className="text-2xl font-bold tracking-[-0.02em]">Compartilhe a área reversa</h2>
+        <ShareButtons title="área reversa — Desmontando narrativas" url={site.url} />
       </section>
 
       <section className="flex flex-col gap-5 rounded-3xl border border-[#e5e7eb] bg-[#f9f7fa] p-10 dark:border-[#2a2a30] dark:bg-[#17171c]">

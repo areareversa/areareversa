@@ -12,6 +12,7 @@ import { CommentSection } from "@/components/CommentSection";
 import { readingTimeMinutes } from "@/lib/readingTime";
 import { site } from "@/lib/site";
 import { BookmarkButton } from "@/components/BookmarkButton";
+import { TtsReader } from "@/components/TtsReader";
 
 export const dynamic = "force-dynamic";
 
@@ -62,11 +63,25 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
         {post.category} · {post.author} · {new Date(post.createdAt).toLocaleDateString("pt-BR")} · {readingTimeMinutes(post.content)} min de leitura · <ViewsCounter slug={post.slug} initial={post.views} />
       </p>
       <h1 className="text-4xl font-bold tracking-[-0.04em] sm:text-5xl">{post.title}</h1>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Article",
+            headline: post.title,
+            description: post.excerpt,
+            author: { "@type": "Organization", name: post.author },
+            datePublished: post.createdAt,
+            image: post.coverImage ?? undefined,
+          }),
+        }}
+      />
       {post.coverImage && (
         // eslint-disable-next-line @next/next/no-img-element
         <img
           src={post.coverImage}
-          alt=""
+          alt={post.title}
           className="aspect-video w-full rounded-2xl object-cover"
         />
       )}
@@ -83,6 +98,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
       <Markdown>{post.content}</Markdown>
       <ShareButtons title={post.title} url={`${site.url}/blog/${post.slug}`} />
       <BookmarkButton slug={post.slug} title={post.title} />
+      <TtsReader text={post.content} />
       <CommentSection slug={post.slug} initialComments={comments} />
 
       {related.length > 0 && (

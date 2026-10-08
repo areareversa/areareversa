@@ -32,8 +32,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           }}
         />
         <Header />
+        <a href="#conteudo" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-20 focus:z-50 focus:rounded-lg focus:bg-[#9333ea] focus:px-4 focus:py-2 focus:text-white">
+          Pular para o conteúdo
+        </a>
         <Tracker />
-        <main className="mx-auto min-h-[60vh] w-full max-w-6xl px-6 pt-24 pb-16">{children}</main>
+        <main id="conteudo" className="mx-auto min-h-[60vh] w-full max-w-6xl px-6 pt-24 pb-16">{children}</main>
         <Footer />
       </body>
     </html>

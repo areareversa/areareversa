@@ -18,7 +18,7 @@ export function CommentSection({ slug, initialComments }: { slug: string; initia
     const res = await fetch("/api/comments", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ slug, name, text }),
+      body: JSON.stringify({ slug, name, text, website: (window as any).__hp ?? "" }),
     });
     const data = await res.json().catch(() => ({}));
     setLoading(false);
@@ -40,8 +40,10 @@ export function CommentSection({ slug, initialComments }: { slug: string; initia
       <h2 className="text-sm font-semibold uppercase tracking-[0.22em] text-[#9ca3af]">Comentários ({comments.length})</h2>
 
       <form onSubmit={enviar} className="flex flex-col gap-3">
-        <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Seu nome" className={input} required />
-        <textarea value={text} onChange={(e) => setText(e.target.value)} placeholder="Deixe seu comentário..." rows={4} className={input} required />
+        {/* honeypot anti-bot: invisível para humanos */}
+        <input type="text" name="website" tabIndex={-1} autoComplete="off" className="hidden" onChange={(e) => (window as any).__hp = e.target.value} />
+        <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Seu nome" className={input} required aria-label="Seu nome" />
+        <textarea value={text} onChange={(e) => setText(e.target.value)} placeholder="Deixe seu comentário..." rows={4} className={input} required aria-label="Seu comentário" />
         <button
           disabled={loading}
           className="w-fit rounded-[14px] bg-[#0f0f12] px-5 py-2.5 text-sm font-semibold text-white transition hover:scale-105 active:scale-95 disabled:opacity-50 dark:bg-white dark:text-[#0f0f12]"

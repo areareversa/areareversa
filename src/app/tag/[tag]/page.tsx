@@ -5,6 +5,11 @@ import { publishedFilter } from "@/lib/posts";
 
 export const dynamic = "force-dynamic";
 
+export async function generateMetadata({ params }: { params: Promise<{ tag: string }> }) {
+  const { tag } = await params;
+  return { title: `#${tag}`, description: `Posts com a tag ${tag}.` };
+}
+
 export default async function TagPage({ params }: { params: Promise<{ tag: string }> }) {
   const { tag } = await params;
   const posts = await prisma.post

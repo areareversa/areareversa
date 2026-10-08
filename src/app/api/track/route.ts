@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { rateLimit } from "@/lib/rateLimit";
 
 function deviceOf(ua: string): string {
   const m = ua.toLowerCase();
@@ -34,6 +35,8 @@ async function geoOf(req: Request): Promise<{ country: string | null; city: stri
 export async function POST(req: Request) {
   const body = await req.json().catch(() => ({}));
   const path = String(body.path ?? "");
+  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "anon";
+  if (!rateLimit(`track:${ip}`, 60)) return NextResponse.json({ ok: true });
   const type = body.type === "click" ? "click" : "pageview";
   const target = body.target ? String(body.target) : null;
   if (!path || path.startsWith("/admin") || path.startsWith("/api")) {

@@ -7,8 +7,11 @@ export function Header() {
   return (
     <header className="fixed inset-x-0 top-0 z-40 border-b border-[#e5e7eb] bg-white/80 backdrop-blur-md dark:border-[#2a2a30] dark:bg-[#0f0f12]/80">
       <div className="mx-auto flex h-[72px] w-full max-w-6xl items-center justify-between px-6">
-        <Link href="/" className="text-lg font-bold tracking-tight">
-          área<span className="text-[#9333ea]">reversa</span>
+        <Link href="/" aria-label="área reversa" className="flex items-center">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo-areareversa-preto.svg" alt="área reversa" className="h-7 dark:hidden" />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo-areareversa-branco.svg" alt="área reversa" className="hidden h-7 dark:block" />
         </Link>
         <nav aria-label="Navegação principal" className="flex items-center gap-6 text-sm">
           <Link href="/blog" className="text-[#4b5563] hover:text-[#9333ea] dark:text-[#d4d4d8]">blog</Link>
@@ -34,7 +37,12 @@ export function Footer() {
   return (
     <footer id="contato" className="border-t border-[#e5e7eb] dark:border-[#2a2a30]">
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 px-6 py-12 text-sm text-[#4b5563] dark:text-[#d4d4d8]">
-        <p className="font-semibold text-[#0f0f12] dark:text-white">área<span className="text-[#9333ea]">reversa</span></p>
+        <p className="font-semibold text-[#0f0f12] dark:text-white">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo-areareversa-preto.svg" alt="área reversa" className="h-6 dark:hidden" />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo-areareversa-branco.svg" alt="área reversa" className="hidden h-6 dark:block" />
+        </p>
         <nav className="flex gap-5 text-xs">
           <Link href="/sobre" className="hover:text-[#9333ea]">sobre</Link>
           <a href="/rss.xml" className="hover:text-[#9333ea]">rss</a>

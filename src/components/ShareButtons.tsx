@@ -14,7 +14,8 @@ export function ShareButtons({ title, url }: { title: string; url: string }) {
   }
 
   async function copiarEAbrir(appUrl: string) {
-    await navigator.clipboard.writeText(url);
+    // Instagram/TikTok não têm URL pública de share: copia "título + link" pronto pra legenda e abre o app
+    await navigator.clipboard.writeText(`${title}\n${url}`);
     setCopiado(true);
     setTimeout(() => setCopiado(false), 2000);
     window.open(appUrl, "_blank");

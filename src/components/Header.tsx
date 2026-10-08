@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { site } from "@/lib/site";
 import { ThemeToggle } from "./ThemeToggle";
+import { MobileNav } from "./MobileNav";
 import { SearchModal } from "./SearchModal";
 
 export function Header() {
@@ -15,7 +16,7 @@ export function Header() {
           <span className="text-[#9ca3af] font-light">|</span>
           <span>área<span className="text-[#9333ea]">reversa</span></span>
         </Link>
-        <nav aria-label="Navegação principal" className="flex items-center gap-6 text-sm">
+        <nav aria-label="Navegação principal" className="hidden items-center gap-6 text-sm sm:flex">
           <Link href="/blog" className="text-[#4b5563] hover:text-[#9333ea] dark:text-[#d4d4d8]">blog</Link>
           <Link href="/podcast" className="text-[#4b5563] hover:text-[#9333ea] dark:text-[#d4d4d8]">podcast</Link>
           <Link href="/salvos" className="text-[#4b5563] hover:text-[#9333ea] dark:text-[#d4d4d8]">salvos</Link>
@@ -29,6 +30,10 @@ export function Header() {
             Começar →
           </Link>
         </nav>
+        <div className="flex items-center gap-3 sm:hidden">
+          <SearchModal />
+          <MobileNav />
+        </div>
       </div>
     </header>
   );

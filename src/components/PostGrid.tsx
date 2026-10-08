@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Highlight } from "./Highlight";
 import { readingTimeMinutes } from "@/lib/readingTime";
 import Link from "next/link";
+import Image from "next/image";
 
 type Post = {
   id: string;
@@ -41,8 +42,7 @@ export function PostGrid({ posts, q }: { posts: Post[]; q?: string }) {
             className="flex flex-col overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white text-left transition hover:-translate-y-0.5 hover:shadow-[0_8px_24px_#0f172a1f] dark:border-[#2a2a30] dark:bg-[#17171c] dark:hover:shadow-[0_8px_24px_#00000066]"
           >
             {p.coverImage ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={p.coverImage} alt="" className="aspect-video w-full object-cover" />
+              <Image src={p.coverImage} alt={p.title} width={640} height={360} className="aspect-video w-full object-cover" />
             ) : (
               <div className="aspect-video w-full bg-[#f9f7fa] dark:bg-[#1a1a20]" />
             )}

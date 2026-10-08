@@ -37,7 +37,7 @@ export async function POST(req: Request) {
   const path = String(body.path ?? "");
   const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "anon";
   if (!rateLimit(`track:${ip}`, 60)) return NextResponse.json({ ok: true });
-  const type = body.type === "click" ? "click" : "pageview";
+  const type = body.type === "click" ? "click" : body.type === "vital" ? "vital" : "pageview";
   const target = body.target ? String(body.target) : null;
   if (!path || path.startsWith("/admin") || path.startsWith("/api")) {
     return NextResponse.json({ ok: true });

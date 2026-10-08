@@ -2,6 +2,7 @@ import { publishedFilter, isVisible } from "@/lib/posts";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { prisma } from "@/lib/prisma";
 import { Markdown } from "@/components/Markdown";
 import { ShareButtons } from "@/components/ShareButtons";
@@ -79,9 +80,11 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
       />
       {post.coverImage && (
         // eslint-disable-next-line @next/next/no-img-element
-        <img
+        <Image
           src={post.coverImage}
           alt={post.title}
+          width={1200}
+          height={675}
           className="aspect-video w-full rounded-2xl object-cover"
         />
       )}

@@ -6,6 +6,7 @@ const jakarta = localFont({ src: "../../public/fonts/plus-jakarta-sans.woff2", w
 const jetbrains = localFont({ src: "../../public/fonts/jetbrains-mono.woff2", weight: "100 800", variable: "--font-jetbrains", display: "swap" });
 import { Header, Footer } from "@/components/Header";
 import { Tracker } from "@/components/Tracker";
+import { WebVitals } from "@/components/WebVitals";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -36,6 +37,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           Pular para o conteúdo
         </a>
         <Tracker />
+        <WebVitals />
         <main id="conteudo" className="mx-auto min-h-[60vh] w-full max-w-6xl px-6 pt-24 pb-16">{children}</main>
         <Footer />
       </body>

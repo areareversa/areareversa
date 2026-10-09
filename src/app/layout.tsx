@@ -12,6 +12,7 @@ import { WebVitals } from "@/components/WebVitals";
 import { CookieConsent } from "@/components/CookieConsent";
 import { GAProvider } from "@/components/GAProvider";
 import { StructuredDataWebSite, StructuredDataOrganization } from "@/components/StructuredData";
+import { PlayerWrapper } from "@/components/PlayerWrapper";
 import { site } from "@/lib/site";
 
 const GA_ID = "G-FRTNFD1KQD";
@@ -46,18 +47,20 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             __html: `try{var t=localStorage.getItem('ar_theme_v2');if(t==='light'){document.documentElement.classList.remove('dark')}}catch(e){}`,
           }}
         />
-        <Header />
-        <a href="#conteudo" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-20 focus:z-50 focus:rounded-lg focus:bg-[#9333ea] focus:px-4 focus:py-2 focus:text-white">
-          Pular para o conteúdo
-        </a>
-        <CookieConsent />
-        <GAProvider />
-        <StructuredDataWebSite />
-        <StructuredDataOrganization />
-        <Tracker />
-        <WebVitals />
-        <main id="conteudo" className="mx-auto min-h-[60vh] w-full max-w-6xl px-6 pt-24 pb-16">{children}</main>
-        <Footer />
+        <PlayerWrapper>
+          <Header />
+          <a href="#conteudo" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-20 focus:z-50 focus:rounded-lg focus:bg-[#9333ea] focus:px-4 focus:py-2 focus:text-white">
+            Pular para o conteúdo
+          </a>
+          <CookieConsent />
+          <GAProvider />
+          <StructuredDataWebSite />
+          <StructuredDataOrganization />
+          <Tracker />
+          <WebVitals />
+          <main id="conteudo" className="mx-auto min-h-[60vh] w-full max-w-6xl px-6 pt-24 pb-16">{children}</main>
+          <Footer />
+        </PlayerWrapper>
       </body>
     </html>
   );

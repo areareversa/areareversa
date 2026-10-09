@@ -1,21 +1,14 @@
-import { Metadata } from "next";
-import PodcastClient from "./PodcastClient";
-
-export const metadata: Metadata = {
-  title: "Podcast",
-  description: "O podcast da área reversa: desmontando narrativas, ideias, discursos e políticas.",
-};
-
-export const revalidate = 3600;
+export const dynamic = "force-dynamic";
 
 type Ep = { title: string; link: string; pubDate: string; audioUrl?: string; contentSnippet?: string };
 
-async function fetchEpisodes(): Promise<Ep[]> {
+export async function GET() {
+  let episodes: Ep[] = [];
   try {
     const res = await fetch("https://anchor.fm/s/118427fe8/podcast/rss", { next: { revalidate: 3600 } });
     const xml = await res.text();
     const itemsXml = xml.split("<item>").slice(1);
-    return itemsXml.map((block) => {
+    episodes = itemsXml.map((block) => {
       const get = (tag: string) => {
         const m = block.match(new RegExp(`<${tag}[^>]*>([\\s\\S]*?)<\\/${tag}>`));
         return m ? m[1].replace(/<!\[CDATA\[|\]\]>/g, "").trim() : "";
@@ -29,12 +22,7 @@ async function fetchEpisodes(): Promise<Ep[]> {
         contentSnippet: get("description").replace(/<[^>]+>/g, " ").slice(0, 160),
       };
     });
-  } catch {
-    return [];
-  }
-}
+  } catch {}
 
-export default async function PodcastPage() {
-  const episodes = await fetchEpisodes();
-  return <PodcastClient initialEpisodes={episodes} />;
+  return Response.json({ episodes });
 }

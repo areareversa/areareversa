@@ -45,7 +45,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <script
           nonce={nonce}
           dangerouslySetInnerHTML={{
-            __html: `try{var t=localStorage.getItem('ar_theme_v2');if(t==='light'){document.documentElement.classList.remove('dark')}}catch(e){}`,
+            __html: `try{var t=localStorage.getItem('ar_theme_v2');if(t==='light'){document.documentElement.classList.remove('dark')}else if(t==='dark'){document.documentElement.classList.add('dark')}else if(window.matchMedia('(prefers-color-scheme: dark)').matches){document.documentElement.classList.add('dark')}}catch(e){}`,
           }}
         />
         <FocusModeProvider>

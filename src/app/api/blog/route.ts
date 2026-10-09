@@ -1,25 +1,16 @@
 import { publishedFilter } from "@/lib/posts";
 import { prisma } from "@/lib/prisma";
-import { StructuredDataBreadcrumb } from "@/components/StructuredData";
-import { site } from "@/lib/site";
-import { BlogIndexClient } from "@/components/BlogIndexClient";
-
-export const revalidate = 60;
 
 const PAGE_SIZE = 9;
 
-export const metadata = {
-  title: "Blog",
-  description: "Análises e desconstrução de narrativas — engenharia reversa de ideias, discursos e políticas.",
-};
+export const dynamic = "force-dynamic";
 
-export default async function BlogIndex({
-  searchParams,
-}: {
-  searchParams: Promise<{ categoria?: string; q?: string; pagina?: string }>;
-}) {
-  const { categoria, q, pagina } = await searchParams;
-  const page = Math.max(1, parseInt(pagina ?? "1", 10) || 1);
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const categoria = searchParams.get("categoria") || undefined;
+  const q = searchParams.get("q") || undefined;
+  const pagina = searchParams.get("pagina") || "1";
+  const page = Math.max(1, parseInt(pagina, 10) || 1);
 
   const where = {
     ...publishedFilter(),
@@ -35,14 +26,14 @@ export default async function BlogIndex({
     prisma.post.groupBy({ by: ["category"], where: publishedFilter(), _count: { _all: true }, orderBy: { category: "asc" } }).catch(() => []),
   ]);
 
-  const initialData = {
+  const pages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+
+  return Response.json({
     posts,
     total,
     grouped,
-    searchParams: { categoria, q, pagina: String(page) },
-  };
-
-  return (
-    <BlogIndexClient initialData={initialData} />
-  );
+    searchParams: { categoria, q },
+    page,
+    pages,
+  });
 }

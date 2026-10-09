@@ -9,6 +9,8 @@ const jetbrains = localFont({ src: "../../public/fonts/jetbrains-mono.woff2", we
 import { Header, Footer } from "@/components/Header";
 import { Tracker } from "@/components/Tracker";
 import { WebVitals } from "@/components/WebVitals";
+import { CookieConsent } from "@/components/CookieConsent";
+import { GAProvider } from "@/components/GAProvider";
 import { site } from "@/lib/site";
 
 const GA_ID = "G-FRTNFD1KQD";
@@ -36,23 +38,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const nonce = await getNonce();
   return (
     <html lang="pt-BR" className={`${jakarta.variable} ${jetbrains.variable} dark`}>
-      <Script
-        nonce={nonce}
-        strategy="beforeInteractive"
-        dangerouslySetInnerHTML={{
-          __html: `
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', '${GA_ID}');
-          `,
-        }}
-      />
-      <Script
-        nonce={nonce}
-        strategy="beforeInteractive"
-        src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
-      />
       <body className="bg-white text-[#0f0f12] antialiased dark:bg-[#0f0f12] dark:text-white">
         <script
           nonce={nonce}
@@ -64,6 +49,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <a href="#conteudo" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-20 focus:z-50 focus:rounded-lg focus:bg-[#9333ea] focus:px-4 focus:py-2 focus:text-white">
           Pular para o conteúdo
         </a>
+        <CookieConsent />
+        <GAProvider />
         <Tracker />
         <WebVitals />
         <main id="conteudo" className="mx-auto min-h-[60vh] w-full max-w-6xl px-6 pt-24 pb-16">{children}</main>

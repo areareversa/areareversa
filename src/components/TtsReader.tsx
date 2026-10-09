@@ -1,39 +1,205 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 
 export function TtsReader({ text }: { text: string }) {
   const [speaking, setSpeaking] = useState(false);
+  const [paused, setPaused] = useState(false);
+  const [voice, setVoice] = useState<SpeechSynthesisVoice | null>(null);
+  const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
+  const textRef = useRef(text);
 
+  // Keep text ref updated
   useEffect(() => {
-    return () => window.speechSynthesis?.cancel();
+    textRef.current = text;
+  }, [text]);
+
+  // Load voices
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.speechSynthesis) return;
+
+    const loadVoices = () => {
+      const availableVoices = window.speechSynthesis.getVoices();
+      setVoices(availableVoices);
+      // Prefer pt-BR voice
+      const ptBrVoice = availableVoices.find(v => v.lang === "pt-BR" || v.lang.startsWith("pt"));
+      if (ptBrVoice) setVoice(ptBrVoice);
+    };
+
+    loadVoices();
+    window.speechSynthesis.onvoiceschanged = loadVoices;
+
+    return () => {
+      window.speechSynthesis.onvoiceschanged = null;
+    };
   }, []);
 
-  function toggle() {
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (typeof window !== "undefined" && window.speechSynthesis) {
+        window.speechSynthesis.cancel();
+      }
+    };
+  }, []);
+
+  const cleanText = useCallback((raw: string): string => {
+    return raw
+      .replace(/#{1,6}\s/g, "") // headers
+      .replace(/\*\*|__/g, "") // bold
+      .replace(/\*|_/g, "") // italic
+      .replace(/`{1,3}[^`]*`{1,3}/g, "") // inline code
+      .replace(/```[\s\S]*?```/g, "") // code blocks
+      .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1") // links -> keep text
+      .replace(/!\[([^\]]*)\]\([^)]+\)/g, "") // images
+      .replace(/^>\s/gm, "") // blockquotes
+      .replace(/^[\-*+]\s/gm, "") // list items
+      .replace(/^\d+\.\s/gm, "") // ordered lists
+      .replace(/---+/g, "") // horizontal rules
+      .replace(/https?:\/\/\S+/g, "") // URLs
+      .replace(/\n{3,}/g, "\n\n") // multiple newlines
+      .replace(/\s+/g, " ") // whitespace
+      .trim();
+  }, []);
+
+  const speak = useCallback(() => {
     if (typeof window === "undefined" || !window.speechSynthesis) return;
+
+    if (speaking && paused) {
+      window.speechSynthesis.resume();
+      setPaused(false);
+      return;
+    }
+
     if (speaking) {
       window.speechSynthesis.cancel();
       setSpeaking(false);
+      setPaused(false);
       return;
     }
-    const plain = text.replace(/[#>*`\[\]()]/g, " ").replace(/https?:\/\/\S+/g, "");
+
+    const plain = cleanText(textRef.current);
+    if (!plain) return;
+
     const u = new SpeechSynthesisUtterance(plain);
     u.lang = "pt-BR";
     u.rate = 1;
-    u.onend = () => setSpeaking(false);
+    u.pitch = 1;
+    u.volume = 1;
+    if (voice) u.voice = voice;
+
+    u.onstart = () => {
+      setSpeaking(true);
+      setPaused(false);
+    };
+    u.onend = () => {
+      setSpeaking(false);
+      setPaused(false);
+    };
+    u.onerror = (e) => {
+      console.error("TTS error:", e);
+      setSpeaking(false);
+      setPaused(false);
+    };
+    u.onpause = () => setPaused(true);
+    u.onresume = () => setPaused(false);
+
     utteranceRef.current = u;
     window.speechSynthesis.speak(u);
-    setSpeaking(true);
+  }, [speaking, paused, voice, cleanText]);
+
+  const pause = useCallback(() => {
+    if (typeof window !== "undefined" && window.speechSynthesis && speaking && !paused) {
+      window.speechSynthesis.pause();
+      setPaused(true);
+    }
+  }, [speaking, paused]);
+
+  const stop = useCallback(() => {
+    if (typeof window !== "undefined" && window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+      setSpeaking(false);
+      setPaused(false);
+    }
+  }, []);
+
+  const handleVoiceChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedVoice = voices.find(v => v.name === e.target.value) || null;
+    setVoice(selectedVoice);
+    if (selectedVoice) {
+      try {
+        localStorage.setItem("ar_tts_voice", selectedVoice.name);
+      } catch {}
+    }
+  };
+
+  // Restore saved voice
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      const savedVoiceName = localStorage.getItem("ar_tts_voice");
+      if (savedVoiceName && voices.length > 0) {
+        const savedVoice = voices.find(v => v.name === savedVoiceName);
+        if (savedVoice) setVoice(savedVoice);
+      }
+    } catch {}
+  }, [voices]);
+
+  if (typeof window === "undefined" || !window.speechSynthesis) {
+    return (
+      <button
+        disabled
+        className="rounded-full border border-[#e5e7eb] px-4 py-2 text-xs text-[#9ca3af] dark:border-[#2a2a30] cursor-not-allowed"
+        title="Síntese de voz não suportada neste navegador"
+      >
+        ▶ ouvir postagem (indisponível)
+      </button>
+    );
   }
 
   return (
-    <button
-      onClick={toggle}
-      aria-label={speaking ? "Parar leitura" : "Ouvir postagem"}
-      className={`rounded-full border px-4 py-2 text-xs transition ${speaking ? "border-[#9333ea] text-[#9333ea]" : "border-[#e5e7eb] dark:border-[#2a2a30]"}`}
-    >
-      {speaking ? "■ parar" : "▶ ouvir postagem"}
-    </button>
+    <div className="flex flex-col gap-2">
+      <div className="flex items-center gap-2">
+        <button
+          onClick={speak}
+          aria-label={speaking ? (paused ? "Continuar leitura" : "Pausar leitura") : "Ouvir postagem"}
+          className={`rounded-full border px-4 py-2 text-xs transition ${
+            speaking
+              ? "border-[#9333ea] bg-[#9333ea]/10 text-[#9333ea]"
+              : "border-[#e5e7eb] dark:border-[#2a2a30]"
+          }`}
+        >
+          {speaking ? (paused ? "▶ continuar" : "⏸ pausar") : "▶ ouvir postagem"}
+        </button>
+        {speaking && (
+          <button
+            onClick={stop}
+            aria-label="Parar leitura"
+            className="rounded-full border border-[#e5e7eb] px-3 py-2 text-xs hover:border-[#ef4444] hover:text-[#ef4444] transition dark:border-[#2a2a30]"
+          >
+            ■ parar
+          </button>
+        )}
+      </div>
+
+      {voices.length > 1 && (
+        <select
+          value={voice?.name || ""}
+          onChange={handleVoiceChange}
+          className="rounded-xl border border-[#e5e7eb] bg-[#f9f7fa] px-3 py-1.5 text-xs dark:border-[#2a2a30] dark:bg-[#17171c]"
+          aria-label="Selecionar voz"
+        >
+          <option value="">Voz padrão do navegador</option>
+          {voices
+            .filter(v => v.lang.startsWith("pt") || v.lang.startsWith("en"))
+            .map(v => (
+              <option key={v.name} value={v.name}>
+                {v.name} ({v.lang})
+              </option>
+            ))}
+        </select>
+      )}
+    </div>
   );
 }

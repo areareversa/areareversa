@@ -119,7 +119,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           ))}
         </div>
       )}
-      <div className="flex items-center gap-4 flex-wrap">
+      <div className="flex flex-col items-start gap-2">
         <ReadingMode />
         <TtsReader text={post.content} />
       </div>

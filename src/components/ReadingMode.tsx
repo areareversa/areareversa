@@ -15,6 +15,11 @@ export function ReadingMode() {
   });
 
   useEffect(() => {
+    // Apply to all article-body elements (more specific than :root)
+    document.querySelectorAll(".article-body").forEach((el) => {
+      (el as HTMLElement).style.setProperty("--article-font-size", `${size}%`);
+    });
+    // Also set on :root for any new elements
     document.documentElement.style.setProperty("--article-font-size", `${size}%`);
     try {
       localStorage.setItem(STORAGE_KEY, String(size));

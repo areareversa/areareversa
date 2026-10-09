@@ -2,17 +2,32 @@
 
 import { useEffect, useRef, useState, useCallback } from "react";
 
+const MAX_CHUNK_LENGTH = 20000; // Safe limit for SpeechSynthesisUtterance
+
 export function TtsReader({ text }: { text: string }) {
   const [speaking, setSpeaking] = useState(false);
   const [paused, setPaused] = useState(false);
   const [voice, setVoice] = useState<SpeechSynthesisVoice | null>(null);
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
+  const [currentChunk, setCurrentChunk] = useState(0);
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
   const textRef = useRef(text);
+  const chunksRef = useRef<string[]>([]);
 
   // Keep text ref updated
   useEffect(() => {
     textRef.current = text;
+  }, [text]);
+
+  // Prepare chunks when text changes
+  useEffect(() => {
+    const plain = cleanText(text);
+    if (plain) {
+      chunksRef.current = splitIntoChunks(plain, MAX_CHUNK_LENGTH);
+    } else {
+      chunksRef.current = [];
+    }
+    setCurrentChunk(0);
   }, [text]);
 
   // Load voices
@@ -22,7 +37,6 @@ export function TtsReader({ text }: { text: string }) {
     const loadVoices = () => {
       const availableVoices = window.speechSynthesis.getVoices();
       setVoices(availableVoices);
-      // Prefer pt-BR voice
       const ptBrVoice = availableVoices.find(v => v.lang === "pt-BR" || v.lang.startsWith("pt"));
       if (ptBrVoice) setVoice(ptBrVoice);
     };
@@ -44,7 +58,7 @@ export function TtsReader({ text }: { text: string }) {
     };
   }, []);
 
-  const cleanText = useCallback((raw: string): string => {
+  function cleanText(raw: string): string {
     return raw
       .replace(/#{1,6}\s/g, "") // headers
       .replace(/\*\*|__/g, "") // bold
@@ -61,7 +75,35 @@ export function TtsReader({ text }: { text: string }) {
       .replace(/\n{3,}/g, "\n\n") // multiple newlines
       .replace(/\s+/g, " ") // whitespace
       .trim();
-  }, []);
+  }
+
+  function splitIntoChunks(text: string, maxLength: number): string[] {
+    const chunks: string[] = [];
+    let remaining = text;
+
+    while (remaining.length > 0) {
+      if (remaining.length <= maxLength) {
+        chunks.push(remaining);
+        break;
+      }
+
+      // Find a good break point (sentence end)
+      let breakPoint = remaining.lastIndexOf(". ", maxLength);
+      if (breakPoint === -1 || breakPoint < maxLength * 0.5) {
+        breakPoint = remaining.lastIndexOf(" ", maxLength);
+      }
+      if (breakPoint === -1 || breakPoint < maxLength * 0.3) {
+        breakPoint = maxLength;
+      } else {
+        breakPoint += 1; // Include the period/space
+      }
+
+      chunks.push(remaining.slice(0, breakPoint).trim());
+      remaining = remaining.slice(breakPoint).trim();
+    }
+
+    return chunks;
+  }
 
   const speak = useCallback(() => {
     if (typeof window === "undefined" || !window.speechSynthesis) return;
@@ -76,13 +118,23 @@ export function TtsReader({ text }: { text: string }) {
       window.speechSynthesis.cancel();
       setSpeaking(false);
       setPaused(false);
+      setCurrentChunk(0);
       return;
     }
 
-    const plain = cleanText(textRef.current);
-    if (!plain) return;
+    const chunks = chunksRef.current;
+    if (chunks.length === 0) return;
 
-    const u = new SpeechSynthesisUtterance(plain);
+    setSpeaking(true);
+    setPaused(false);
+    setCurrentChunk(0);
+    speakChunk(chunks[0], 0);
+  }, [speaking, paused]);
+
+  const speakChunk = (chunk: string, index: number) => {
+    if (typeof window === "undefined" || !window.speechSynthesis) return;
+
+    const u = new SpeechSynthesisUtterance(chunk);
     u.lang = "pt-BR";
     u.rate = 1;
     u.pitch = 1;
@@ -92,22 +144,41 @@ export function TtsReader({ text }: { text: string }) {
     u.onstart = () => {
       setSpeaking(true);
       setPaused(false);
+      setCurrentChunk(index);
     };
+
     u.onend = () => {
-      setSpeaking(false);
-      setPaused(false);
+      const chunks = chunksRef.current;
+      if (index < chunks.length - 1) {
+        // Speak next chunk
+        speakChunk(chunks[index + 1], index + 1);
+      } else {
+        // All done
+        setSpeaking(false);
+        setPaused(false);
+        setCurrentChunk(0);
+      }
     };
+
     u.onerror = (e) => {
       console.error("TTS error:", e);
-      setSpeaking(false);
-      setPaused(false);
+      // Try next chunk on error
+      const chunks = chunksRef.current;
+      if (index < chunks.length - 1) {
+        speakChunk(chunks[index + 1], index + 1);
+      } else {
+        setSpeaking(false);
+        setPaused(false);
+        setCurrentChunk(0);
+      }
     };
+
     u.onpause = () => setPaused(true);
     u.onresume = () => setPaused(false);
 
     utteranceRef.current = u;
     window.speechSynthesis.speak(u);
-  }, [speaking, paused, voice, cleanText]);
+  };
 
   const pause = useCallback(() => {
     if (typeof window !== "undefined" && window.speechSynthesis && speaking && !paused) {
@@ -121,6 +192,7 @@ export function TtsReader({ text }: { text: string }) {
       window.speechSynthesis.cancel();
       setSpeaking(false);
       setPaused(false);
+      setCurrentChunk(0);
     }
   }, []);
 
@@ -158,14 +230,19 @@ export function TtsReader({ text }: { text: string }) {
     );
   }
 
+  const hasText = chunksRef.current.length > 0;
+
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center gap-2">
         <button
           onClick={speak}
+          disabled={!hasText}
           aria-label={speaking ? (paused ? "Continuar leitura" : "Pausar leitura") : "Ouvir postagem"}
           className={`rounded-full border px-4 py-2 text-xs transition ${
-            speaking
+            !hasText
+              ? "border-[#e5e7eb] text-[#9ca3af] cursor-not-allowed dark:border-[#2a2a30]"
+              : speaking
               ? "border-[#9333ea] bg-[#9333ea]/10 text-[#9333ea]"
               : "border-[#e5e7eb] dark:border-[#2a2a30]"
           }`}
@@ -182,6 +259,12 @@ export function TtsReader({ text }: { text: string }) {
           </button>
         )}
       </div>
+
+      {speaking && chunksRef.current.length > 1 && (
+        <div className="text-[11px] text-[#9ca3af] font-mono">
+          Parte {currentChunk + 1} de {chunksRef.current.length}
+        </div>
+      )}
 
       {voices.length > 1 && (
         <select

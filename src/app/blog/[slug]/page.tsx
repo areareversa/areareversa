@@ -79,13 +79,14 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
         }}
       />
       {post.coverImage && (
-        // eslint-disable-next-line @next/next/no-img-element
         <Image
           src={post.coverImage}
           alt={post.title}
           width={1200}
           height={675}
           className="aspect-video w-full rounded-2xl object-cover"
+          placeholder="blur"
+          blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="
         />
       )}
       {post.tags.length > 0 && (

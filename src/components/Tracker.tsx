@@ -2,9 +2,11 @@
 
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
+import { useScrollDepth } from "@/lib/gaEvents";
 
 export function Tracker() {
   const pathname = usePathname();
+  useScrollDepth();
 
   useEffect(() => {
     fetch("/api/track", {

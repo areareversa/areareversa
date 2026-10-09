@@ -15,6 +15,9 @@ import { site } from "@/lib/site";
 import { BookmarkButton } from "@/components/BookmarkButton";
 import { TtsReader } from "@/components/TtsReader";
 import { StructuredDataBreadcrumb } from "@/components/StructuredData";
+import { TableOfContents } from "@/components/TableOfContents";
+import { MarkdownErrorBoundary, TTSErrorBoundary, CommentsErrorBoundary } from "@/components/ErrorBoundary";
+import { FocusModeToggle } from "@/components/FocusMode";
 
 export const revalidate = 60;
 
@@ -121,12 +124,20 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
       )}
       <div className="flex flex-col items-start gap-2">
         <ReadingMode />
-        <TtsReader text={post.content} />
+        <TTSErrorBoundary>
+          <TtsReader text={post.content} />
+        </TTSErrorBoundary>
+        <FocusModeToggle />
       </div>
-      <Markdown>{post.content}</Markdown>
+      <TableOfContents />
+      <MarkdownErrorBoundary>
+        <Markdown>{post.content}</Markdown>
+      </MarkdownErrorBoundary>
       <ShareButtons title={post.title} url={`${site.url}/blog/${post.slug}`} />
       <BookmarkButton slug={post.slug} title={post.title} />
-      <CommentSection slug={post.slug} initialComments={comments} />
+      <CommentsErrorBoundary>
+        <CommentSection slug={post.slug} initialComments={comments} />
+      </CommentsErrorBoundary>
 
       {related.length > 0 && (
         <section className="flex flex-col gap-4">

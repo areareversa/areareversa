@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Highlight } from "./Highlight";
 import { readingTimeMinutes } from "@/lib/readingTime";
 import Link from "next/link";
@@ -20,6 +21,7 @@ type Post = {
 
 export function PostGrid({ posts, q }: { posts: Post[]; q?: string }) {
   const [ativo, setAtivo] = useState<Post | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
@@ -28,6 +30,10 @@ export function PostGrid({ posts, q }: { posts: Post[]; q?: string }) {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, []);
+
+  const prefetch = (slug: string) => {
+    router.prefetch(`/blog/${slug}`);
+  };
 
   if (posts.length === 0) {
     return <p className="py-4 text-neutral-500">Nenhuma postagem encontrada.</p>;
@@ -39,6 +45,7 @@ export function PostGrid({ posts, q }: { posts: Post[]; q?: string }) {
           <button
             key={p.id}
             onClick={() => setAtivo(p)}
+            onMouseEnter={() => prefetch(p.slug)}
             className="flex flex-col overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white text-left transition hover:-translate-y-0.5 hover:shadow-[0_8px_24px_#0f172a1f] dark:border-[#2a2a30] dark:bg-[#17171c] dark:hover:shadow-[0_8px_24px_#00000066]"
           >
             {p.coverImage ? (

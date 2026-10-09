@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import Script from "next/script";
 import "./globals.css";
 
 const jakarta = localFont({ src: "../../public/fonts/plus-jakarta-sans.woff2", weight: "100 900", variable: "--font-jakarta", display: "swap" });
@@ -8,6 +9,8 @@ import { Header, Footer } from "@/components/Header";
 import { Tracker } from "@/components/Tracker";
 import { WebVitals } from "@/components/WebVitals";
 import { site } from "@/lib/site";
+
+const GA_ID = "G-FRTNFD1KQD";
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -26,6 +29,21 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pt-BR" className={`${jakarta.variable} ${jetbrains.variable} dark`}>
+      <Script
+        strategy="beforeInteractive"
+        dangerouslySetInnerHTML={{
+          __html: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GA_ID}');
+          `,
+        }}
+      />
+      <Script
+        strategy="beforeInteractive"
+        src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+      />
       <body className="bg-white text-[#0f0f12] antialiased dark:bg-[#0f0f12] dark:text-white">
         <script
           dangerouslySetInnerHTML={{

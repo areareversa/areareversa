@@ -6,7 +6,7 @@ import Link from "next/link";
 import { site } from "@/lib/site";
 import { prisma } from "@/lib/prisma";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export default async function Home() {
   let posts: { slug: string; title: string; excerpt: string; createdAt: Date; content: string }[] = [];

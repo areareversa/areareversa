@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { site } from "@/lib/site";
 import { ThemeToggle } from "./ThemeToggle";
 import { MobileNav } from "./MobileNav";
@@ -9,10 +10,22 @@ export function Header() {
     <header className="fixed inset-x-0 top-0 z-40 border-b border-[#e5e7eb] bg-white/80 backdrop-blur-md dark:border-[#2a2a30] dark:bg-[#0f0f12]/80">
       <div className="mx-auto flex h-[72px] w-full max-w-6xl items-center justify-between px-6">
         <Link href="/" aria-label="área reversa" className="flex items-center gap-3 text-lg font-bold tracking-tight">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo-areareversa-preto.svg" alt="" className="h-7 dark:hidden" />
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo-areareversa-branco.svg" alt="" className="hidden h-7 dark:block" />
+          <Image
+            src="/logo-areareversa-preto.svg"
+            alt=""
+            width={28}
+            height={28}
+            className="h-7 dark:hidden"
+            priority
+          />
+          <Image
+            src="/logo-areareversa-branco.svg"
+            alt=""
+            width={28}
+            height={28}
+            className="hidden h-7 dark:block"
+            priority
+          />
           <span className="text-[#9ca3af] font-light">|</span>
           <span>área<span className="text-[#9333ea]">reversa</span></span>
         </Link>
@@ -45,10 +58,20 @@ export function Footer() {
     <footer id="contato" className="border-t border-[#e5e7eb] dark:border-[#2a2a30]">
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-4 px-6 py-12 text-sm text-[#4b5563] dark:text-[#d4d4d8]">
         <p className="flex items-center gap-3 font-semibold text-[#0f0f12] dark:text-white">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo-areareversa-preto.svg" alt="" className="h-6 dark:hidden" />
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo-areareversa-branco.svg" alt="" className="hidden h-6 dark:block" />
+          <Image
+            src="/logo-areareversa-preto.svg"
+            alt=""
+            width={24}
+            height={24}
+            className="h-6 dark:hidden"
+          />
+          <Image
+            src="/logo-areareversa-branco.svg"
+            alt=""
+            width={24}
+            height={24}
+            className="hidden h-6 dark:block"
+          />
           <span className="text-[#9ca3af] font-light">|</span>
           <span>área<span className="text-[#9333ea]">reversa</span></span>
         </p>

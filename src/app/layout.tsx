@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import Script from "next/script";
+import { headers } from "next/headers";
 import "./globals.css";
 
 const jakarta = localFont({ src: "../../public/fonts/plus-jakarta-sans.woff2", weight: "100 900", variable: "--font-jakarta", display: "swap" });
@@ -11,6 +12,11 @@ import { WebVitals } from "@/components/WebVitals";
 import { site } from "@/lib/site";
 
 const GA_ID = "G-FRTNFD1KQD";
+
+async function getNonce() {
+  const headersList = await headers();
+  return headersList.get("x-nonce") ?? "";
+}
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -26,10 +32,12 @@ export const metadata: Metadata = {
   alternates: { types: { "application/rss+xml": "/rss.xml" } },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const nonce = await getNonce();
   return (
     <html lang="pt-BR" className={`${jakarta.variable} ${jetbrains.variable} dark`}>
       <Script
+        nonce={nonce}
         strategy="beforeInteractive"
         dangerouslySetInnerHTML={{
           __html: `
@@ -41,11 +49,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         }}
       />
       <Script
+        nonce={nonce}
         strategy="beforeInteractive"
         src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
       />
       <body className="bg-white text-[#0f0f12] antialiased dark:bg-[#0f0f12] dark:text-white">
         <script
+          nonce={nonce}
           dangerouslySetInnerHTML={{
             __html: `try{var t=localStorage.getItem('ar_theme_v2');if(t==='light'){document.documentElement.classList.remove('dark')}}catch(e){}`,
           }}

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { ThemeToggle } from "./ThemeToggle";
+import { SearchModal } from "./SearchModal";
 
 export function MobileNav() {
   const [open, setOpen] = useState(false);
@@ -22,6 +23,7 @@ export function MobileNav() {
           className="absolute inset-x-0 top-[72px] flex flex-col gap-1 border-b border-[#e5e7eb] bg-white p-4 text-sm sm:hidden dark:border-[#2a2a30] dark:bg-[#0f0f12]"
           onClick={() => setOpen(false)}
         >
+          <div className="mb-2 flex justify-center"><SearchModal /></div>
           <Link href="/blog" className="rounded-lg px-3 py-2.5 hover:bg-[#9333ea]/10">blog</Link>
           <Link href="/podcast" className="rounded-lg px-3 py-2.5 hover:bg-[#9333ea]/10">podcast</Link>
           <Link href="/salvos" className="rounded-lg px-3 py-2.5 hover:bg-[#9333ea]/10">salvos</Link>

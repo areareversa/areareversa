@@ -15,7 +15,7 @@ import { site } from "@/lib/site";
 import { BookmarkButton } from "@/components/BookmarkButton";
 import { TtsReader } from "@/components/TtsReader";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export async function generateMetadata({
   params,

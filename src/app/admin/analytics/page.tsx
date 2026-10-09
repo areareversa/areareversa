@@ -1,230 +1,241 @@
-import { CountriesMap } from "@/components/CountriesMap";
-import { redirect } from "next/navigation";
-import { prisma } from "@/lib/prisma";
-import { isAuthed } from "@/lib/auth";
+"use client";
 
-export const metadata = { title: "Analytics" };
-export const dynamic = "force-dynamic";
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { GAEvents } from "@/lib/gaEvents";
 
-export default async function AnalyticsPage({ searchParams }: { searchParams: Promise<{ dias?: string }> }) {
-  if (!(await isAuthed())) redirect("/admin/login");
+type Period = "7d" | "30d" | "90d";
 
-  const { dias } = await searchParams;
-  const periodDays = [7, 30, 90].includes(Number(dias)) ? Number(dias) : 30;
-  const since = new Date(Date.now() - periodDays * 24 * 60 * 60 * 1000);
-  const events = await prisma.event
-    .findMany({ where: { createdAt: { gte: since } }, orderBy: { createdAt: "desc" } })
-    .catch(() => []);
+interface Stats {
+  totalViews: number;
+  uniqueVisitors: number;
+  topPosts: Array<{ slug: string; title: string; views: number }>;
+  viewsByDay: Array<{ date: string; views: number }>;
+  referrers: Array<{ referrer: string; count: number }>;
+  devices: Array<{ device: string; count: number }>;
+  countries: Array<{ country: string; count: number }>;
+}
 
-  const pageviews = events.filter((e) => e.type === "pageview");
-  const clicks = events.filter((e) => e.type === "click");
+export default function AdminAnalytics() {
+  const [period, setPeriod] = useState<Period>("30d");
+  const [stats, setStats] = useState<Stats | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [exportLoading, setExportLoading] = useState(false);
 
-  // acessos por dia (30 dias)
-  const byDay = new Map<string, number>();
-  for (const e of pageviews) {
-    const d = e.createdAt.toISOString().slice(0, 10);
-    byDay.set(d, (byDay.get(d) ?? 0) + 1);
-  }
-  const days: { date: string; count: number }[] = [];
-  for (let i = periodDays - 1; i >= 0; i--) {
-    const d = new Date(Date.now() - i * 86400000).toISOString().slice(0, 10);
-    days.push({ date: d, count: byDay.get(d) ?? 0 });
-  }
-  const maxDay = Math.max(1, ...days.map((d) => d.count));
+  useEffect(() => {
+    fetchStats();
+  }, [period]);
 
-  function topBy(list: typeof events, key: (e: (typeof events)[number]) => string | null, n = 10) {
-    const m = new Map<string, number>();
-    for (const e of list) {
-      const k = key(e);
-      if (k) m.set(k, (m.get(k) ?? 0) + 1);
+  const fetchStats = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/admin/analytics?period=${period}`);
+      const data = await res.json();
+      setStats(data);
+    } catch (e) {
+      console.error("Failed to fetch analytics:", e);
+    } finally {
+      setLoading(false);
     }
-    return [...m.entries()].sort((a, b) => b[1] - a[1]).slice(0, n);
+  };
+
+  const handleExport = async () => {
+    setExportLoading(true);
+    try {
+      const res = await fetch(`/api/admin/analytics/export?period=${period}`);
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `analytics-${period}-${new Date().toISOString().split("T")[0]}.csv`;
+      a.click();
+      GAEvents.ctaClick("analytics_export", "admin_analytics");
+    } catch (e) {
+      console.error("Export failed:", e);
+    } finally {
+      setExportLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex flex-col gap-6 animate-pulse">
+        <div className="h-8 w-48 bg-[#e5e7eb] rounded dark:bg-[#2a2a30]" />
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {[1,2,3,4].map(i => <div key={i} className="h-24 bg-[#e5e7eb] rounded-xl dark:bg-[#2a2a30]" />)}
+        </div>
+        <div className="h-96 bg-[#e5e7eb] rounded-xl dark:bg-[#2a2a30]" />
+      </div>
+    );
   }
 
-  const topPosts = topBy(clicks, (e) => e.target);
-  const topPages = topBy(pageviews, (e) => e.path);
-  const byDevice = topBy(events, (e) => e.device);
-  const byCountry = topBy(events, (e) => e.country);
-  const deviceTotal = Math.max(1, events.length);
-  const [recent, subscribers] = await Promise.all([
-    Promise.resolve(events.slice(0, 20)),
-    prisma.emailSubscriber.findMany({ orderBy: { createdAt: "desc" } }).catch(() => []),
-  ]);
-
-  const card = "rounded-2xl border border-[#e5e7eb] p-5 dark:border-[#2a2a30]";
-  const sectionTitle = "text-sm font-semibold uppercase tracking-[0.22em] text-[#9ca3af]";
+  if (!stats) return <p className="text-[#ef4444]">Erro ao carregar analytics.</p>;
 
   return (
-    <div className="flex flex-col gap-10">
+    <div className="flex flex-col gap-8">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold tracking-[-0.02em]">analytics</h1>
-        <div className="flex items-center gap-3">
-          <a href={`/admin/analytics/export?dias=${periodDays}`} className="rounded-full border border-[#e5e7eb] px-3 py-1.5 text-xs dark:border-[#2a2a30]">
-            exportar CSV
-          </a>
-          <div className="flex gap-2 text-xs">
-          {[7, 30, 90].map((d) => (
-            <a
-              key={d}
-              href={`/admin/analytics?dias=${d}`}
-              className={`rounded-full border px-3 py-1.5 ${d === periodDays ? "border-[#9333ea] bg-[#9333ea]/10 text-[#9333ea]" : "border-[#e5e7eb] dark:border-[#2a2a30]"}`}
-            >
-              {d}d
-            </a>
-          ))}
+        <h1 className="text-4xl font-bold tracking-[-0.04em]">analytics</h1>
+        <button
+          onClick={handleExport}
+          disabled={exportLoading}
+          className="rounded-xl border border-[#e5e7eb] px-4 py-2 text-sm font-semibold transition hover:border-[#9333ea] hover:text-[#9333ea] dark:border-[#2a2a30] disabled:opacity-50"
+        >
+          {exportLoading ? "Exportando..." : "Exportar CSV"}
+        </button>
+      </div>
+
+      <div className="flex gap-2">
+        {(["7d", "30d", "90d"] as Period[]).map((p) => (
+          <button
+            key={p}
+            onClick={() => setPeriod(p)}
+            className={`rounded-full px-4 py-1.5 text-sm font-medium transition ${
+              period === p
+                ? "bg-[#9333ea] text-white"
+                : "border border-[#e5e7eb] text-[#4b5563] hover:border-[#9333ea] hover:text-[#9333ea] dark:border-[#2a2a30] dark:text-[#d4d4d8]"
+            }`}
+          >
+            Últimos {p === "7d" ? "7 dias" : p === "30d" ? "30 dias" : "90 dias"}
+          </button>
+        ))}
+      </div>
+
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <StatCard label="Visualizações" value={stats.totalViews.toLocaleString("pt-BR")} />
+        <StatCard label="Visitantes únicos" value={stats.uniqueVisitors.toLocaleString("pt-BR")} />
+        <StatCard label="Média/dia" value={Math.round(stats.totalViews / (period === "7d" ? 7 : period === "30d" ? 30 : 90)).toLocaleString("pt-BR")} />
+        <StatCard label="Top post" value={stats.topPosts[0]?.views?.toLocaleString("pt-BR") ?? "—"} />
+      </div>
+
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <Card title="Visualizações por dia">
+          <ViewsChart data={stats.viewsByDay} />
+        </Card>
+        <Card title="Top 10 posts">
+          <TopPostsTable posts={stats.topPosts} />
+        </Card>
+        <Card title="Referrers (top 10)">
+          <ReferrersTable referrers={stats.referrers} />
+        </Card>
+        <Card title="Dispositivos">
+          <DevicesChart devices={stats.devices} />
+        </Card>
+        <Card title="Países (top 10)" className="lg:col-span-2">
+          <CountriesTable countries={stats.countries} />
+        </Card>
+      </div>
+    </div>
+  );
+}
+
+function StatCard({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-2xl border border-[#e5e7eb] bg-white p-6 dark:border-[#2a2a30] dark:bg-[#17171c]">
+      <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#9ca3af]">{label}</p>
+      <p className="mt-2 text-3xl font-bold text-[#0f0f12] dark:text-white">{value}</p>
+    </div>
+  );
+}
+
+function Card({ title, children, className = "" }: { title: string; children: React.ReactNode; className?: string }) {
+  return (
+    <div className={`rounded-2xl border border-[#e5e7eb] bg-white p-6 dark:border-[#2a2a30] dark:bg-[#17171c] ${className}`}>
+      <h2 className="text-sm font-semibold uppercase tracking-[0.22em] text-[#9ca3af] mb-4">{title}</h2>
+      {children}
+    </div>
+  );
+}
+
+function ViewsChart({ data }: { data: Array<{ date: string; views: number }> }) {
+  if (data.length === 0) return <p className="text-[#9ca3af] text-center py-8">Sem dados</p>;
+  
+  const maxViews = Math.max(...data.map(d => d.views), 1);
+  
+  return (
+    <div className="h-64 flex items-end gap-1 px-2">
+      {data.slice(-30).map((d, i) => (
+        <div key={d.date} className="flex-1 flex flex-col items-center">
+          <div
+            className="w-full bg-[#9333ea] rounded-t transition-all hover:bg-[#a855f7]"
+            style={{ height: `${(d.views / maxViews) * 100}%`, minHeight: d.views > 0 ? "4px" : "0" }}
+            title={`${new Date(d.date).toLocaleDateString("pt-BR")}: ${d.views} views`}
+          />
+          <span className="text-[10px] text-[#9ca3af] mt-1">{i % 5 === 0 ? new Date(d.date).toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" }) : ""}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function TopPostsTable({ posts }: { posts: Array<{ slug: string; title: string; views: number }> }) {
+  if (posts.length === 0) return <p className="text-[#9ca3af] text-center py-8">Sem dados</p>;
+  
+  return (
+    <div className="space-y-3">
+      {posts.slice(0, 10).map((p, i) => (
+        <Link key={p.slug} href={`/blog/${p.slug}`} target="_blank" rel="noopener" className="flex items-center gap-3 p-3 rounded-xl hover:bg-[#9333ea]/5 transition">
+          <span className="w-8 text-center text-[#9ca3af] font-mono text-sm">{i + 1}</span>
+          <div className="flex-1 min-w-0">
+            <p className="font-medium truncate">{p.title}</p>
+            <p className="text-xs text-[#9ca3af]">{p.views.toLocaleString("pt-BR")} views</p>
+          </div>
+        </Link>
+      ))}
+    </div>
+  );
+}
+
+function ReferrersTable({ referrers }: { referrers: Array<{ referrer: string; count: number }> }) {
+  if (referrers.length === 0) return <p className="text-[#9ca3af] text-center py-8">Sem dados</p>;
+  
+  return (
+    <div className="space-y-3">
+      {referrers.slice(0, 10).map((r) => (
+        <div key={r.referrer} className="flex items-center justify-between p-3 rounded-xl hover:bg-[#9333ea]/5 transition">
+          <span className="text-sm truncate max-w-[200px]">{r.referrer === "" ? "Direto" : r.referrer}</span>
+          <span className="text-[#9ca3af] font-mono">{r.count.toLocaleString("pt-BR")}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function DevicesChart({ devices }: { devices: Array<{ device: string; count: number }> }) {
+  if (devices.length === 0) return <p className="text-[#9ca3af] text-center py-8">Sem dados</p>;
+  
+  const total = devices.reduce((sum, d) => sum + d.count, 0);
+  
+  return (
+    <div className="space-y-4">
+      {devices.map((d) => (
+        <div key={d.device}>
+          <div className="flex justify-between text-sm mb-1">
+            <span className="capitalize">{d.device}</span>
+            <span className="text-[#9ca3af]">{((d.count / total) * 100).toFixed(1)}%</span>
+          </div>
+          <div className="h-2 bg-[#e5e7eb] rounded-full dark:bg-[#2a2a30] overflow-hidden">
+            <div
+              className="h-full bg-[#9333ea] rounded-full transition-all"
+              style={{ width: `${(d.count / total) * 100}%` }}
+            />
           </div>
         </div>
-      </div>
+      ))}
+    </div>
+  );
+}
 
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
-        <div className={card}><p className="text-3xl font-bold">{pageviews.length}</p><p className="text-xs text-[#9ca3af]">acessos (30d)</p></div>
-        <div className={card}><p className="text-3xl font-bold">{clicks.length}</p><p className="text-xs text-[#9ca3af]">cliques em posts (30d)</p></div>
-        <div className={card}><p className="text-3xl font-bold">{new Set(pageviews.map((e) => e.path)).size}</p><p className="text-xs text-[#9ca3af]">páginas distintas</p></div>
-        <div className={card}><p className="text-3xl font-bold">{byDevice[0]?.[0] ?? "—"}</p><p className="text-xs text-[#9ca3af]">dispositivo mais comum</p></div>
-        <div className={card}><p className="text-3xl font-bold">{subscribers.length}</p><p className="text-xs text-[#9ca3af]">inscritos na newsletter</p></div>
-      </div>
-
-      <section className="flex flex-col gap-4">
-        <h2 className={sectionTitle}>Acessos por dia ({periodDays} dias)</h2>
-        <div className="flex h-40 items-end gap-1">
-          {days.map((d) => (
-            <div key={d.date} className="group relative flex-1">
-              <div
-                className="w-full rounded-t bg-[#9333ea]/70 transition group-hover:bg-[#9333ea]"
-                style={{ height: `${(d.count / maxDay) * 160}px` }}
-                title={`${d.date}: ${d.count}`}
-              />
-            </div>
-          ))}
-        </div>
-        <div className="flex justify-between text-[10px] text-[#9ca3af]">
-          <span>{days[0]?.date}</span>
-          <span>{days[days.length - 1]?.date}</span>
-        </div>
-      </section>
-
-      <section className="flex flex-col gap-4">
-        <h2 className={sectionTitle}>Mapa de acessos</h2>
-        <CountriesMap counts={byCountry} />
-      </section>
-
-      <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
-        <section className="flex flex-col gap-3">
-          <h2 className={sectionTitle}>Posts mais clicados</h2>
-          <table className="text-sm">
-            <tbody>
-              {topPosts.map(([slug, n]) => (
-                <tr key={slug} className="border-b border-[#e5e7eb] dark:border-[#2a2a30]">
-                  <td className="py-2 pr-4 font-mono text-xs">{slug}</td>
-                  <td className="py-2 text-right">{n}</td>
-                </tr>
-              ))}
-              {topPosts.length === 0 && <tr><td className="py-2 text-[#9ca3af]">sem dados ainda</td></tr>}
-            </tbody>
-          </table>
-        </section>
-
-        <section className="flex flex-col gap-3">
-          <h2 className={sectionTitle}>Páginas mais acessadas</h2>
-          <table className="text-sm">
-            <tbody>
-              {topPages.map(([path, n]) => (
-                <tr key={path} className="border-b border-[#e5e7eb] dark:border-[#2a2a30]">
-                  <td className="py-2 pr-4 font-mono text-xs">{path}</td>
-                  <td className="py-2 text-right">{n}</td>
-                </tr>
-              ))}
-              {topPages.length === 0 && <tr><td className="py-2 text-[#9ca3af]">sem dados ainda</td></tr>}
-            </tbody>
-          </table>
-        </section>
-
-        <section className="flex flex-col gap-3">
-          <h2 className={sectionTitle}>Dispositivo</h2>
-          {byDevice.map(([device, n]) => (
-            <div key={device} className="flex flex-col gap-1">
-              <div className="flex justify-between text-sm">
-                <span>{device}</span>
-                <span className="text-[#9ca3af]">{Math.round((n / deviceTotal) * 100)}%</span>
-              </div>
-              <div className="h-2 w-full rounded-full bg-[#e5e7eb] dark:bg-[#2a2a30]">
-                <div className="h-2 rounded-full bg-[#9333ea]" style={{ width: `${(n / deviceTotal) * 100}%` }} />
-              </div>
-            </div>
-          ))}
-          {byDevice.length === 0 && <p className="text-sm text-[#9ca3af]">sem dados ainda</p>}
-        </section>
-
-        <section className="flex flex-col gap-3">
-          <h2 className={sectionTitle}>País</h2>
-          {byCountry.map(([country, n]) => (
-            <div key={country} className="flex flex-col gap-1">
-              <div className="flex justify-between text-sm">
-                <span>{country}</span>
-                <span className="text-[#9ca3af]">{Math.round((n / deviceTotal) * 100)}%</span>
-              </div>
-              <div className="h-2 w-full rounded-full bg-[#e5e7eb] dark:bg-[#2a2a30]">
-                <div className="h-2 rounded-full bg-[#9333ea]" style={{ width: `${(n / deviceTotal) * 100}%` }} />
-              </div>
-            </div>
-          ))}
-          {byCountry.length === 0 && <p className="text-sm text-[#9ca3af]">sem dados ainda</p>}
-        </section>
-      </div>
-
-      <section className="flex flex-col gap-3">
-        <h2 className={sectionTitle}>Inscritos na newsletter</h2>
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="text-left text-xs text-[#9ca3af]">
-              <th className="pb-2">e-mail</th>
-              <th className="pb-2">inscrito em</th>
-            </tr>
-          </thead>
-          <tbody>
-            {subscribers.map((s) => (
-              <tr key={s.id} className="border-t border-[#e5e7eb] dark:border-[#2a2a30]">
-                <td className="py-2">{s.email}</td>
-                <td className="py-2 text-xs text-[#9ca3af]">{s.createdAt.toLocaleString("pt-BR")}</td>
-              </tr>
-            ))}
-            {subscribers.length === 0 && (
-              <tr><td colSpan={2} className="py-4 text-[#9ca3af]">nenhum inscrito ainda.</td></tr>
-            )}
-          </tbody>
-        </table>
-      </section>
-
-      <section className="flex flex-col gap-3">
-        <h2 className={sectionTitle}>Últimos acessos</h2>
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="text-left text-xs text-[#9ca3af]">
-              <th className="pb-2">quando</th>
-              <th className="pb-2">tipo</th>
-              <th className="pb-2">página</th>
-              <th className="pb-2">alvo</th>
-              <th className="pb-2">dispositivo</th>
-              <th className="pb-2">país</th>
-            </tr>
-          </thead>
-          <tbody>
-            {recent.map((e) => (
-              <tr key={e.id} className="border-t border-[#e5e7eb] dark:border-[#2a2a30]">
-                <td className="py-2 text-xs text-[#9ca3af]">{e.createdAt.toLocaleString("pt-BR")}</td>
-                <td className="py-2">{e.type}</td>
-                <td className="py-2 font-mono text-xs">{e.path}</td>
-                <td className="py-2 font-mono text-xs">{e.target ?? "—"}</td>
-                <td className="py-2">{e.device}</td>
-                <td className="py-2">{e.country ?? "—"}{e.city ? ` · ${e.city}` : ""}</td>
-              </tr>
-            ))}
-            {recent.length === 0 && (
-              <tr><td colSpan={6} className="py-4 text-[#9ca3af]">nenhum evento registrado ainda — navegue pelo site para gerar dados.</td></tr>
-            )}
-          </tbody>
-        </table>
-      </section>
+function CountriesTable({ countries }: { countries: Array<{ country: string; count: number }> }) {
+  if (countries.length === 0) return <p className="text-[#9ca3af] text-center py-8">Sem dados</p>;
+  
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      {countries.slice(0, 20).map((c) => (
+        <Link key={c.country} href={`/blog?country=${encodeURIComponent(c.country)}`} className="flex items-center justify-between p-3 rounded-xl hover:bg-[#9333ea]/5 transition">
+          <span className="text-sm">{c.country}</span>
+          <span className="text-[#9ca3af] font-mono">{c.count.toLocaleString("pt-BR")}</span>
+        </Link>
+      ))}
     </div>
   );
 }

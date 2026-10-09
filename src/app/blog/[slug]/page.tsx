@@ -14,6 +14,7 @@ import { readingTimeMinutes } from "@/lib/readingTime";
 import { site } from "@/lib/site";
 import { BookmarkButton } from "@/components/BookmarkButton";
 import { TtsReader } from "@/components/TtsReader";
+import { StructuredDataBreadcrumb } from "@/components/StructuredData";
 
 export const revalidate = 60;
 
@@ -57,8 +58,15 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
       .catch(() => []),
   ]);
 
+  const breadcrumbs = [
+    { name: "Início", url: site.url },
+    { name: "Blog", url: `${site.url}/blog` },
+    { name: post.title, url: `${site.url}/blog/${post.slug}` },
+  ];
+
   return (
     <article className="mx-auto flex max-w-2xl flex-col gap-6">
+      <StructuredDataBreadcrumb items={breadcrumbs} />
       <ReadingProgress />
       <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#9333ea]">
         {post.category} · {post.author} · {new Date(post.createdAt).toLocaleDateString("pt-BR")} · {readingTimeMinutes(post.content)} min de leitura · <ViewsCounter slug={post.slug} initial={post.views} />
@@ -74,7 +82,20 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
             description: post.excerpt,
             author: { "@type": "Organization", name: post.author },
             datePublished: post.createdAt,
+            dateModified: post.updatedAt ?? post.createdAt,
             image: post.coverImage ?? undefined,
+            publisher: {
+              "@type": "Organization",
+              name: site.name,
+              logo: {
+                "@type": "ImageObject",
+                url: `${site.url}/logo-areareversa-preto.svg`,
+              },
+            },
+            mainEntityOfPage: {
+              "@type": "WebPage",
+              "@id": `${site.url}/blog/${post.slug}`,
+            },
           }),
         }}
       />

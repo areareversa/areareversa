@@ -2,6 +2,8 @@ import { publishedFilter } from "@/lib/posts";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { PostGrid } from "@/components/PostGrid";
+import { StructuredDataBreadcrumb } from "@/components/StructuredData";
+import { site } from "@/lib/site";
 
 export const revalidate = 60;
 
@@ -44,8 +46,14 @@ export default async function BlogIndex({
     return s ? `/blog?${s}` : "/blog";
   };
 
+  const breadcrumbs = [
+    { name: "Início", url: site.url },
+    { name: "Blog", url: `${site.url}/blog` },
+  ];
+
   return (
     <div className="flex flex-col gap-8">
+      <StructuredDataBreadcrumb items={breadcrumbs} />
       <h1 className="text-5xl font-bold tracking-[-0.04em]">blog</h1>
 
       <form action="/blog" method="get" className="flex gap-2">

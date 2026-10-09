@@ -11,6 +11,7 @@ import { Tracker } from "@/components/Tracker";
 import { WebVitals } from "@/components/WebVitals";
 import { CookieConsent } from "@/components/CookieConsent";
 import { GAProvider } from "@/components/GAProvider";
+import { StructuredDataWebSite, StructuredDataOrganization } from "@/components/StructuredData";
 import { site } from "@/lib/site";
 
 const GA_ID = "G-FRTNFD1KQD";
@@ -51,6 +52,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         </a>
         <CookieConsent />
         <GAProvider />
+        <StructuredDataWebSite />
+        <StructuredDataOrganization />
         <Tracker />
         <WebVitals />
         <main id="conteudo" className="mx-auto min-h-[60vh] w-full max-w-6xl px-6 pt-24 pb-16">{children}</main>

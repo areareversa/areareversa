@@ -119,11 +119,13 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
           ))}
         </div>
       )}
-      <ReadingMode />
+      <div className="flex items-center gap-4 flex-wrap">
+        <ReadingMode />
+        <TtsReader text={post.content} />
+      </div>
       <Markdown>{post.content}</Markdown>
       <ShareButtons title={post.title} url={`${site.url}/blog/${post.slug}`} />
       <BookmarkButton slug={post.slug} title={post.title} />
-      <TtsReader text={post.content} />
       <CommentSection slug={post.slug} initialComments={comments} />
 
       {related.length > 0 && (

@@ -4,15 +4,34 @@ import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { useScrollDepth } from "@/lib/gaEvents";
 
+function getDeviceType(): string {
+  const ua = navigator.userAgent;
+  if (/tablet|ipad|playbook|silk/i.test(ua)) return "tablet";
+  if (/mobile|android|iphone|ipod|blackberry|opera mini|iemobile/i.test(ua)) return "mobile";
+  return "desktop";
+}
+
+function getReferrer(): string {
+  return document.referrer || "";
+}
+
 export function Tracker() {
   const pathname = usePathname();
   useScrollDepth();
 
   useEffect(() => {
+    const device = getDeviceType();
+    const referrer = getReferrer();
+    
     fetch("/api/track", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ type: "pageview", path: pathname }),
+      body: JSON.stringify({ 
+        type: "pageview", 
+        path: pathname,
+        device,
+        referrer,
+      }),
       keepalive: true,
     }).catch(() => {});
   }, [pathname]);
@@ -27,7 +46,11 @@ export function Tracker() {
         fetch("/api/track", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ type: "click", path: window.location.pathname, target: m[1] }),
+          body: JSON.stringify({ 
+            type: "click", 
+            path: window.location.pathname, 
+            target: m[1] 
+          }),
           keepalive: true,
         }).catch(() => {});
       }

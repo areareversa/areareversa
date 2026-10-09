@@ -43,16 +43,19 @@ model Comment {
 
 model Event {
   id        String   @id @default(cuid())
-  type      String   // "pageview" | "click"
+  type      String   // "pageview" | "click" | "vital"
   path      String
   target    String?
   device    String   // "desktop" | "mobile" | "tablet"
+  referrer  String?
+  ip        String?
   country   String?
   city      String?
   createdAt DateTime @default(now())
 
   @@index([createdAt])
   @@index([path])
+  @@index([ip])
   @@map("events")
 }
 

@@ -22,6 +22,18 @@ function getDateRange(period: string) {
   return startDate;
 }
 
+function getDeviceType(ua: string): string {
+  if (/tablet|ipad|playbook|silk/i.test(ua)) return "tablet";
+  if (/mobile|android|iphone|ipod|blackberry|opera mini|iemobile/i.test(ua)) return "mobile";
+  return "desktop";
+}
+
+function getCountryFromIP(ip: string): string {
+  // Simplified - in production use a GeoIP service
+  // For now, return "Brasil" for Brazilian IPs or "Outros"
+  return "Brasil";
+}
+
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const period = searchParams.get("period") || "30d";
@@ -35,9 +47,9 @@ export async function GET(request: Request) {
     });
     const totalViews = totalViewsResult._count.id;
 
-    // Unique visitors (approximate by distinct paths/day - simplified)
+    // Unique visitors (by IP + day)
     const uniqueVisitorsResult = await prisma.event.groupBy({
-      by: ["path"],
+      by: ["ip", "createdAt"],
       where: { type: "pageview", createdAt: { gte: startDate } },
       _count: { id: true },
     });
@@ -59,7 +71,7 @@ export async function GET(request: Request) {
       .map(([date, views]) => ({ date, views }))
       .sort((a, b) => a.date.localeCompare(b.date));
 
-    // Top posts
+    // Top posts by clicks
     const topPostsRaw = await prisma.event.groupBy({
       by: ["target"],
       where: { type: "click", createdAt: { gte: startDate }, target: { not: null } },
@@ -82,26 +94,60 @@ export async function GET(request: Request) {
       })
       .filter(Boolean) as Array<{ slug: string; title: string; views: number }>;
 
-    // Referrers (from events with referrer info - simplified)
+    // Referrers - group by referrer domain
     const referrersRaw = await prisma.event.findMany({
       where: { type: "pageview", createdAt: { gte: startDate } },
-      select: { path: true }, // We don't have referrer in current schema, use path as proxy
+      select: { referrer: true },
     });
 
-    // For now, return empty referrers since we don't track them
-    const referrers: Array<{ referrer: string; count: number }> = [];
+    const referrerMap = new Map<string, number>();
+    referrersRaw.forEach((e) => {
+      const ref = e.referrer || "Direto";
+      try {
+        const domain = new URL(ref).hostname.replace("www.", "");
+        referrerMap.set(domain, (referrerMap.get(domain) || 0) + 1);
+      } catch {
+        referrerMap.set("Direto", (referrerMap.get("Direto") || 0) + 1);
+      }
+    });
 
-    // Devices (we don't track this currently)
-    const devices = [
-      { device: "desktop", count: Math.round(totalViews * 0.6) },
-      { device: "mobile", count: Math.round(totalViews * 0.35) },
-      { device: "tablet", count: Math.round(totalViews * 0.05) },
-    ];
+    const referrers = Array.from(referrerMap.entries())
+      .map(([referrer, count]) => ({ referrer, count }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 10);
 
-    // Countries (we don't track this currently)
-    const countries = [
-      { country: "Brasil", count: totalViews },
-    ];
+    // Devices - real data from events
+    const deviceRaw = await prisma.event.findMany({
+      where: { type: "pageview", createdAt: { gte: startDate } },
+      select: { device: true },
+    });
+
+    const deviceMap = new Map<string, number>();
+    deviceRaw.forEach((e) => {
+      const device = e.device || "desktop";
+      deviceMap.set(device, (deviceMap.get(device) || 0) + 1);
+    });
+
+    const devices = Array.from(deviceMap.entries())
+      .map(([device, count]) => ({ device, count }))
+      .sort((a, b) => b.count - a.count);
+
+    // Countries - real data from events
+    const countryRaw = await prisma.event.findMany({
+      where: { type: "pageview", createdAt: { gte: startDate } },
+      select: { country: true },
+    });
+
+    const countryMap = new Map<string, number>();
+    countryRaw.forEach((e) => {
+      const country = e.country || "Brasil";
+      countryMap.set(country, (countryMap.get(country) || 0) + 1);
+    });
+
+    const countries = Array.from(countryMap.entries())
+      .map(([country, count]) => ({ country, count }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 10);
 
     return NextResponse.json({
       totalViews,

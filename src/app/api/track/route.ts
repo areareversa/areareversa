@@ -35,17 +35,30 @@ async function geoOf(req: Request): Promise<{ country: string | null; city: stri
 export async function POST(req: Request) {
   const body = await req.json().catch(() => ({}));
   const path = String(body.path ?? "");
-  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "anon";
-  if (!rateLimit(`track:${ip}`, 60)) return NextResponse.json({ ok: true });
   const type = body.type === "click" ? "click" : body.type === "vital" ? "vital" : "pageview";
   const target = body.target ? String(body.target) : null;
+  const clientDevice = body.device ? String(body.device) : null;
+  const clientReferrer = body.referrer ? String(body.referrer) : null;
+  
+  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "anon";
+  if (!rateLimit(`track:${ip}`, 60)) return NextResponse.json({ ok: true });
+  
   if (!path || path.startsWith("/admin") || path.startsWith("/api")) {
     return NextResponse.json({ ok: true });
   }
+  
   const geo = await geoOf(req);
+  const ua = req.headers.get("user-agent") ?? "";
+  
+  // Use client-provided device/referrer if available, fallback to server detection
+  const device = clientDevice || deviceOf(ua);
+  const referrer = clientReferrer || "";
+  const country = geo.country;
+  const city = geo.city;
+  
   await prisma.event
     .create({
-      data: { type, path, target, device: deviceOf(req.headers.get("user-agent") ?? ""), country: geo.country, city: geo.city },
+      data: { type, path, target, device, referrer, country, city, ip },
     })
     .catch(() => {});
   return NextResponse.json({ ok: true });

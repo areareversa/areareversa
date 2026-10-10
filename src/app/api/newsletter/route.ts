@@ -1,45 +1,9 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { rateLimit } from "@/lib/rateLimit";
-import crypto from "crypto";
+import { generateToken, sendConfirmationEmail } from "@/lib/email";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://areareversa.com.br";
-
-function generateToken(): string {
-  return crypto.randomBytes(32).toString("hex");
-}
-
-async function sendConfirmationEmail(email: string, token: string) {
-  // TODO: Implement actual email sending with nodemailer
-  // For now, log the confirmation link
-  const confirmUrl = `${SITE_URL}/api/newsletter/confirm?token=${token}`;
-  console.log(`[Newsletter] Confirmation email for ${email}: ${confirmUrl}`);
-  
-  // Example with nodemailer (uncomment and configure):
-  /*
-  const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: Number(process.env.SMTP_PORT),
-    secure: true,
-    auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
-  });
-  await transporter.sendMail({
-    from: "área reversa <newsletter@areareversa.com.br>",
-    to: email,
-    subject: "Confirme sua inscrição na newsletter da área reversa",
-    html: `
-      <p>Obrigado por se inscrever!</p>
-      <p><a href="${confirmUrl}">Clique aqui para confirmar seu e-mail</a></p>
-      <p>Ou copie este link: ${confirmUrl}</p>
-    `,
-  });
-  */
-}
-
-async function sendWelcomeEmail(email: string) {
-  // TODO: Implement welcome email
-  console.log(`[Newsletter] Welcome email sent to ${email}`);
-}
 
 export async function POST(req: Request) {
   const { email } = await req.json().catch(() => ({}));

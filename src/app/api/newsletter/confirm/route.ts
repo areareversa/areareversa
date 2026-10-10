@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { sendWelcomeEmail } from "@/lib/email";
 
 export const dynamic = "force-dynamic";
 
@@ -37,8 +38,8 @@ export async function GET(request: Request) {
     },
   });
 
-  // Send welcome email (async, don't await)
-  // sendWelcomeEmail(subscriber.email).catch(console.error);
+  // Send welcome email
+  await sendWelcomeEmail(subscriber.email).catch(console.error);
 
   return NextResponse.redirect(new URL("/?newsletter=confirmed", request.url));
 }

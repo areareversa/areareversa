@@ -1,0 +1,140 @@
+{
+  "site": {
+    "name": "área reversa",
+    "tagline": "Deconstructing narratives.",
+    "description": "Reverse engineering of ideas, discourses and policies. From any side. Method · Context · No filter"
+  },
+  "nav": {
+    "blog": "blog",
+    "podcast": "podcast",
+    "saved": "saved",
+    "about": "about",
+    "contact": "contact",
+    "search": "search"
+  },
+  "home": {
+    "hero": {
+      "badge": "Method · Context · No filter",
+      "title": "Deconstructing narratives.",
+      "subtitle": "Reverse engineering of ideas, discourses and policies. From any side.",
+      "ctaPrimary": "Get started →",
+      "ctaSecondary": "Listen to podcast"
+    },
+    "sections": {
+      "latestPosts": "Latest from the blog",
+      "mostRead": "Most read this week",
+      "whereToFind": "Where to find us",
+      "share": "Share área reversa",
+      "newsletter": "Get analyses by email",
+      "newsletterDesc": "No spam. Only when new post is published.",
+      "finalCta": "Every narrative has a source code. Let's deconstruct it together.",
+      "finalCtaButton": "Explore the blog →"
+    }
+  },
+  "blog": {
+    "title": "blog",
+    "searchPlaceholder": "search by title or excerpt...",
+    "searchButton": "search",
+    "allCategories": "all",
+    "readMore": "read full post →",
+    "noPosts": "First posts coming soon.",
+    "noResults": "No posts found.",
+    "previous": "← previous",
+    "next": "next →",
+    "page": "page {current} of {total}",
+    "backToBlog": "← back to blog",
+    "post": {
+      "readTime": "{minutes} min read",
+      "views": "views",
+      "tags": "Tags:",
+      "share": "Share",
+      "bookmark": "Save",
+      "listen": "Listen to post",
+      "related": "Read also",
+      "comments": "Comments ({count})",
+      "noComments": "Be the first to comment.",
+      "commentPlaceholder": "Leave your comment...",
+      "namePlaceholder": "Your name",
+      "submitComment": "Comment",
+      "submitting": "posting...",
+      "commentPosted": "Comment posted!",
+      "errorComment": "Error posting comment"
+    }
+  },
+  "podcast": {
+    "title": "podcast",
+    "subtitle": "The área reversa podcast: deconstructing narratives, ideas, discourses and policies.",
+    "episodes": "Episodes",
+    "noEpisodes": "Episodes unavailable at the moment. Try again later.",
+    "listenOnSpotify": "listen on Spotify →"
+  },
+  "saved": {
+    "title": "saved",
+    "empty": "No posts saved in this browser."
+  },
+  "about": {
+    "title": "about",
+    "p1": "<strong>área reversa</strong> was born from a simple idea: every public narrative — a politician's speech, a CEO's discourse, a news report, a social media post — is built by someone, with some intention, using certain cuts and omitting others. Our proposal is to do the opposite of the common spectator: instead of consuming the ready-made narrative, we deconstruct it.",
+    "p2": "In posts and podcast we analyze how messages are constructed: what rhetorical structure is at play, what data appears and what disappears, what assumptions are embedded and how the same story changes depending on who tells it. We use primary sources (official documents, transcripts, laws) whenever possible and leave references at the bottom of each content.",
+    "p3": "We are not a partisan vehicle — the method applies to any side of the spectrum. The idea is that, at the end of each analysis, you can see the \"toolbox\" that exists behind the discourse.",
+    "p4": "<strong>Method · Context · No filter.</strong>"
+  },
+  "newsletter": {
+    "title": "Get analyses by email",
+    "description": "No spam. Only when new post is published.",
+    "placeholder": "your@email.com",
+    "subscribe": "Subscribe",
+    "subscribing": "...",
+    "success": "Subscription confirmed. Thanks!",
+    "checkEmail": "Confirmation email sent. Check your inbox (and spam).",
+    "alreadySubscribed": "This email is already subscribed and confirmed.",
+    "error": "Subscription error",
+    "confirmTitle": "Subscription confirmed!",
+    "confirmMessage": "Thanks for subscribing to área reversa newsletter.",
+    "expiredToken": "Confirmation link expired. Try subscribing again.",
+    "invalidToken": "Invalid confirmation link."
+  },
+  "footer": {
+    "contact": "contact: ",
+    "rss": "rss blog",
+    "podcastRss": "rss podcast",
+    "sitemap": "sitemap",
+    "rights": "© {year} {name} — {tagline}"
+  },
+  "common": {
+    "loading": "loading...",
+    "error": "Error loading",
+    "retry": "Retry",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "search": "Search",
+    "filter": "Filter",
+    "clear": "Clear",
+    "copy": "Copy",
+    "copied": "Copied!",
+    "share": "Share",
+    "readMore": "Read more",
+    "showMore": "Show more",
+    "showLess": "Show less"
+  },
+  "admin": {
+    "title": "admin",
+    "analytics": "analytics",
+    "comments": "comments",
+    "newPost": "new post",
+    "ai": "ai",
+    "login": "login",
+    "logout": "logout",
+    "dashboard": "dashboard",
+    "posts": "posts",
+    "comments": "comments",
+    "subscribers": "subscribers",
+    "analyticsDesc": "Views, top posts, referrers, devices"
+  }
+}

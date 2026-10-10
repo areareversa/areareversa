@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { isAuthed } from "@/lib/auth";
-import { deleteComment, toggleCommentHidden, replyComment } from "../actions";
+import { deleteCommentAction, toggleCommentHiddenAction, replyCommentAction } from "../actions";
 import { ReplyBox } from "@/components/ReplyBox";
 
 export const metadata = { title: "Comentários" };
@@ -28,12 +28,12 @@ export default async function ComentariosAdmin() {
           </p>
           <p className="mt-2 text-sm">{c.text}</p>
           {c.adminReply && <p className="mt-2 text-sm text-[#9333ea]">Resposta: {c.adminReply}</p>}
-          <ReplyBox commentId={c.id} defaultValue={c.adminReply} action={replyComment.bind(null, c.id)} />
+          <ReplyBox commentId={c.id} defaultValue={c.adminReply} action={(fd) => replyCommentAction(fd, c.id)} />
           <div className="mt-3 flex gap-4 text-xs">
-            <form action={toggleCommentHidden.bind(null, c.id)}>
+            <form action={(fd) => toggleCommentHiddenAction(fd, c.id)}>
               <button className="underline underline-offset-4">{c.hidden ? "mostrar" : "ocultar"}</button>
             </form>
-            <form action={deleteComment.bind(null, c.id)}>
+            <form action={(fd) => deleteCommentAction(fd, c.id)}>
               <button className="text-red-500 underline underline-offset-4">excluir</button>
             </form>
           </div>

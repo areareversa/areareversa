@@ -4,6 +4,8 @@ import { useEffect } from "react";
 
 export function WebVitals() {
   useEffect(() => {
+    if (typeof window === "undefined") return;
+    
     import("web-vitals").then(({ onCLS, onLCP, onINP, onFCP, onTTFB }) => {
       const report = (metric: { name: string; value: number }) => {
         fetch("/api/track", {

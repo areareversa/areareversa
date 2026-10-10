@@ -1,0 +1,140 @@
+{
+  "site": {
+    "name": "área reversa",
+    "tagline": "Desmontando narrativas.",
+    "description": "Engenharia reversa de ideias, discursos e políticas. De qualquer lado. Método · Contexto · Sem filtro"
+  },
+  "nav": {
+    "blog": "blog",
+    "podcast": "podcast",
+    "saved": "salvos",
+    "about": "sobre",
+    "contact": "contato",
+    "search": "buscar"
+  },
+  "home": {
+    "hero": {
+      "badge": "Método · Contexto · Sem filtro",
+      "title": "Desmontando narrativas.",
+      "subtitle": "Engenharia reversa de ideias, discursos e políticas. De qualquer lado.",
+      "ctaPrimary": "Começar agora →",
+      "ctaSecondary": "Ouvir o podcast"
+    },
+    "sections": {
+      "latestPosts": "Últimas do blog",
+      "mostRead": "Mais lidas da semana",
+      "whereToFind": "Onde nos encontrar",
+      "share": "Compartilhe a área reversa",
+      "newsletter": "Receba as análises por e-mail",
+      "newsletterDesc": "Sem spam. Só quando sair post novo.",
+      "finalCta": "Toda narrativa tem um código-fonte. Vamos desmontá-lo juntos.",
+      "finalCtaButton": "Explorar o blog →"
+    }
+  },
+  "blog": {
+    "title": "blog",
+    "searchPlaceholder": "buscar por título ou resumo...",
+    "searchButton": "buscar",
+    "allCategories": "todas",
+    "readMore": "ler post completo →",
+    "noPosts": "Em breve as primeiras postagens.",
+    "noResults": "Nenhuma postagem encontrada.",
+    "previous": "← anterior",
+    "next": "próxima →",
+    "page": "página {current} de {total}",
+    "backToBlog": "← voltar ao blog",
+    "post": {
+      "readTime": "{minutes} min de leitura",
+      "views": "visualizações",
+      "tags": "Tags:",
+      "share": "Compartilhar",
+      "bookmark": "Salvar",
+      "listen": "Ouvir postagem",
+      "related": "Leia também",
+      "comments": "Comentários ({count})",
+      "noComments": "Seja o primeiro a comentar.",
+      "commentPlaceholder": "Deixe seu comentário...",
+      "namePlaceholder": "Seu nome",
+      "submitComment": "Comentar",
+      "submitting": "enviando...",
+      "commentPosted": "Comentário publicado!",
+      "errorComment": "Erro ao comentar"
+    }
+  },
+  "podcast": {
+    "title": "podcast",
+    "subtitle": "O podcast da área reversa: desmontando narrativas, ideias, discursos e políticas.",
+    "episodes": "Episódios",
+    "noEpisodes": "Episódios indisponíveis no momento. Tente novamente mais tarde.",
+    "listenOnSpotify": "ouvir no Spotify →"
+  },
+  "saved": {
+    "title": "salvos",
+    "empty": "Nenhum post salvo neste navegador."
+  },
+  "about": {
+    "title": "sobre",
+    "p1": "A <strong>área reversa</strong> nasceu de uma ideia simples: toda narrativa pública — uma fala de político, um discurso de CEO, uma reportagem, uma postagem de rede social — é montada por alguém, com alguma intenção, usando certos recortes e omitindo outros. Nossa proposta é fazer o caminho contrário do espectador comum: em vez de consumir a narrativa pronta, nós a desmontamos.",
+    "p2": "Nos posts e no podcast analisamos como mensagens são construídas: qual estrutura retórica está em jogo, que dados aparecem e quais somem, quais pressupostos estão embutidos e como a mesma história muda dependendo de quem a conta. Usamos fontes primárias (documentos oficiais, transcrições, leis) sempre que possível e deixamos as referências no pé de cada conteúdo.",
+    "p3": "Não somos um veículo partidário — o método se aplica a qualquer lado do espectro. A ideia é que, no final de cada análise, você consiga enxergar a \"caixa de ferramentas\" que existe por trás do discurso.",
+    "p4": "<strong>Método · Contexto · Sem filtro.</strong>"
+  },
+  "newsletter": {
+    "title": "Receba as análises por e-mail",
+    "description": "Sem spam. Só quando sair post novo.",
+    "placeholder": "seu@email.com",
+    "subscribe": "Assinar",
+    "subscribing": "...",
+    "success": "Inscrição confirmada. Obrigado!",
+    "checkEmail": "E-mail de confirmação enviado. Verifique sua caixa de entrada (e spam).",
+    "alreadySubscribed": "Este e-mail já está inscrito e confirmado.",
+    "error": "Erro ao inscrever",
+    "confirmTitle": "Inscrição confirmada!",
+    "confirmMessage": "Obrigado por assinar a newsletter da área reversa.",
+    "expiredToken": "O link de confirmação expirou. Tente se inscrever novamente.",
+    "invalidToken": "Link de confirmação inválido."
+  },
+  "footer": {
+    "contact": "contato: ",
+    "rss": "rss blog",
+    "podcastRss": "rss podcast",
+    "sitemap": "sitemap",
+    "rights": "© {year} {name} — {tagline}"
+  },
+  "common": {
+    "loading": "carregando...",
+    "error": "Erro ao carregar",
+    "retry": "Tentar novamente",
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "delete": "Excluir",
+    "edit": "Editar",
+    "close": "Fechar",
+    "back": "Voltar",
+    "next": "Próximo",
+    "previous": "Anterior",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "clear": "Limpar",
+    "copy": "Copiar",
+    "copied": "Copiado!",
+    "share": "Compartilhar",
+    "readMore": "Ler mais",
+    "showMore": "Mostrar mais",
+    "showLess": "Mostrar menos"
+  },
+  "admin": {
+    "title": "admin",
+    "analytics": "analytics",
+    "comments": "comentários",
+    "newPost": "novo post",
+    "ai": "ia",
+    "login": "login",
+    "logout": "sair",
+    "dashboard": "dashboard",
+    "posts": "posts",
+    "comments": "comentários",
+    "subscribers": "inscritos",
+    "analyticsDesc": "Visualizações, top posts, referrers, dispositivos"
+  }
+}

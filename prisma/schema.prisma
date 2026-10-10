@@ -73,3 +73,12 @@ model EmailSubscriber {
 
   @@map("email_subscribers")
 }
+
+model Setting {
+  key       String   @id
+  value     String
+  isSecret  Boolean  @default(false)
+  updatedAt DateTime @updatedAt
+
+  @@map("settings")
+}

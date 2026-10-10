@@ -1,26 +1,33 @@
 import nodemailer from "nodemailer";
 import { prisma } from "./prisma";
+import { getSmtpConfig } from "./settings";
 
 export async function notifyNewPost(post: { title: string; slug: string; excerpt: string }) {
-  const user = process.env.GMAIL_USER;
-  const pass = process.env.GMAIL_APP_PASSWORD;
-  if (!user || !pass) return;
+  const cfg = await getSmtpConfig();
+  if (!cfg.configured) {
+    console.warn("[Newsletter] SMTP não configurado — notificação de novo post ignorada");
+    return;
+  }
 
-  const subscribers = await prisma.emailSubscriber.findMany({ select: { email: true } }).catch(() => []);
+  const subscribers = await prisma.emailSubscriber
+    .findMany({ where: { confirmed: true }, select: { email: true } })
+    .catch(() => []);
   if (subscribers.length === 0) return;
 
-  const link = `${process.env.NEXT_PUBLIC_SITE_URL ?? "https://areareversa.com.br"}/blog/${post.slug}`;
+  const link = `${cfg.siteUrl}/blog/${post.slug}`;
   const html = `<h1>${post.title}</h1><p>${post.excerpt}</p><p><a href="${link}">Ler no site →</a></p><hr><p style="font-size:12px;color:#888">Você recebeu este e-mail porque se inscreveu em área reversa. Para cancelar, responda "remover".</p>`;
 
   const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: { user, pass: pass.replace(/\s/g, "") },
+    host: cfg.host,
+    port: cfg.port,
+    secure: cfg.port === 465,
+    auth: { user: cfg.user, pass: cfg.pass.replace(/\s/g, "") },
   });
 
   await Promise.allSettled(
     subscribers.map((s) =>
       transporter.sendMail({
-        from: `área reversa <${user}>`,
+        from: `área reversa <${cfg.from}>`,
         to: s.email,
         subject: `Novo post: ${post.title}`,
         html,

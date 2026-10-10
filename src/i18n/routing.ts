@@ -4,6 +4,18 @@ export const routing = defineRouting({
   locales: ['pt-BR', 'en-US', 'es-ES', 'ar-PS'],
   defaultLocale: 'pt-BR',
   localePrefix: 'always',
+  domains: [
+    {
+      domain: 'www.areareversa.com.br',
+      defaultLocale: 'pt-BR',
+      locales: ['pt-BR', 'en-US', 'es-ES', 'ar-PS']
+    },
+    {
+      domain: 'areareversa.com.br',
+      defaultLocale: 'pt-BR',
+      locales: ['pt-BR', 'en-US', 'es-ES', 'ar-PS']
+    }
+  ],
   pathnames: {
     '/': '/',
     '/blog': '/blog',

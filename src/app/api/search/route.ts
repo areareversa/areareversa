@@ -18,9 +18,7 @@ export async function GET(req: Request) {
 
   // Use PostgreSQL full-text search with websearch_to_tsquery for natural language queries
   // Supports: "termo1 termo2" (OR), '"exato"' (phrase), -excluir (NOT), termo1 OR termo2
-  const query = q
-    .replace(/"/g, "") // Remove quotes for phrase search - websearch handles it
-    .trim();
+  const query = q.trim();
 
   const posts = await prisma.$queryRaw`
     SELECT 
@@ -28,11 +26,11 @@ export async function GET(req: Request) {
       p.title, 
       p.excerpt, 
       p.category,
-      ts_rank_cd(p."searchVector", websearch_to_tsquery('portuguese', ${query})) AS rank
+      ts_rank_cd(p."searchVector"::tsvector, websearch_to_tsquery('portuguese', ${query})) AS rank
     FROM posts p
     WHERE p.published = true 
       AND (p."publishAt" IS NULL OR p."publishAt" <= NOW())
-      AND p."searchVector" @@ websearch_to_tsquery('portuguese', ${query})
+      AND p."searchVector"::tsvector @@ websearch_to_tsquery('portuguese', ${query})
     ORDER BY rank DESC, p."createdAt" DESC
     LIMIT 8
   `;

@@ -167,14 +167,16 @@ export function PlayerProvider({ children, initialEpisodes = [] }: PlayerProvide
     setIsRestoring(false);
   }, [state.currentEpisode]);
 
-  // Update audio src when episode changes
+  // Update audio src when episode changes (only when URL actually changes)
   useEffect(() => {
     if (isRestoring) return;
     const audio = audioRef.current;
     if (!audio || !state.currentEpisode?.audioUrl) return;
 
-    audio.src = state.currentEpisode.audioUrl;
-    audio.load();
+    if (audio.src !== state.currentEpisode.audioUrl) {
+      audio.src = state.currentEpisode.audioUrl;
+      audio.load();
+    }
     if (state.isPlaying) {
       audio.play().catch(() => setState(s => ({ ...s, isPlaying: false })));
     }

@@ -14,13 +14,24 @@ export async function generateMetadata({
   const { slug } = await params;
   const post = await prisma.post.findUnique({ where: { slug } }).catch(() => null);
   if (!post) return { title: "não encontrado" };
+  const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || "https://areareversa.com.br").replace(
+    /\/+$/,
+    ""
+  );
   return {
     title: post.title,
     description: post.excerpt,
+    // sinaliza aos sites que este post aceita webmentions
+    alternates: {
+      types: {
+        "text/html": [{ url: `${siteUrl}/blog/${post.slug}` }],
+        "application/webmention+json": `${siteUrl}/api/webmention`,
+      },
+    },
     openGraph: {
       title: post.title,
       description: post.excerpt,
-      url: `${process.env.NEXT_PUBLIC_SITE_URL || "https://areareversa.com.br"}/blog/${post.slug}`,
+      url: `${siteUrl}/blog/${post.slug}`,
       type: "article",
       images: post.coverImage ? [post.coverImage] : undefined,
     },
@@ -32,7 +43,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
   const post = await prisma.post.findUnique({ where: { slug } }).catch(() => null);
   if (!post || !isVisible(post)) notFound();
 
-  const [related, comments] = await Promise.all([
+  const [related, comments, mentions] = await Promise.all([
     prisma.post
       .findMany({
         where: { ...publishedFilter(), category: post.category, NOT: { id: post.id } },
@@ -44,6 +55,25 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
     prisma.comment
       .findMany({ where: { postId: post.id, hidden: false }, orderBy: { createdAt: "desc" } })
       .catch(() => []),
+    prisma.webmention
+      .findMany({
+        where: { postSlug: post.slug, status: "approved" },
+        orderBy: { createdAt: "desc" },
+        take: 50,
+        select: {
+          id: true,
+          source: true,
+          type: true,
+          title: true,
+          authorName: true,
+          authorUrl: true,
+          authorPhoto: true,
+          content: true,
+          adminReply: true,
+          createdAt: true,
+        },
+      })
+      .catch(() => []),
   ]);
 
   return (
@@ -54,6 +84,7 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
         updatedAt: post.updatedAt?.toISOString(),
       }}
       initialComments={comments}
+      initialMentions={mentions.map((m) => ({ ...m, createdAt: m.createdAt.toISOString() }))}
     />
   );
 }

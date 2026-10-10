@@ -41,11 +41,19 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const nonce = await getNonce();
   return (
     <html lang="pt-BR" className={`${jakarta.variable} ${jetbrains.variable} dark`}>
+      <head>
+        {/* endpoint de webmention: mesmo para todas as páginas, então vai aqui */}
+        <link
+          rel="webmention"
+          href={`${(process.env.NEXT_PUBLIC_SITE_URL || "https://areareversa.com.br").replace(/\/+$/, "")}/api/webmention`}
+        />
+        <link rel="micropub" href={`${(process.env.NEXT_PUBLIC_SITE_URL || "https://areareversa.com.br").replace(/\/+$/, "")}/api/webmention`} />
+      </head>
       <body className="bg-white text-[#0f0f12] antialiased dark:bg-[#0f0f12] dark:text-white">
         <script
           nonce={nonce}
           dangerouslySetInnerHTML={{
-            __html: `try{var t=localStorage.getItem('ar_theme_v2');if(t==='light'){document.documentElement.classList.remove('dark')}else if(t==='dark'){document.documentElement.classList.add('dark')}else if(window.matchMedia('(prefers-color-scheme: dark)').matches){document.documentElement.classList.add('dark')}}catch(e){}`,
+            __html: `try{var t=localStorage.getItem('ar_theme_v2');if(t==='light'){document.documentElement.classList.remove('dark')}else if(t==='system'){document.documentElement.classList.toggle('dark',window.matchMedia('(prefers-color-scheme: dark)').matches)}else{document.documentElement.classList.add('dark')}}catch(e){document.documentElement.classList.add('dark')}`,
           }}
         />
         <FocusModeProvider>

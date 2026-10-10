@@ -19,6 +19,7 @@ import { FocusModeToggle } from "@/components/FocusMode";
 import { MarkdownErrorBoundary, TTSErrorBoundary, CommentsErrorBoundary } from "@/components/ErrorBoundary";
 import { site } from "@/lib/site";
 import { GAEvents } from "@/lib/gaEvents";
+import { WebmentionList, type Mention } from "@/components/WebmentionList";
 
 type Post = {
   slug: string;
@@ -42,7 +43,7 @@ type Comment = {
   adminReply?: string | null;
 };
 
-export default function PostPageClient({ initialPost, initialComments = [] }: { initialPost: Post | null; initialComments: Comment[] }) {
+export default function PostPageClient({ initialPost, initialComments = [], initialMentions = [] }: { initialPost: Post | null; initialComments: Comment[]; initialMentions?: Mention[] }) {
   const [post, setPost] = useState<Post | null>(initialPost);
   const [comments, setComments] = useState<Comment[]>(initialComments);
   const [related, setRelated] = useState<Post[]>([]);
@@ -81,13 +82,23 @@ export default function PostPageClient({ initialPost, initialComments = [] }: { 
   if (!post) return <div className="mx-auto max-w-2xl py-12 text-center text-[#4b5563] dark:text-[#d4d4d8]">Post não encontrado.</div>;
 
   return (
-    <article className="mx-auto flex max-w-2xl flex-col gap-6">
+    <article className="mx-auto flex max-w-2xl flex-col gap-6 h-entry">
       <StructuredDataBreadcrumb items={breadcrumbs} />
       <ReadingProgress />
+      {/* microformats2: permite que sites que implementam webmention
+          extraiam título, autor, data e conteúdo deste post */}
+      <a className="u-url sr-only" href={`${site.url}/blog/${post.slug}`}>
+        {post.title}
+      </a>
+      <a className="u-webmention sr-only" href={`${site.url}/api/webmention`} />
       <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#9333ea]">
-        {post.category} · {post.author} · {new Date(post.createdAt).toLocaleDateString("pt-BR")} · {readingTimeMinutes(post.content)} min de leitura · <ViewsCounter slug={post.slug} initial={post.views} />
+        {post.category} · <span className="p-author h-card"><a className="u-url p-name" href={`${site.url}/sobre`}>{post.author}</a></span> ·{" "}
+        <time className="dt-published" dateTime={post.createdAt}>
+          {new Date(post.createdAt).toLocaleDateString("pt-BR")}
+        </time>{" "}
+        · {readingTimeMinutes(post.content)} min de leitura · <ViewsCounter slug={post.slug} initial={post.views} />
       </p>
-      <h1 className="text-4xl font-bold tracking-[-0.04em] sm:text-5xl">{post.title}</h1>
+      <h1 className="p-name text-4xl font-bold tracking-[-0.04em] sm:text-5xl">{post.title}</h1>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
@@ -144,13 +155,16 @@ export default function PostPageClient({ initialPost, initialComments = [] }: { 
       </div>
       <TableOfContents />
       <MarkdownErrorBoundary>
-        <Markdown>{post.content}</Markdown>
+        <div className="e-content">
+          <Markdown>{post.content}</Markdown>
+        </div>
       </MarkdownErrorBoundary>
       <ShareButtons title={post.title} url={`${site.url}/blog/${post.slug}`} />
       <BookmarkButton slug={post.slug} title={post.title} />
       <CommentsErrorBoundary>
         <CommentSection slug={post.slug} initialComments={comments} />
       </CommentsErrorBoundary>
+      {initialMentions.length > 0 && <WebmentionList mentions={initialMentions} />}
 
       {related.length > 0 && (
         <section className="flex flex-col gap-4">

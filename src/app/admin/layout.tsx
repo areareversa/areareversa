@@ -14,6 +14,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           <Link href="/admin/analytics" className="hover:underline underline-offset-4">analytics</Link>
           <Link href="/admin/comentarios" className="hover:underline underline-offset-4">comentários</Link>
           <Link href="/admin/configuracoes" className="hover:underline underline-offset-4">configurações</Link>
+          <Link href="/admin/mencoes" className="hover:underline underline-offset-4">menções</Link>
           <form action={logoutAction} className="ml-auto">
             <button className="underline underline-offset-4">sair</button>
           </form>

@@ -19,15 +19,16 @@ const TITLES: Record<ThemeMode, string> = {
 const QUERY = "(prefers-color-scheme: dark)";
 
 export function ThemeToggle() {
-  // Durante o SSR (e o primeiro render do cliente) ficamos em "system"/claro
-  // para não tocar em localStorage nem em matchMedia antes do navegador existir.
-  const [mode, setMode] = useState<ThemeMode>("system");
-  const [dark, setDark] = useState(false);
+  // O padrão do site é o tema escuro. Durante o SSR (e o primeiro render do
+  // cliente) ficamos em "dark" para não tocar em localStorage/matchMedia
+  // antes do navegador existir — o que quebrava o build no servidor.
+  const [mode, setMode] = useState<ThemeMode>("dark");
+  const [dark, setDark] = useState(true);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     const stored = localStorage.getItem("ar_theme_v2") as ThemeMode | null;
-    setMode(stored ?? "system");
+    setMode(stored ?? "dark");
     setMounted(true);
   }, []);
 

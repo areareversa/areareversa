@@ -82,3 +82,27 @@ model Setting {
 
   @@map("settings")
 }
+
+model Webmention {
+  id          String   @id @default(cuid())
+  source      String
+  target      String
+  postSlug    String?
+  type        String   @default("mention")
+  title       String?
+  authorName  String?
+  authorUrl   String?
+  authorPhoto String?
+  content     String?
+  published   String?
+  status      String   @default("pending")
+  adminReply  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([source, target])
+  @@index([postSlug])
+  @@index([status])
+  @@index([createdAt])
+  @@map("webmentions")
+}

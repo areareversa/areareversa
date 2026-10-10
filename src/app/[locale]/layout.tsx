@@ -77,6 +77,13 @@ export default async function RootLayout({ children, params }: { children: React
             __html: `try{var t=localStorage.getItem('ar_theme_v2');if(t==='light'){document.documentElement.classList.remove('dark')}else if(t==='dark'){document.documentElement.classList.add('dark')}else if(window.matchMedia('(prefers-color-scheme: dark)').matches){document.documentElement.classList.add('dark')}}catch(e){}`,
           }}
         />
+        {/* Fallback client-side redirect for root path */}
+        <script
+          nonce={nonce}
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{if(window.location.pathname==='/'){window.location.href='/pt-BR/';}}catch(e){}}())`,
+          }}
+        />
         <NextIntlClientProvider messages={await getMessages({ locale })} locale={locale}>
           <FocusModeProvider>
             <PlayerWrapper>

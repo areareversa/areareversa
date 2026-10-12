@@ -41,7 +41,7 @@ export async function POST(req: Request) {
   const clientReferrer = body.referrer ? String(body.referrer) : null;
   
   const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "anon";
-  if (!rateLimit(`track:${ip}`, 60)) return NextResponse.json({ ok: true });
+  if (!(await rateLimit(`track:${ip}`, 60))) return NextResponse.json({ ok: true });
   
   if (!path || path.startsWith("/admin") || path.startsWith("/api")) {
     return NextResponse.json({ ok: true });

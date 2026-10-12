@@ -6,7 +6,7 @@ export async function POST(req: Request) {
   const { slug, name, text, website } = await req.json().catch(() => ({}));
   if (website) return NextResponse.json({ ok: true }); // honeypot anti-bot
   const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "anon";
-  if (!rateLimit(`comments:${ip}`, 5)) {
+  if (!(await rateLimit(`comments:${ip}`, 5))) {
     return NextResponse.json({ error: "Muitos comentários. Aguarde um minuto." }, { status: 429 });
   }
   const cleanName = String(name ?? "").trim().slice(0, 80);

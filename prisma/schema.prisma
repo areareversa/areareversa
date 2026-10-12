@@ -83,6 +83,15 @@ model Setting {
   @@map("settings")
 }
 
+model RateLimit {
+  key     String   @id
+  count   Int      @default(0)
+  resetAt DateTime
+
+  @@index([resetAt])
+  @@map("rate_limits")
+}
+
 model Webmention {
   id          String   @id @default(cuid())
   source      String

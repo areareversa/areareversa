@@ -10,7 +10,10 @@ export async function notifyNewPost(post: { title: string; slug: string; excerpt
   }
 
   const subscribers = await prisma.emailSubscriber
-    .findMany({ where: { confirmed: true }, select: { email: true } })
+    .findMany({
+      where: { confirmed: true, unsubscribedAt: null },
+      select: { email: true },
+    })
     .catch(() => []);
   if (subscribers.length === 0) return;
 

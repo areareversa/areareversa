@@ -24,6 +24,10 @@ export function NewsletterForm() {
     } else if (newsletterStatus === "invalid_token") {
       setStep("error");
       setMsg("Link de confirmação inválido.");
+    } else if (newsletterStatus === "confirmed_no_email") {
+      // inscrição foi registrada, mas o e-mail de boas-vindas não saiu
+      setStep("confirmed");
+      setMsg("Inscrição confirmada! Só não conseguimos enviar o e-mail de boas-vindas.");
     }
   }, []);
 

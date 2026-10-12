@@ -89,6 +89,8 @@ const welcomeEmailTemplate = (unsubscribeUrl: string, siteUrl: string) => `
     <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 24px 0;">
     <p style="font-size: 14px; color: #6b7280; text-align: center;">
       Não quer mais receber? <a href="${unsubscribeUrl}" style="color: #9333ea;">Cancelar inscrição</a>
+      &nbsp;·&nbsp;
+      <a href="${siteUrl}/rss.xml" style="color: #9333ea;">Prefere RSS?</a>
     </p>
   </div>
   <div style="text-align: center; padding: 20px; font-size: 12px; color: #9ca3af;">
@@ -165,9 +167,11 @@ export async function sendConfirmationEmail(email: string, token: string) {
   return sendEmail(email, subject, html);
 }
 
-export async function sendWelcomeEmail(email: string) {
+export async function sendWelcomeEmail(email: string, unsubscribeToken: string) {
   const { siteUrl } = await getSmtpConfig();
-  const unsubscribeUrl = `${siteUrl}/api/newsletter/unsubscribe`;
+  // O token é obrigatório: sem ele o link cai em "Token inválido" e o
+  // assinante não consegue sair da lista (exigência da LGPD).
+  const unsubscribeUrl = `${siteUrl}/api/newsletter/unsubscribe?token=${unsubscribeToken}`;
   const subject = "Bem-vindo à newsletter da área reversa! 🎉";
   const html = welcomeEmailTemplate(unsubscribeUrl, siteUrl);
   return sendEmail(email, subject, html);

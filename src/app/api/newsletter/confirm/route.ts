@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import crypto from "crypto";
 import { prisma } from "@/lib/prisma";
 import { sendWelcomeEmail } from "@/lib/email";
 
@@ -28,18 +29,28 @@ export async function GET(request: Request) {
     return NextResponse.redirect(new URL("/?newsletter=already_confirmed", request.url));
   }
 
+  // O e-mail de boas-vindas precisa de um link de cancelamento funcional
+  // (LGPD). Geramos o token agora e devolvemos ?unsubscribed=1 no final.
+  const unsubscribeToken = crypto.randomBytes(32).toString("hex");
+
   await prisma.emailSubscriber.update({
     where: { id: subscriber.id },
-    data: { 
-      confirmed: true, 
-      token: null, 
+    data: {
+      confirmed: true,
+      token: null,
       tokenExpiresAt: null,
       confirmedAt: new Date(),
+      unsubscribeToken,
+      unsubscribedAt: null,
     },
   });
 
-  // Send welcome email
-  await sendWelcomeEmail(subscriber.email).catch(console.error);
+  const result = await sendWelcomeEmail(subscriber.email, unsubscribeToken);
+
+  if (!result.success) {
+    console.error("[Newsletter] confirmação ok mas e-mail de boas-vindas falhou:", result.reason);
+    return NextResponse.redirect(new URL("/?newsletter=confirmed_no_email", request.url));
+  }
 
   return NextResponse.redirect(new URL("/?newsletter=confirmed", request.url));
 }

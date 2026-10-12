@@ -1,53 +1,42 @@
 import { NextResponse } from "next/server";
+import crypto from "crypto";
 import { prisma } from "@/lib/prisma";
-import { sendEmail } from "@/lib/email";
-
-const unsubscribeEmailTemplate = (unsubscribeUrl: string) => `
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #1f1f1f; max-width: 600px; margin: 0 auto; padding: 20px;">
-  <div style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); padding: 30px; text-align: center; border-radius: 12px 12px 0 0;">
-    <h1 style="color: white; margin: 0; font-size: 28px;">Cancelar inscrição</h1>
-    <p style="color: rgba(255,255,255,0.9); margin: 8px 0 0;">Clique no botão abaixo para confirmar</p>
-  </div>
-  <div style="background: #fafafa; padding: 30px; border-radius: 0 0 12px 12px; border: 1px solid #e5e7eb; border-top: none;">
-    <p style="font-size: 18px; margin-bottom: 16px;">Recebemos um pedido para cancelar sua inscrição na newsletter da <strong>área reversa</strong>.</p>
-    <p style="margin-bottom: 24px;">Se foi você, clique no botão abaixo para confirmar o cancelamento:</p>
-    <div style="text-align: center; margin: 32px 0;">
-      <a href="${unsubscribeUrl}" style="display: inline-block; background: #ef4444; color: white; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 16px;">Cancelar minha inscrição</a>
-    </div>
-    <p style="font-size: 14px; color: #6b7280; text-align: center; margin-top: 24px;">
-      Ou copie este link no navegador:<br>
-      <span style="word-break: break-all; color: #ef4444;">${unsubscribeUrl}</span>
-    </p>
-    <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 24px 0;">
-    <p style="font-size: 12px; color: #9ca3af; text-align: center;">
-      Este link expira em 7 dias. Se não foi você, ignore este e-mail.
-    </p>
-  </div>
-  <div style="text-align: center; padding: 20px; font-size: 12px; color: #9ca3af;">
-    <p>área reversa — Desmontando narrativas.</p>
-  </div>
-</body>
-</html>
-`;
+import { sendUnsubscribeEmail } from "@/lib/email";
+import { getSmtpConfig } from "@/lib/settings";
 
 export const dynamic = "force-dynamic";
+
+const SITE_URL = "https://areareversa.com.br";
+
+function page(title: string, body: string) {
+  return `<html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>${title}</title>
+<meta name="robots" content="noindex"></head>
+<body style="font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;background:#fafafa;color:#1f1f1f;padding:2rem 1rem;margin:0">
+<div style="max-width:520px;margin:0 auto;background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:2rem">
+<h1 style="margin:0 0 1rem;font-size:1.5rem">${title}</h1>
+${body}
+<p style="margin-top:2rem;font-size:.85rem;color:#9ca3af">
+<a href="${SITE_URL}" style="color:#9333ea">área reversa</a> — Desmontando narrativas.
+</p>
+</div></body></html>`;
+}
+
+function htmlResponse(title: string, body: string) {
+  return new Response(page(title, body), {
+    headers: { "Content-Type": "text/html; charset=utf-8" },
+  });
+}
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const token = searchParams.get("token");
 
   if (!token) {
-    return new Response(
-      `<html><body style="font-family:system-ui;padding:2rem;text-align:center">
-        <h1>Token inválido</h1><p>Link de cancelamento inválido ou expirado.</p>
-      </body></html>`,
-      { headers: { "Content-Type": "text/html" } }
+    return htmlResponse(
+      "Link inválido",
+      "<p>Este link não tem token. Use o link que veio no e-mail da newsletter.</p>"
     );
   }
 
@@ -56,101 +45,73 @@ export async function GET(request: Request) {
   });
 
   if (!subscriber) {
-    return new Response(
-      `<html><body style="font-family:system-ui;padding:2rem;text-align:center">
-        <h1>Link inválido</h1><p>Este link de cancelamento não é válido ou já foi usado.</p>
-      </body></html>`,
-      { headers: { "Content-Type": "text/html" } }
+    return htmlResponse(
+      "Link inválido",
+      "<p>Este link de cancelamento não é válido ou já foi usado.</p>"
     );
   }
 
   if (subscriber.unsubscribedAt) {
-    return new Response(
-      `<html><body style="font-family:system-ui;padding:2rem;text-align:center">
-        <h1>Já cancelado</h1><p>Este e-mail já foi removido da lista.</p>
-      </body></html>`,
-      { headers: { "Content-Type": "text/html" } }
+    return htmlResponse(
+      "Já cancelado",
+      `<p>O e-mail <strong>${subscriber.email}</strong> já foi removido da nossa lista.</p>`
     );
   }
 
   await prisma.emailSubscriber.update({
     where: { id: subscriber.id },
-    data: { 
-      unsubscribedAt: new Date(),
-      confirmed: false,
-    },
+    data: { unsubscribedAt: new Date(), confirmed: false },
   });
 
-  return new Response(
-    `<html><body style="font-family:system-ui;padding:2rem;text-align:center">
-      <h1>Cancelado com sucesso</h1>
-      <p>O e-mail <strong>${subscriber.email}</strong> foi removido da nossa lista.</p>
-      <p>Não receberá mais nossos e-mails. Se mudou de ideia, pode se inscrever novamente no site.</p>
-    </body></html>`,
-    { headers: { "Content-Type": "text/html" } }
+  return htmlResponse(
+    "Cancelado com sucesso",
+    `<p>O e-mail <strong>${subscriber.email}</strong> foi removido da nossa lista.</p>
+     <p>Não receberá mais nossos e-mails. Se mudar de ideia, é só se inscrever novamente no site.</p>
+     <p style="margin-top:1.5rem"><a href="${SITE_URL}/rss.xml" style="color:#9333ea">Prefere acompanhar pelo RSS?</a></p>`
   );
 }
 
+/**
+ * Pedido de cancelamento por e-mail.
+ *
+ * A resposta é sempre a mesma ("se o e-mail existir...") para não revelar quem
+ * está inscrito. O template vem de src/lib/email.ts — antes havia três cópias
+ * divergentes deste HTML dentro desta única rota.
+ */
 export async function POST(request: Request) {
   const { email } = await request.json().catch(() => ({}));
   const clean = String(email ?? "").trim().toLowerCase();
-  
+
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(clean)) {
     return NextResponse.json({ error: "E-mail inválido" }, { status: 400 });
   }
 
-  const subscriber = await prisma.emailSubscriber.findUnique({ where: { email: clean } });
-  
-  if (!subscriber) {
-    return NextResponse.json({ ok: true, message: "Se o e-mail existir, enviaremos link de cancelamento." });
-  }
+  const neutro = () =>
+    NextResponse.json({
+      ok: true,
+      message: "Se o e-mail existir na nossa lista, enviamos o link de cancelamento.",
+    });
 
-  const crypto = await import("crypto");
+  const subscriber = await prisma.emailSubscriber.findUnique({ where: { email: clean } });
+  if (!subscriber || subscriber.unsubscribedAt) return neutro();
+
   const unsubscribeToken = crypto.randomBytes(32).toString("hex");
-  
   await prisma.emailSubscriber.update({
     where: { id: subscriber.id },
     data: { unsubscribeToken },
   });
 
-  const unsubscribeUrl = `${process.env.NEXT_PUBLIC_SITE_URL || "https://areareversa.com.br"}/api/newsletter/unsubscribe?token=${unsubscribeToken}`;
-  
-  // Send unsubscribe email
-  await sendEmail(
-    clean, 
-    "Cancelar inscrição na newsletter da área reversa",
-    `<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #1f1f1f; max-width: 600px; margin: 0 auto; padding: 20px;">
-  <div style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); padding: 30px; text-align: center; border-radius: 12px 12px 0 0;">
-    <h1 style="color: white; margin: 0; font-size: 28px;">Cancelar inscrição</h1>
-    <p style="color: rgba(255,255,255,0.9); margin: 8px 0 0;">Clique no botão abaixo para confirmar</p>
-  </div>
-  <div style="background: #fafafa; padding: 30px; border-radius: 0 0 12px 12px; border: 1px solid #e5e7eb; border-top: none;">
-    <p style="font-size: 18px; margin-bottom: 16px;">Recebemos um pedido para cancelar sua inscrição na newsletter da <strong>área reversa</strong>.</p>
-    <p style="margin-bottom: 24px;">Se foi você, clique no botão abaixo para confirmar o cancelamento:</p>
-    <div style="text-align: center; margin: 32px 0;">
-      <a href="${unsubscribeUrl}" style="display: inline-block; background: #ef4444; color: white; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 16px;">Cancelar minha inscrição</a>
-    </div>
-    <p style="font-size: 14px; color: #6b7280; text-align: center; margin-top: 24px;">
-      Ou copie este link no navegador:<br>
-      <span style="word-break: break-all; color: #ef4444;">${unsubscribeUrl}</span>
-    </p>
-    <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 24px 0;">
-    <p style="font-size: 12px; color: #9ca3af; text-align: center;">
-      Este link expira em 7 dias. Se não foi você, ignore este e-mail.
-    </p>
-  </div>
-  <div style="text-align: center; padding: 20px; font-size: 12px; color: #9ca3af;">
-    <p>área reversa — Desmontando narrativas.</p>
-  </div>
-</body>
-</html>`
-  ).catch(console.error);
+  const { siteUrl } = await getSmtpConfig();
+  const unsubscribeUrl = `${siteUrl}/api/newsletter/unsubscribe?token=${unsubscribeToken}`;
 
-  return NextResponse.json({ ok: true, message: "Se o e-mail existir, enviaremos link de cancelamento." });
+  const result = await sendUnsubscribeEmail(clean, unsubscribeUrl);
+  if (!result.success) {
+    console.error("[Newsletter] falha ao enviar cancelamento:", result.reason);
+    return NextResponse.json(
+      { error: "Não consegui enviar o link de cancelamento agora. Tente de novo em instantes." },
+      { status: 502 }
+    );
+  }
+
+  return neutro();
 }

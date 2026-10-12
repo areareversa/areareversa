@@ -45,3 +45,7 @@ next-env.d.ts
 # backups do banco (contem dados de produção, nunca vao para o git)
 backups/
 .tmp-backup-test/
+
+# arquivos temporarios
+tmp_*.cjs
+tmp_*.mjs

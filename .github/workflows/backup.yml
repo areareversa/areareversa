@@ -1,16 +1,26 @@
 name: backup do banco
 
+# agenda + botão manual em Actions > backup do banco > Run workflow
 on:
   schedule:
-    # todo dia às 3h UTC (meia-noite no horário de Brasília)
+    # 3h UTC = meia-noite em Brasília. O cron do GitHub sempre roda em UTC.
     - cron: "0 3 * * *"
-  # dá para rodar na mão em Actions > backup do banco > Run workflow
   workflow_dispatch:
     inputs:
       manter:
-        description: "Quantos backups manter"
+        description: "Quantos backups manter (padrão 30)"
         required: false
         default: "30"
+
+# O agendamento automático do GitHub só roda em repositórios públicos ou após
+# 60 dias de atividade. Este repo é público, então está ok — e o botão manual
+# funciona de qualquer forma.
+permissions:
+  contents: read
+
+concurrency:
+  group: backup-banco
+  cancel-in-progress: false
 
 jobs:
   backup:
@@ -23,9 +33,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
+          cache: npm
 
       - name: instalar dependências
-        run: npm ci --omit=optional
+        run: npm ci --omit=optional --ignore-scripts
+        # --ignore-scripts pula o postinstall "prisma generate", que não é
+        # necessário para o dump (só o pacote pg é usado) e evita baixar engine.
 
       - name: gerar backup
         env:
@@ -37,14 +50,12 @@ jobs:
       - name: resumo
         run: |
           {
-            echo "### Backup do banco — $(date -u +%Y-%m-%d\ %H:%M\ UTC)"
+            echo "### Backup do banco — $(date -u +'%Y-%m-%d %H:%M UTC')"
             echo
-            echo "\`\`\`"
-            ls -lh backups/*.gz | awk '{print $5, $9}'
-            echo "\`\`\`"
+            ls -lh backups/ | tail -n +2 | awk '{print "- `"$9"` — " $5}'
           } >> "$GITHUB_STEP_SUMMARY"
 
-      # guarda como artefato (90 dias por padrão) — sobrevive a apagar o repositório
+      # artefato sobrevive a apagar o repositório; 90 dias de retenção
       - name: guardar artefato
         uses: actions/upload-artifact@v4
         with:

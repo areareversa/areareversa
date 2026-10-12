@@ -5,11 +5,21 @@ import { PodcastEpisodeSkeleton } from "@/components/Skeletons";
 import { GAEvents } from "@/lib/gaEvents";
 import { usePlayer } from "@/lib/PlayerContext";
 
-type Ep = { title: string; link: string; pubDate: string; audioUrl?: string; contentSnippet?: string };
+type Ep = {
+  title: string;
+  link: string;
+  pubDate: string;
+  audioUrl?: string;
+  contentSnippet?: string;
+  duration?: string;
+  guid?: string;
+};
 
 export default function PodcastClient({ initialEpisodes }: { initialEpisodes: Ep[] }) {
   const [episodes, setEpisodes] = useState<Ep[]>(initialEpisodes);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [updatedAt, setUpdatedAt] = useState<string | null>(null);
   const { play, setQueueEpisodes } = usePlayer();
 
   useEffect(() => {
@@ -24,10 +34,20 @@ export default function PodcastClient({ initialEpisodes }: { initialEpisodes: Ep
     fetch("/api/podcast")
       .then((r) => r.json())
       .then((d) => {
-        setEpisodes(d.episodes ?? []);
+        if (Array.isArray(d.episodes) && d.episodes.length > 0) {
+          setEpisodes(d.episodes);
+          setUpdatedAt(d.fetchedAt ?? null);
+          setError(null);
+        } else {
+          // mantém o que veio do servidor em vez de mostrar a página vazia
+          setError(d.error ?? "feed indisponível");
+        }
         setLoading(false);
       })
-      .catch(() => setLoading(false));
+      .catch(() => {
+        setError("não consegui atualizar a lista");
+        setLoading(false);
+      });
   }, []);
 
   const handlePlay = (ep: Ep & { audioUrl: string }) => {
@@ -42,7 +62,19 @@ export default function PodcastClient({ initialEpisodes }: { initialEpisodes: Ep
         Bastidores, ideias e discursos desmontados ao vivo. Ouça os episódios mais recentes do canal da área reversa:
       </p>
       <section className="flex flex-col gap-4">
-        <h2 className="text-sm font-semibold uppercase tracking-[0.22em] text-[#9ca3af]">Episódios</h2>
+        <h2 className="text-sm font-semibold uppercase tracking-[0.22em] text-[#9ca3af]">
+          Episódios
+          {updatedAt ? (
+            <span className="ml-2 font-sans text-xs normal-case tracking-normal text-[#9ca3af]/70">
+              atualizado em {new Date(updatedAt).toLocaleString("pt-BR")}
+            </span>
+          ) : null}
+        </h2>
+        {error ? (
+          <p className="rounded-xl border border-amber-500/40 bg-amber-500/10 px-4 py-2 text-xs text-amber-600 dark:text-amber-400">
+            Não consegui atualizar a lista agora ({error}). Mostrando a última versão conhecida.
+          </p>
+        ) : null}
         {loading ? (
           <>
             <PodcastEpisodeSkeleton />
@@ -51,11 +83,14 @@ export default function PodcastClient({ initialEpisodes }: { initialEpisodes: Ep
           </>
         ) : (
           episodes.map((ep) => (
-            <div key={ep.link} className="flex flex-col gap-3 rounded-2xl border border-[#e5e7eb] p-5 dark:border-[#2a2a30]">
+            <div key={ep.guid ?? ep.audioUrl ?? ep.link} className="flex flex-col gap-3 rounded-2xl border border-[#e5e7eb] p-5 dark:border-[#2a2a30]">
               <a href={ep.link} target="_blank" rel="noreferrer" className="font-semibold hover:text-[#9333ea]">
                 {ep.title}
               </a>
-              {ep.pubDate && <p className="text-xs text-[#9ca3af]">{new Date(ep.pubDate).toLocaleDateString("pt-BR")}</p>}
+              <p className="flex flex-wrap gap-x-3 text-xs text-[#9ca3af]">
+                {ep.pubDate && <time dateTime={ep.pubDate}>{new Date(ep.pubDate).toLocaleDateString("pt-BR")}</time>}
+                {ep.duration && <span>{ep.duration}</span>}
+              </p>
               {ep.contentSnippet && <p className="text-sm text-[#4b5563] dark:text-[#d4d4d8]">{ep.contentSnippet}...</p>}
               {ep.audioUrl && (
                 <button

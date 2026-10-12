@@ -41,3 +41,7 @@ yarn-error.log*
 next-env.d.ts
 
 /src/generated/prisma
+
+# backups do banco (contem dados de produção, nunca vao para o git)
+backups/
+.tmp-backup-test/

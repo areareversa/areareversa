@@ -1,28 +1,27 @@
+import { fetchEpisodes } from "@/lib/podcast";
+
 export const dynamic = "force-dynamic";
 
-type Ep = { title: string; link: string; pubDate: string; audioUrl?: string; contentSnippet?: string };
-
+/**
+ * API do podcast — sempre busca o feed na hora (sem cache), para que um
+ * episódio publicado no Spotify apareça no site assim que a página carregar.
+ */
 export async function GET() {
-  let episodes: Ep[] = [];
-  try {
-    const res = await fetch("https://anchor.fm/s/118427fe8/podcast/rss", { next: { revalidate: 3600 } });
-    const xml = await res.text();
-    const itemsXml = xml.split("<item>").slice(1);
-    episodes = itemsXml.map((block) => {
-      const get = (tag: string) => {
-        const m = block.match(new RegExp(`<${tag}[^>]*>([\\s\\S]*?)<\\/${tag}>`));
-        return m ? m[1].replace(/<!\[CDATA\[|\]\]>/g, "").trim() : "";
-      };
-      const enc = block.match(/<enclosure[^>]*url="([^"]+)"/);
-      return {
-        title: get("title"),
-        link: get("link"),
-        pubDate: get("pubDate"),
-        audioUrl: enc?.[1],
-        contentSnippet: get("description").replace(/<[^>]+>/g, " ").slice(0, 160),
-      };
-    });
-  } catch {}
+  const result = await fetchEpisodes({ revalidate: false });
 
-  return Response.json({ episodes });
+  return Response.json(
+    {
+      episodes: result.episodes,
+      count: result.episodes.length,
+      source: result.source ?? null,
+      fetchedAt: result.fetchedAt,
+      error: result.error ?? null,
+    },
+    {
+      status: result.episodes.length > 0 ? 200 : 502,
+      headers: {
+        "Cache-Control": "no-store, max-age=0",
+      },
+    }
+  );
 }

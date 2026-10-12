@@ -1,0 +1,54 @@
+name: backup do banco
+
+on:
+  schedule:
+    # todo dia às 3h UTC (meia-noite no horário de Brasília)
+    - cron: "0 3 * * *"
+  # dá para rodar na mão em Actions > backup do banco > Run workflow
+  workflow_dispatch:
+    inputs:
+      manter:
+        description: "Quantos backups manter"
+        required: false
+        default: "30"
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: instalar dependências
+        run: npm ci --omit=optional
+
+      - name: gerar backup
+        env:
+          # cadastre em Settings > Secrets and variables > Actions > New repository secret
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          KEEP: ${{ github.event.inputs.manter || '30' }}
+        run: node scripts/backup.mjs --out backups --keep "$KEEP"
+
+      - name: resumo
+        run: |
+          {
+            echo "### Backup do banco — $(date -u +%Y-%m-%d\ %H:%M\ UTC)"
+            echo
+            echo "\`\`\`"
+            ls -lh backups/*.gz | awk '{print $5, $9}'
+            echo "\`\`\`"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      # guarda como artefato (90 dias por padrão) — sobrevive a apagar o repositório
+      - name: guardar artefato
+        uses: actions/upload-artifact@v4
+        with:
+          name: backup-banco-${{ github.run_id }}
+          path: backups/
+          retention-days: 90
+          if-no-files-found: error

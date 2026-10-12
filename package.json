@@ -9,7 +9,9 @@
         "lint": "eslint",
         "test": "node tests/smoke.test.mjs && tsx tests/units.test.ts",
         "postinstall": "prisma generate",
-        "seed": "tsx scripts/seed.mjs"
+        "seed": "tsx scripts/seed.mjs",
+        "backup": "node scripts/backup.mjs",
+        "restore": "node scripts/restore.mjs"
     },
     "dependencies": {
         "@prisma/adapter-pg": "^7.10.0",

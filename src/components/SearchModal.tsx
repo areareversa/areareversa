@@ -99,6 +99,9 @@ export function SearchModal() {
 
   return (
     <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Buscar posts"
       className="fixed inset-0 z-50 flex items-start justify-center bg-black/60 p-6 pt-24 backdrop-blur-sm"
       onClick={() => setOpen(false)}
       onKeyDown={handleKeyDown}
@@ -114,10 +117,13 @@ export function SearchModal() {
           aria-label="Buscar posts"
           aria-autocomplete="list"
           aria-controls="search-results"
+          aria-activedescendant={
+            results.length > 0 ? `search-opt-${selectedIndex}` : undefined
+          }
         />
         <ul id="search-results" className="mt-3 flex flex-col" role="listbox">
           {loading && (
-            <li className="px-3 py-4 text-sm text-[#9ca3af] flex items-center gap-2">
+            <li role="presentation" aria-live="polite" className="px-3 py-4 text-sm text-[#9ca3af] flex items-center gap-2">
               <svg className="animate-spin h-4 w-4 text-[#9333ea]" viewBox="0 0 24 24">
                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
@@ -126,7 +132,12 @@ export function SearchModal() {
             </li>
           )}
           {results.map((r, i) => (
-            <li key={r.slug} role="option" aria-selected={selectedIndex === i}>
+            <li
+              key={r.slug}
+              id={`search-opt-${i}`}
+              role="option"
+              aria-selected={selectedIndex === i}
+            >
               <button
                 onClick={() => {
                   setOpen(false);
@@ -147,10 +158,14 @@ export function SearchModal() {
             </li>
           ))}
           {!loading && results.length === 0 && q.trim() && (
-            <li className="px-3 py-4 text-sm text-[#9ca3af]">Nenhum resultado para "{q}".</li>
+            <li role="presentation" aria-live="polite" className="px-3 py-4 text-sm text-[#9ca3af]">
+              Nenhum resultado para "{q}".
+            </li>
           )}
           {!loading && results.length === 0 && !q.trim() && (
-            <li className="px-3 py-4 text-sm text-[#9ca3af]">Digite para buscar...</li>
+            <li role="presentation" className="px-3 py-4 text-sm text-[#9ca3af]">
+              Digite para buscar...
+            </li>
           )}
         </ul>
         <p className="mt-3 text-[11px] text-[#9ca3af] text-center">

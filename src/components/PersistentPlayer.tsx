@@ -43,7 +43,7 @@ export function PersistentPlayer() {
           <div className="flex items-center gap-3">
             <button
               onClick={previous}
-              className="p-2 rounded-full hover:bg-[#9333ea]/10 text-[#4b5563] hover:text-[#9333ea] dark:text-[#d4d4d8] transition"
+              className="p-2 rounded-full hover:bg-[#9333ea]/10 text-[#4b5563] hover:text-[#9333ea] dark:text-[#d4d4d8] transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#9333ea]"
               aria-label="Anterior"
               title="Anterior"
             >
@@ -55,7 +55,7 @@ export function PersistentPlayer() {
 
             <button
               onClick={toggle}
-              className="p-2.5 rounded-full bg-[#0f0f12] text-white hover:scale-105 active:scale-95 transition dark:bg-white dark:text-[#0f0f12]"
+              className="p-2.5 rounded-full bg-[#0f0f12] text-white hover:scale-105 active:scale-95 transition dark:bg-white dark:text-[#0f0f12] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#9333ea]"
               aria-label={isPlaying ? "Pausar" : "Tocar"}
               title={isPlaying ? "Pausar" : "Tocar"}
             >
@@ -73,7 +73,7 @@ export function PersistentPlayer() {
 
             <button
               onClick={next}
-              className="p-2 rounded-full hover:bg-[#9333ea]/10 text-[#4b5563] hover:text-[#9333ea] dark:text-[#d4d4d8] transition"
+              className="p-2 rounded-full hover:bg-[#9333ea]/10 text-[#4b5563] hover:text-[#9333ea] dark:text-[#d4d4d8] transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#9333ea]"
               aria-label="Próximo"
               title="Próximo"
             >
@@ -86,39 +86,35 @@ export function PersistentPlayer() {
 
           {/* Progress + Time */}
           <div className="flex items-center gap-3 min-w-[200px] max-w-[300px]">
-            <span className="text-[11px] text-[#9ca3af] font-mono w-10 text-right">{formatTime(currentTime)}</span>
-            <div className="flex-1 h-1.5 bg-[#e5e7eb] rounded-full cursor-pointer relative" role="slider" aria-label="Progresso do episódio" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(progress)}>
-              <div
-                className="h-full bg-[#9333ea] rounded-full transition-all"
-                style={{ width: `${progress}%` }}
-              />
-              <button
-                onMouseDown={(e) => {
-                  const handleMove = (moveEvent: MouseEvent) => {
-                    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-                    const percent = Math.max(0, Math.min(1, (moveEvent.clientX - rect.left) / rect.width));
-                    seek(percent * duration);
-                  };
-                  const handleUp = () => {
-                    document.removeEventListener("mousemove", handleMove);
-                    document.removeEventListener("mouseup", handleUp);
-                  };
-                  document.addEventListener("mousemove", handleMove);
-                  document.addEventListener("mouseup", handleUp);
-                }}
-                className="absolute top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-white border-2 border-[#9333ea] opacity-0 hover:opacity-100 focus:opacity-100 transition-opacity"
-                style={{ left: `${progress}%`, transform: "translate(-50%, -50%)" }}
-                aria-hidden="true"
-              />
-            </div>
-            <span className="text-[11px] text-[#9ca3af] font-mono w-10">{formatTime(duration)}</span>
+            <span className="text-[11px] text-[#9ca3af] font-mono w-10 text-right">
+              {formatTime(currentTime)}
+            </span>
+            {/*
+              A barra de progresso virou input[type=range] de verdade. Antes
+              era um div com role="slider" sem tabIndex (nunca recebia foco) e
+              sem tratamento das setas — ou seja, inutilizavel pelo teclado. Por
+              dentro havia ainda um <button>, papel invalido dentro de slider.
+            */}
+            <input
+              type="range"
+              min={0}
+              max={duration || 0}
+              step="0.1"
+              value={currentTime}
+              onChange={(e) => seek(Number(e.target.value))}
+              className="h-1.5 flex-1 appearance-none rounded-full bg-[#e5e7eb] accent-[#9333ea] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#9333ea] dark:bg-[#2a2a30] cursor-pointer"
+              aria-label="Progresso do episodio"
+              aria-valuetext={`${formatTime(currentTime)} de ${formatTime(duration)}`}
+            />
+            <span className="text-[11px] text-[#9ca3af] font-mono w-10">
+              {formatTime(duration)}
+            </span>
           </div>
-
           {/* Volume */}
           <div className="flex items-center gap-2">
             <button
               onClick={() => setVolume(volume > 0 ? 0 : 1)}
-              className="p-1.5 text-[#4b5563] hover:text-[#9333ea] dark:text-[#d4d4d8] transition"
+              className="p-1.5 text-[#4b5563] hover:text-[#9333ea] dark:text-[#d4d4d8] transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#9333ea]"
               aria-label={volume > 0 ? "Mutar" : "Desmutar"}
             >
               {volume > 0 ? (
@@ -149,7 +145,7 @@ export function PersistentPlayer() {
           {/* Close */}
           <button
             onClick={stop}
-            className="p-2 rounded-full hover:bg-[#9333ea]/10 text-[#9ca3af] hover:text-[#9333ea] transition"
+            className="p-2 rounded-full hover:bg-[#9333ea]/10 text-[#9ca3af] hover:text-[#9333ea] transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#9333ea]"
             aria-label="Fechar player"
             title="Fechar player"
           >

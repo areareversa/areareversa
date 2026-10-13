@@ -85,7 +85,13 @@ export function BlogIndexClient({ initialData }: { initialData: { posts: any[]; 
       <h1 className="text-5xl font-bold tracking-[-0.04em]">blog</h1>
 
       <form onSubmit={handleSearch} className="flex gap-2">
+        {/* o placeholder some quando o usuario digita e nao e lido de forma
+            confiavel por leitor de tela; o label nao some nunca */}
+        <label htmlFor="busca" className="sr-only">
+          Buscar por titulo ou resumo
+        </label>
         <input
+          id="busca"
           type="search"
           name="q"
           defaultValue={searchParams.q}

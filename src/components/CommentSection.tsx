@@ -41,7 +41,7 @@ export function CommentSection({ slug, initialComments }: { slug: string; initia
 
       <form onSubmit={enviar} className="flex flex-col gap-3">
         {/* honeypot anti-bot: invisível para humanos */}
-        <input type="text" name="website" tabIndex={-1} autoComplete="off" className="hidden" onChange={(e) => (window as any).__hp = e.target.value} />
+        <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" className="hidden" onChange={(e) => (window as any).__hp = e.target.value} />
         <input value={name} onChange={(e) => setName(e.target.value)} placeholder="Seu nome" className={input} required aria-label="Seu nome" />
         <textarea value={text} onChange={(e) => setText(e.target.value)} placeholder="Deixe seu comentário..." rows={4} className={input} required aria-label="Seu comentário" />
         <button

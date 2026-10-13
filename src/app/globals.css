@@ -76,6 +76,53 @@ body {
   to { opacity: 1; transform: translateY(0); }
 }
 
+/*
+ * Foco visivel - WCAG 2.4.7 (Focus Visible).
+ *
+ * Navegar por teclado sem enxergar para onde o foco esta e inutilizavel. O
+ * site usa "outline: none" em varios lugares, entao a regra global abaixo
+ * devolve um contorno em tudo que recebe foco por teclado. ":focus-visible"
+ * so aparece na interacao por teclado, entao o clique com mouse nao deixa
+ * borda sobrando.
+ */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid #9333ea;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* No dark mode o roxo puro some no fundo; um tom mais claro funciona melhor. */
+@media (prefers-color-scheme: dark) {
+  :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+    outline-color: #c084fc;
+  }
+}
+
+/*
+ * Respeita quem pediu menos animacao no sistema (WCAG 2.3.3 e 2.2.2).
+ * Cobre as animacoes do grid, do player e das transicoes de cor.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/*
+ * Respeita quem pediu mais contraste (Windows: "Alto contraste").
+ * Engrossa o contorno do foco, que em modo alto costuma ficar bem fino.
+ */
+@media (prefers-contrast: more) {
+  :where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+    outline-width: 3px;
+  }
+}
+
 .focus-mode header,
 .focus-mode footer,
 .focus-mode nav[aria-label="Navegação principal"],

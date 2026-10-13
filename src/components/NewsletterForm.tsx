@@ -90,9 +90,14 @@ export function NewsletterForm() {
   return (
     <form onSubmit={enviar} className="flex w-full max-w-md flex-col gap-2">
       <div className="flex gap-2">
+        <label htmlFor="newsletter-email" className="sr-only">
+          Seu e-mail
+        </label>
         <input
+          id="newsletter-email"
           type="email"
           required
+          aria-describedby="newsletter-aviso"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="seu@email.com"
@@ -105,7 +110,10 @@ export function NewsletterForm() {
           {loading ? "..." : "Assinar"}
         </button>
       </div>
-      {msg && <p className="text-xs text-[#ef4444] dark:text-[#fca5a5]">{msg}</p>}
+      {/*role=status faz o leitor de tela anunciar a resposta sem tirar o foco */}
+      <p id="newsletter-aviso" role="status" aria-live="polite" className="min-h-[1rem] text-xs text-[#ef4444] dark:text-[#fca5a5]">
+        {msg}
+      </p>
     </form>
   );
 }

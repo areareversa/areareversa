@@ -9,14 +9,16 @@ import { prisma } from "@/lib/prisma";
 export const revalidate = 60;
 
 export default async function Home() {
-  let posts: { slug: string; title: string; excerpt: string; createdAt: Date; content: string }[] = [];
+  let posts: { slug: string; title: string; excerpt: string; createdAt: Date; readingMinutes: number | null }[] = [];
   let categories: string[] = [];
   try {
     posts = await prisma.post.findMany({
       where: publishedFilter(),
       orderBy: { createdAt: "desc" },
       take: 6,
-      select: { slug: true, title: true, excerpt: true, createdAt: true, content: true },
+      // readingMinutes vem do banco (calculado por trigger). Trazer o campo
+      // content inteiro aqui aumentava o HTML em ~30 KB so para contar palavras.
+      select: { slug: true, title: true, excerpt: true, createdAt: true, readingMinutes: true },
     });
     const grouped = await prisma.post.groupBy({
       by: ["category"],
@@ -88,7 +90,7 @@ export default async function Home() {
             >
               <h3 className="text-lg font-semibold leading-snug tracking-tight">{p.title}</h3>
               <p className="text-sm text-[#4b5563] dark:text-[#d4d4d8]">{p.excerpt}</p>
-              <p className="text-xs text-[#9ca3af]">{readingTimeMinutes(p.content)} min de leitura</p>
+              <p className="text-xs text-[#9ca3af]">{p.readingMinutes ?? 1} min de leitura</p>
             </Link>
           ))}
           {posts.length === 0 && <p className="text-[#4b5563] dark:text-[#d4d4d8]">Em breve as primeiras postagens.</p>}

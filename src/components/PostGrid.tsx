@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Highlight } from "./Highlight";
-import { readingTimeMinutes } from "@/lib/readingTime";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -15,7 +14,7 @@ type Post = {
   coverImage: string | null;
   createdAt: string | Date;
   author: string;
-  content?: string;
+  readingMinutes?: number | null;
 };
 
 export function PostGrid({ posts, q }: { posts: Post[]; q?: string }) {
@@ -89,7 +88,7 @@ export function PostGrid({ posts, q }: { posts: Post[]; q?: string }) {
               <div className="flex flex-col gap-2 p-5">
                 <span className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#9ca3af]">
                   {p.category} · {p.author}
-                  {p.content ? ` · ${readingTimeMinutes(p.content)} min` : ""}
+                  {p.readingMinutes ? ` · ${p.readingMinutes} min` : ""}
                 </span>
                 {/* h2 cria a hierarquia que faltava: o título da página é h1 e o
                     título de cada post é h2 */}

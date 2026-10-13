@@ -30,7 +30,27 @@ export default async function BlogIndex({
   };
 
   const [posts, total, grouped] = await Promise.all([
-    prisma.post.findMany({ where, orderBy: { createdAt: "desc" }, skip: (page - 1) * PAGE_SIZE, take: PAGE_SIZE }).catch(() => []),
+    prisma.post
+      .findMany({
+        where,
+        orderBy: { createdAt: "desc" },
+        skip: (page - 1) * PAGE_SIZE,
+        take: PAGE_SIZE,
+        // Sem select, o Prisma traz content (o markdown inteiro) de cada post
+        // e o HTML do /blog ia para 153 KB so para exibir o tempo de leitura.
+        select: {
+          id: true,
+          slug: true,
+          title: true,
+          excerpt: true,
+          category: true,
+          coverImage: true,
+          createdAt: true,
+          author: true,
+          readingMinutes: true,
+        },
+      })
+      .catch(() => []),
     prisma.post.count({ where }).catch(() => 0),
     prisma.post.groupBy({ by: ["category"], where: publishedFilter(), _count: { _all: true }, orderBy: { category: "asc" } }).catch(() => []),
   ]);

@@ -23,6 +23,7 @@ model Post {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   searchVector String?  @db.Text // tsvector for full-text search
+  readingMinutes Int?   // calculado por trigger no banco (evita enviar o post inteiro só para contar palavras)
   comments    Comment[]
 
   @@map("posts")

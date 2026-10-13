@@ -21,11 +21,15 @@ export async function generateMetadata({
   return {
     title: post.title,
     description: post.excerpt,
-    // sinaliza aos sites que este post aceita webmentions
+    other: {
+      webmention: `${siteUrl}/api/webmention`,
+      "llms-txt": `${siteUrl}/llms.txt`,
+    },
     alternates: {
       types: {
         "text/html": [{ url: `${siteUrl}/blog/${post.slug}` }],
-        "application/webmention+json": `${siteUrl}/api/webmention`,
+        // a mesma página em markdown limpo, para agentes (llmstxt.org)
+        "text/markdown": [{ url: `${siteUrl}/blog/${post.slug}.md` }],
       },
     },
     openGraph: {

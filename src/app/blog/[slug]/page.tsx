@@ -50,15 +50,23 @@ export async function generateMetadata({
       modifiedTime: post.updatedAt?.toISOString() ?? post.createdAt.toISOString(),
       authors: [post.author],
       tags: post.tags,
-      images: post.coverImage
-        ? [{ url: post.coverImage, width: 1200, height: 630, alt: post.title }]
-        : undefined,
+      // Só declara a imagem quando existe capa. Se escrever
+      // `images: undefined`, o Next entende a chave como presente e NÃO usa a
+      // imagem gerada pelo arquivo opengraph-image.tsx — o post saía sem
+      // og:image nenhum, que é justamente o que o Google penaliza.
+      ...(post.coverImage
+        ? {
+            images: [
+              { url: post.coverImage, width: 1200, height: 630, alt: post.title },
+            ],
+          }
+        : {}),
     },
     twitter: {
       card: "summary_large_image",
       title: post.title,
       description: post.excerpt,
-      images: post.coverImage ? [post.coverImage] : undefined,
+      ...(post.coverImage ? { images: [post.coverImage] } : {}),
     },
   };
 }

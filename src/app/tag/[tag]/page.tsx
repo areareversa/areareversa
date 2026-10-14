@@ -12,10 +12,38 @@ export async function generateMetadata({ params }: { params: Promise<{ tag: stri
   return { title: `#${tag}`, description: `Posts com a tag ${tag}.` };
 }
 
+/**
+ * Pré-renderiza as tags existentes. Sem isto a rota é renderizada a cada
+ * visita e responde "no-store".
+ */
+export async function generateStaticParams() {
+  const posts = await prisma.post
+    .findMany({ where: publishedFilter(), select: { tags: true } })
+    .catch(() => []);
+  const tags = [...new Set(posts.flatMap((p) => p.tags))];
+  return tags.map((tag) => ({ tag }));
+}
+
 export default async function TagPage({ params }: { params: Promise<{ tag: string }> }) {
   const { tag } = await params;
   const posts = await prisma.post
-    .findMany({ where: { ...publishedFilter(), tags: { has: tag } }, orderBy: { createdAt: "desc" } })
+    .findMany({
+      where: { ...publishedFilter(), tags: { has: tag } },
+      orderBy: { createdAt: "desc" },
+      // Sem select o Prisma traz o markdown inteiro de cada post; o PostGrid
+      // so precisa do resumo e do tempo de leitura.
+      select: {
+        id: true,
+        slug: true,
+        title: true,
+        excerpt: true,
+        category: true,
+        coverImage: true,
+        createdAt: true,
+        author: true,
+        readingMinutes: true,
+      },
+    })
     .catch(() => []);
 
   const breadcrumbs = [

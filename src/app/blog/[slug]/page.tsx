@@ -42,6 +42,24 @@ export async function generateMetadata({
   };
 }
 
+/**
+ * Gera as rotas no build.
+ *
+ * Sem isto, uma rota dinâmica não é pré-renderizada: o Next a renderiza a
+ * cada visita e responde "no-store" — que era o que deixava a página de
+ * artigo em ~670 ms mesmo com revalidate = 60.
+ *
+ * Com generateStaticParams, os 13 posts viram páginas estáticas no build e
+ * passam a sair do cache da borda. Post novo continua funcionando: o admin
+ * chama revalidatePath("/blog"), e a página é regenerada na borda.
+ */
+export async function generateStaticParams() {
+  const posts = await prisma.post
+    .findMany({ where: publishedFilter(), select: { slug: true } })
+    .catch(() => []);
+  return posts.map((p) => ({ slug: p.slug }));
+}
+
 export default async function PostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const post = await prisma.post.findUnique({ where: { slug } }).catch(() => null);

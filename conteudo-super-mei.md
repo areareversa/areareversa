@@ -4,6 +4,14 @@
 
 Esqueça a manchete. O projeto que o governo protocolou no Congresso em junho **não é** o pacote que o governo anunciou em outubro. Isso não é um detalhe de jornalismo — é exatamente onde a engenharia reversa começa.
 
+> **Como ler este texto.** Toda afirmação aqui está numa de três camadas, e vale saber qual é qual antes de aceptar qualquer uma:
+>
+> 1. **O que o documento diz** — citação literal do projeto, entre aspas ou em itálico.
+> 2. **O que decorre disso** — leitura jurídica ou técnica, marcada como interpretação.
+> 3. **O que é hipótese** — leitura política do autor, sempre no condicional.
+>
+> Onde a lei não diz, este texto diz que não diz. Uma previsão de governo que não foi protocolada continua sendo previsão.
+
 ---
 
 ## O que foi anunciado (13 de outubro de 2026)
@@ -36,9 +44,11 @@ O art. 18-A, § 1º, na redação que o PLP propõe:
 
 > considera-se MEI quem tenha auferido receita bruta, **no ano-calendário anterior**, de até R$ 140.000,00 (cento e quarenta mil reais)
 
-Lê de novo. Quem estoura o número em janeiro de 2028 não é impedido de nada. A aferição olha para a receita do ano anterior.
+Lê de novo. A aferição olha para a receita do ano **anterior**.
 
-Ou seja: o sistema é **reativo, não proativo**. Ninguém é barrado no balcão. O MEI fatura o ano inteiro acima do teto, emite nota, presta serviço, e só depois existe uma apuração. O teto não é um freio — é uma conferência que chega depois.
+Ou seja: o sistema é **reativo, não proativo**. Não existe um limite que impeça o faturamento de ultrapassá-lo durante o ano — o MEI fatura, emite nota e presta serviço normalmente. A conferência vem depois.
+
+**E "depois" não significa "sem consequência".** O art. 18, § 7º, II, da LC 123 prevê o **desenquadramento obrigatório** quando o MEI excede o limite, e o § 6º diz que esse desenquadramento pode ocorrer **de ofício** — ou seja, a Receita pode determiná-lo sem que o empresário tenha pedido nada. Quem estoura o teto não fica impune: perde o enquadramento e passa a recolher pela regra geral do Simples Nacional.
 
 E tem mais. Para quem começa no meio do ano, o limite é proporcional:
 
@@ -62,13 +72,20 @@ Aqui está a peça que o debate público passou por cima. Art. 3º, literal:
 
 O art. 14 da LRF exige que todo projeto que aumenta despesa ou reduz receita traga seu impacto orçamentário junto. O PLP responde: o aumento do teto do MEI só vale se a **renúncia de receita** correspondente estiver inscrita na LOA de 2027, 2028 e 2029.
 
-Traduzindo sem juridiquês: **o teto não sobe porque o Congresso votou. O teto sobe porque o governo escreveu, no orçamento, que está abrindo mão de receita.**
+Traduzindo sem juridiquês: **o teto não sobe só porque o Congresso votou a PLP. Ele depende de uma segunda passagem, na lei orçamentária.**
 
-E quem decide isso não é o Congresso — é a Secretaria de Orçamento do Executivo. Se o time econômico não computar a renúncia, o teto não sobe, mesmo com a PLP aprovada nas comissões.
+Aqui é preciso cuidado com a inferência, porque o erro é fácil. A LOA é **elaborada pelo Executivo e votada pelo Congresso** — é uma lei como outra. O art. 3º não dá veto a ninguém: **acrescenta um requisito**, e nada mais.
 
-Agora olha a janela: **2027 a 2029**. São três orçamentos, três votações da LOA, três chances de o projeto morrer em silêncio. Um projeto com urgência no Congresso pode virar lei em três semanas. Uma renúncia de receita na LOA é objeto de negociação entre Tesouro, Fazenda e agencies durante o ano inteiro.
+O que ele faz é criar uma condição que atravessa **dois processos legislativos distintos**, em calendários diferentes:
 
-**A engrenagem lenta não está no Congresso. Está no orçamento.**
+1. A PLP 186/2026, com urgência, no Congresso.
+2. A LOA de cada exercício, com o relator orçamentário, na negociação do orçamento.
+
+Se o Executivo não computar a renúncia, o Congresso pode incluí-la. Se o Congresso não aprovar, o teto não sobe. Ninguém decide sozinho — mas o segundo processo é muito mais lento que o primeiro.
+
+Agora olha a janela: **2027 a 2029**. São três orçamentos, três votações, **três oportunidades distintas de o projeto travar** — e uma delas não tem nada a ver com o Congresso que votou a PLP. Um projeto com urgência pode virar lei em três semanas; um item de renúncia de receita na LOA é negociado ao longo do ano inteiro e pode ser alterado na discussão.
+
+**A engrenagem lenta existe. Mas não é um botão de bloqueio — é um segundo rito, mais lento e mais frágil.**
 
 ---
 
@@ -81,7 +98,7 @@ A manchete diz "MEI pode contratar dois empregados". O art. 18-C diz outra coisa
 Duas travas:
 
 1. **É só no meio rural.** Indústria, comércio e serviços *no âmbito rural*. O resto do país continua com o um empregado de sempre, previsto no art. 18 da LC 123.
-2. **Salário mínimo e só.** Cada empregado tem que receber *exclusivamente* um salário mínimo ou o piso da categoria. Sem hora extra, sem adicional, sem PLR, sem nada. Se o segundo empregado for contratado com qualquer acréscimo, o MEI deixa de enquadrar.
+2. **Salário mínimo e só.** O texto exige que os empregados recebam *exclusivamente* um salário mínimo ou o piso da categoria. Na redação atual, o artigo não comporta hora extra, adicional de periculosidade, PLR nem nenhum outro acréscimo. **O que o projeto não diz é qual é a consequência de descumprir** — não há, no texto enviado, previsão expressa de desenquadramento. Quem pagar acima disso está apostando numa interpretação que ainda não foi escrita.
 
 O § 2º do mesmo artigo abre uma válvula: em caso de afastamento legal, é permitida a contratação de empregado em número equivalente ao dos afastados, até que cessem as condições. Isso dá alguma flexibilidade — mas é acessória.
 
@@ -115,11 +132,17 @@ Duas coisas que a manchete não diz.
 
 **Primeira: onde está o projeto?** O texto protocolado em 29 de junho não fala em anistia. Se existe um PLP com esse conteúdo, ele é *outro documento* — não o 186/2026. Cada projeto tem seu número, seu rito e seu prazo. Uma anistia desse tamanho não passa "junto".
 
-**Segunda: de quem é a dívida?** Aqui está a armadilha clássica do MEI, e vale mais do que o valor. A dívida tributária do MEI é dívida do **empresário individual** — ou seja, da empresa. Não é dívida pessoal. A regra geral é a separação patrimonial: os bens do empresário não respondem pelas dívidas do negócio, salvo fraude, excesso de culpas, dolo ou má-fé.
+**Segunda: de quem é a dívida?** Aqui é preciso ser direto, porque o ponto contraria a intuição de muita gente: **a dívida do MEI é dívida pessoal.**
 
-Então: se você é MEI e tem R$ 40 mil de dívida com a Receita, a anistia pode liquidar o que é do negócio. Mas **ela não toca no seu CPF.** Se essa mesma dívida já aparece num processo de recuperação judicial, num divórcio, num levantamento de shortfall patrimonial ou num cadastro de fiador, ela é sua — pessoalmente — e continua sua.
+O MEI não é uma sociedade limitada. Ele é um **empresário individual** — art. 18-A, caput, da LC 123 — e essa figura **não tem separação patrimonial**. Não existe uma parede entre "os bens da empresa" e "os bens do sócio": para o sistema, é o **mesmo patrimônio**. É por isso que a jurisprudência trabalhista costuma equiparar o MEI à pessoa física, e é também por isso que a gratuidade de justiça não é automática para ele.
 
-Antes de comemorar: **descubra de qual CNPJ é a dívida**. É uma pergunta de uma ligação, e muda completamente o tamanho do problema.
+A regra geral, portanto, é a **responsabilidade ilimitada**: tributos, compras e contratos podem ser exigidos do patrimônio do titular. Não há, no texto enviado, exceção que inverta isso.
+
+E isso muda a leitura da anistia — para o lado bom. Quando o governo anuncia perdão de R$ 12,6 bilhões em dívidas de 3,6 milhões de MEIs, ele não está limpando a dívida de 3,6 milhões de empresas. Está limpando **a dívida de 3,6 milhões de pessoas**, com o próprio CPF no nome. Por isso os R$ 3.500 de média não são pouco: é limpeza direta de patrimônio pessoal.
+
+**O cuidado que sobra não é esse — é outro, e é o oposto do que se imagina.** A anistia anunciada alcança **dívidas tributárias**. Não alcança dívida com fornecedor, com empregado, nem o que você deve de outra empresa que tenha em nome. E, como o excesso de receita é medido no ano anterior, **desenquadrar não zera o passado**: os MES anteriores ao desenquadramento continuam devendo, agora apurados pela regra geral do Simples Nacional.
+
+Duas perguntas antes de comemorar: **é só dívida tributária?** E **de qual CNPJ, de qual período?** O Portal do Empreendedor responde as duas.
 
 ---
 
@@ -162,7 +185,7 @@ Você é notificado e tem que escolher entre migrar para o regime normal ou se d
 Não. Nada disso está em vigor. O perdão depende de votação; o teto novo depende de votação **e** de inscrição na LOA; o Pix/MEI depende de votação **e** de regulamentação do Executivo. Três camadas, três portões.
 
 ### 5. Recebi aviso de que estou na dívida ativa. Já era?
-O envio pelo Meu Empreendedor é aviso de preparação para cobrança, não execução de nada. Mas não decida pelo aviso: **peça a certidão de débitos do seu CNPJ e do seu CPF separadamente.** Dois números, duas respostas.
+O envio pelo Meu Empreendedor é aviso de preparação para cobrança, não execução de nada. Mas não decida pelo aviso: como a responsabilidade é ilimitada, **o mesmo lançamento aparece sob o CNPJ e sob o seu CPF**. Peça a certidão de débitos dos dois e confira se o valor é o mesmo. Se divergirem, o problema é maior do que a tela mostra.
 
 ### 6. Posso contratar o segundo empregado agora?
 Não. Nada foi aprovado. Contratar com base em manchete é assumir risco sozinho — e, se estourar a trava do salário mínimo, você pode ter que devolver a condição de MEI.
@@ -171,11 +194,11 @@ Não. Nada foi aprovado. Contratar com base em manchete é assumir risco sozinho
 
 ## O Veredito da Área Reversa
 
-O Super MEI não é um projeto simples de childcare: é um projeto de lei complementar com quatro travas embutidas no próprio texto, e três delas estão nas entrelinhas — o art. 3º (renúncia de receita na LOA), o art. 4º (escotilha fiscal) e a palavra "rural" escondida no art. 18-C.
+O Super MEI não é só um aumento de teto: é um projeto de lei complementar com quatro travas embutidas no próprio texto, e três delas estão nas entrelinhas — o art. 3º (renúncia de receita na LOA), o art. 4º (escotilha fiscal) e a palavra "rural" escondida no art. 18-C.
 
 Nenhuma delas é ilegal. Todas são exatamente o que a engenharia reversa procura: **a diferença entre o que a manchete promete e o que a máquina realmente faz.**
 
-O teto subindo de R$ 81 mil para R$ 140 mil parece generosidade. Mas é um valor nominal, sem correção por inflação no texto base — e sem teto, porque o teto é medido com um ano de atraso e verificado depois do serviço entregue. A anistia de R$ 12,6 bilhões parece dinheiro na mesa. Mas é R$ 3.500 por MEI em média, sobre a dívida da empresa — não do CPF. E o "dois empregados" é uma política rural que a comunicação nacional contou como se fosse universal.
+O teto subindo de R$ 81 mil para R$ 140 mil parece generosidade. Mas é um valor nominal, sem correção por inflação no texto base, e verificado com um ano de atraso — o que abre espaço para o desenquadramento de ofício. A anistia de R$ 12,6 bilhões parece dinheiro na mesa. E aqui a câmera inverte: os R$ 3.500 por pessoa não são de uma empresa, são do CPF de quem é MEI — e a ausência de separação patrimonial faz dessa a parte do pacote que realmente chega no bolso de alguém. O "dois empregados", por sua vez, é uma política rural que a comunicação nacional contou como se fosse universal.
 
 A engenharia reversa está feita. Agora cabe a você decidir o que faz com ela.
 
@@ -186,15 +209,33 @@ A engenharia reversa está feita. Agora cabe a você decidir o que faz com ela.
 1. **Raio-X:** descubra se sua atividade é "no âmbito rural". Isso decide, sozinho, se você tem direito ao segundo empregado.
 2. **Simulador:** pegue seu DAS atual e multiplique por 46. É mais ou menos o tamanho médio da dívida anistiada.
 3. **Acompanhe a LOA, não o Congresso:** entre 2027 e 2029, o que decide o seu teto novo é o capítulo de renúncia de receita da lei orçamentária. É onde o esforço real de lobby deveria estar.
-4. **Separe os dois números:** descubra de qual CNPJ é a sua dívida e se ela aparece no seu CPF. Isso muda o tamanho do problema.
+4. **Confira os dois números:** como a responsabilidade do MEI é ilimitada, a mesma dívida aparece sob o CNPJ e sob o seu CPF. Compare os dois valores da certidão — se divergirem, o problema é maior do que a tela mostra.
 5. **Leia as atas:** os requerimentos de apensamento e a votação do requerimento de retirada estão em ata pública. Cinco pedidos para grudar projeto é sinal claro de que alguém sabe que o caminho até a sanção é longo.
 
 ---
 
 ## Fontes
 
+**Projeto e tramitação**
+
 1. **Câmara dos Deputados** — ficha de tramitação e texto integral da **PLP 186/2026**, com a Mensagem 560/2026, os requerimentos REQ 3658, 3717, 3756, 3799 e 4106 (todos de 2026) e os RPD 1 e 2.
-2. **Lei Complementar nº 123/2006** — art. 18, 18-A, 18-C e 26 (Estatuto Nacional da Microempresa e da Empresa de Pequeno Porte).
+
+**Legislação citada no artigo**
+
+2. **Lei Complementar nº 123/2006** — art. 18, § 6º e § 7º, II (desenquadramento de ofício e obrigatório por excesso de receita), art. 18-A, art. 18-C e art. 26.
 3. **Lei Complementar nº 101/2000** (LRF) — art. 14 e 14-A.
 4. **Lei Complementar nº 224/2025**, art. 5º; **Lei nº 15.321/2025**, art. 149.
-5. **Receita Federal** — Simples Nacional / MEI: apuração do teto, tabela do DAS e os procedimentos de dívida ativa.
+
+**Sobre a responsabilidade patrimonial**
+
+5. **Código Civil, Lei nº 10.406/2002** — art. 966 (conceito de empresário) e arts. 972 a 977 (capacidade do empresário). Repare que **não há, nesses artigos, qualquer limite de responsabilidade**: a limitação do art. 1.005 e seguintes é da sociedade limitada, não do empresário individual. É essa a base da responsabilidade ilimitada do MEI.
+6. **Portal do Empreendedor (gov.br)** — MEI como empresário individual, ausência de separação patrimonial e equiparação à pessoa física, que é o fundamento da negativa de gratuidade de justiça automática.
+
+**Sobre o anúncio de outubro**
+
+7. **Ministério da Fazenda** — comunicação do pacote enviado ao Congresso em outubro de 2026, incluindo o perdão de R$ 12,6 bilhões e o teto de R$ 140 mil.
+8. **Agência Brasil** — cobertura do anúncio, com as versões de teto, perdão e Pix/MEI.
+
+**Consulta**
+
+9. **Receita Federal** — Simples Nacional / MEI: apuração do teto, tabela do DAS e procedimentos de dívida ativa.

@@ -48,7 +48,17 @@ Lê de novo. A aferição olha para a receita do ano **anterior**.
 
 Ou seja: o sistema é **reativo, não proativo**. Não existe um limite que impeça o faturamento de ultrapassá-lo durante o ano — o MEI fatura, emite nota e presta serviço normalmente. A conferência vem depois.
 
-**E "depois" não significa "sem consequência".** O art. 18, § 7º, II, da LC 123 prevê o **desenquadramento obrigatório** quando o MEI excede o limite, e o § 6º diz que esse desenquadramento pode ocorrer **de ofício** — ou seja, a Receita pode determiná-lo sem que o empresário tenha pedido nada. Quem estoura o teto não fica impune: perde o enquadramento e passa a recolher pela regra geral do Simples Nacional.
+**E "depois" não significa "sem consequência" — significa consequência retroativa.** O sistema do excesso de receita tem três degraus, e vale saber em qual deles você está:
+
+1. **Até 20% de excesso.** Não há desenquadramento. O MEI paga um **DAS de excesso de receita**, calculado só sobre a parcela que passou do limite, com vencimento em janeiro do ano seguinte. Mas ainda assim precisa **comunicar** a saída.
+2. **Mais de 20% de excesso.** Aí há desenquadramento, e ele é **retroativo a 1º de janeiro do ano em que o excesso ocorreu**. O negócio passa a recolher o ano inteiro pela regra geral do Simples Nacional de microempresa — e é sobre esse recolhimento retroativo que incidem multa e juros.
+3. **Sem o MEI fazer nada.** O art. 18-A, § 8º, da LC 123 permite o **desenquadramento de ofício**, quando a Receita constata a movimentação pelo cruzamento de notas fiscais. Foi assim, em 2015, que um lote de Contribuições Especiais Tributárias foi publicado contra MEIs do Pará e do Amazonas.
+
+O prazo para comunicar é o **último dia útil do mês seguinte** ao do excesso.
+
+Ou seja: o teto não é um freio, mas também não é só papel. A assimetria real está no degrau 2 — **é possível passar de 20% e olhar para trás.** E é exatamente esse o risco que o teto novo de R$ 140 mil torna mais fácil de cometer: um negócio que hoje fatura R$ 78 mil e cresce 20% continua salvo; o mesmo negócio, com o teto em R$ 140 mil, precisa saltar bem mais longe para cair no mesmo buraco.
+
+Isto é leitura, não texto: o projeto não altera nenhuma dessas regras. Apenas muda o número de referência.
 
 E tem mais. Para quem começa no meio do ano, o limite é proporcional:
 
@@ -106,19 +116,33 @@ Na prática, portanto: **a mudança de um para dois empregados é uma política 
 
 ---
 
-## Engrenagem 4: a cláusula de escotilha (art. 4º)
+## Engrenagem 4: o que o art. 4º dispensa de verdade
 
 O art. 4º é curto e vale uma leitura em voz alta:
 
 > O disposto nesta Lei Complementar não se sujeita às disposições do art. 14-A da Lei Complementar nº 101, de 4 de maio de 2000, do art. 5º da Lei Complementar nº 224, de 26 de dezembro de 2025, e do art. 149 da Lei nº 15.321, de 31 de dezembro de 2025.
 
-Traduzido: o projeto declara fora do seu alcance três dispositivos — a trava de operações de crédito do art. 14-A da LRF, o art. 5º da LC 224/2025 e o art. 149 da Lei 15.321/2025. Os dois últimos são de dezembro de 2025: o marco fiscal novo.
+Vamos abrir os três.
 
-A mensagem é direta: **este projeto não passa pelas travas que o novo arcabouço fiscal colocou nos outros.**
+**O art. 14-A da LRF** — este é o que importa, e ele não trata de dívida pública. Trata da **disciplina para conceder benefícios tributários**. Uma proposição que cria, amplia ou prorroga benefício com renúncia de receita precisa vir acompanhada de:
 
-Isso não é anomalia — é técnica de projeto. Subir um benefício tributário gera um custo fiscal pequeno e mensurável. Romper uma trava de endividamento abre um espaço muito maior. O governo pediu a exceção do tamanho grande porque a despesa é do tamanho pequeno.
+- estimativa do **quantitativo de beneficiários**;
+- **prazo de vigência de no máximo 5 anos**;
+- **metas de desempenho objetivas e quantificáveis**, em dimensões econômicas, sociais e ambientais;
+- impacto previsto na redução das **desigualdades regionais**;
+- mecanismos de **transparência, monitoramento e avaliação**.
 
-Vale sempre a pergunta de engenharia: **quando um sistema pede uma exceção, o que exatamente está sendo exento?** Aqui, a resposta é: a disciplina de endividamento do Estado.
+E o § 2º é o mais duro: **é vedada a prorrogação de benefício cujas metas não tenham sido atingidas.**
+
+**O art. 5º da LC 224/2025** trata da estimativa de renúncias nas diretrizes orçamentárias — os anexos de estimativa global de incentivos.
+
+**O art. 149 da Lei 15.321/2025** é da **LDO 2026** e diz, no mesmo tom: cláusula de vigência de no máximo cinco anos, acompanhada de metas e objetivos.
+
+Então, o que o projeto dispensa? **Exatamente a obrigação de medir.** O Super MEI fica livre de contar quantos MEIs serão gravados com o teto novo, de se fixar um prazo de avaliação, de definir metas e de prestar contas do resultado.
+
+E aqui está a parte que muda a leitura do artigo — **é cláusula de série, não invenção deste projeto.** A mesma fórmula aparece em outras proposições de 2026 que alteram benefícios tributários, com a mesma enumeração de dispositivos (arts. 14 e 14-A da LRF, art. 5º da LC 224/2025, inciso I do art. 29 e arts. 140 a 149 da Lei 15.321/2025). Não é uma manobra costurada para este caso.
+
+E é exatamente por ser automática que merece atenção. Uma regra que aparece em todo benefício tributário do pacote fiscal não pode ser lida como decisão caso a caso — mas também não pode ser lida como nada. **Ela significa que, por padrão, os benefícios tributários do pacote de 2026 entram sem prazo de avaliação e sem meta.** O que se exige em cima é que cada benefício traga a sua própria métrica.
 
 ---
 
@@ -126,7 +150,9 @@ Vale sempre a pergunta de engenharia: **quando um sistema pede uma exceção, o 
 
 Vamos fazer a conta. R$ 12,6 bilhões divididos por 3,6 milhões de MEIs dá **R$ 3.500 por pessoa, em média**.
 
-O DAS do MEI gira hoje na casa dos R$ 67 a R$ 83 por mês, dependendo da atividade. R$ 3.500 equivale a pouco mais de **quatro anos de imposto**. Ou, lido de outro jeito: o MEI endividado não é alguém que estourou o cartão no primeiro mês — é alguém que roda há anos e foi acumulando.
+O DAS do MEI gira hoje na casa dos R$ 67 a R$ 83 por mês, dependendo da atividade. Dividir por isso dá cerca de **quatro anos de imposto**.
+
+*Ressalva:* essa é uma média sobre uma média. O R$ 3.500 é a média nacional de um conjunto de 3,6 milhões — dentro dele há gente com R$ 100 e gente com R$ 100 mil de dívida. E a comparação com o DAS só vale se a dívida for de origem recente, e não de multa. Serve para dimensionar a ordem de grandeza, não para dizer o que vai acontecer com o seu caso.
 
 Duas coisas que a manchete não diz.
 
@@ -158,9 +184,13 @@ Lendo o histórico de tramitação, o item mais repetido não é sobre MEI. São
 | 07/07/2026 | Fausto Pinato (UNIÃO/SP) | apensar à PLP 108/2021 |
 | 24/08/2026 | Cezinha de Madureira (PL/SP) | apensar à PLP 108/2021 |
 
-**Apensar** significa: o projeto deixa de andar sozinho e passa a andar junto com outro. Se o outro morre, este morre junto. Se o outro fica preso numa comissão, este também. É a maneira mais barata e mais eficaz de matar um projeto — sem votar contra, sem dar entrevista, sem aparecer no placar.
+**Apensar** significa: o projeto deixa de andar sozinho e passa a andar junto com outro. Se o outro morre, este morre junto. Se o outro fica preso numa comissão, este também.
 
-Quem pediu: um do PSB, dois do UNIÃO, um do REPUBLIC, um do PL. Nenhum partido do campo do governo. O padrão não é "contra o MEI" — é "contra *este* projeto, *agora*".
+*Interpretação:* essa é a ferramenta mais barata de travar um projeto — sem votar contra, sem dar entrevista, sem aparecer no placar. É leitura institucional, não documento.
+
+**O que é fato:** cinco pedidos, um do PSB, dois do UNIÃO, um do REPUBLIC e um do PL. Nenhum partido do campo do governo. E, na tramitação que consta da ficha, **nenhum dos cinco aparece como acolhido** — o que a Mesa efetivamente fez foi apensar a PLP 267/2026 ao projeto, no sentido inverso ao dos pedidos.
+
+*Interpretação:* o padrão dos signatários sugere resistência ao projeto específico neste momento, e não posição sobre o tema MEI. Provavelmente é só isso: um projeto que cria despesa e mexe em benefício tributário atrai requerimento de apensamento quase por padrão, e cinco em quatro meses é o que se esperaria de um texto com essas características. **Nada nos documentos permite afirmar intenção deliberada de matar a proposição** — para isso seria preciso ler as justificativas dos requerimentos, que não constam da ficha pública resumida.
 
 E veja o que estava em jogo no REQ 3717/2026: a **PLP 125/2025**, que institui correção anual do teto pelo INPC. Se aquela apensação tivesse sido aceita, o teto passaria a ser corrigido por inflação — e R$ 110 mil de 2027 valeria menos de R$ 110 mil de 2026. Nesse caso específico, a apensação não era só manobra de sala: era uma trava real contra a perda, defendendo quem opera no limite.
 
@@ -179,7 +209,7 @@ Não. Hoje é R$ 81 mil por ano. R$ 110 mil só em 2027, e R$ 140 mil a partir d
 Não automaticamente. O DAS é valor fixo mensal definido pelo Comitê Gestor. Se o teto subir e o valor fixo não acompanhar, você fatura mais e paga o mesmo. Mas isso depende do valor que o Comitê Gestor definir — e ele ainda não definiu.
 
 ### 3. Se eu passar de R$ 81 mil, o que acontece?
-Você é notificado e tem que escolher entre migrar para o regime normal ou se desenquadrar. A regra é que o desenquadramento é obrigatório quando a receita do ano-calendário anterior supera o limite — não importa o que você faça depois.
+Depende de quanto. Até 20% de excesso, você paga um DAS de excesso sobre a parcela que estourou e comunica a saída — o desenquadramento vale a partir de 1º de janeiro do ano seguinte. Passou de 20%, o desenquadramento é **retroativo** ao 1º de janeiro do ano do excesso, e o ano inteiro é recolhido pela regra geral do Simples Nacional, com multa e juros. A comunicação é devida até o último dia útil do mês seguinte.
 
 ### 4. A anistia já vale?
 Não. Nada disso está em vigor. O perdão depende de votação; o teto novo depende de votação **e** de inscrição na LOA; o Pix/MEI depende de votação **e** de regulamentação do Executivo. Três camadas, três portões.
@@ -194,7 +224,7 @@ Não. Nada foi aprovado. Contratar com base em manchete é assumir risco sozinho
 
 ## O Veredito da Área Reversa
 
-O Super MEI não é só um aumento de teto: é um projeto de lei complementar com quatro travas embutidas no próprio texto, e três delas estão nas entrelinhas — o art. 3º (renúncia de receita na LOA), o art. 4º (escotilha fiscal) e a palavra "rural" escondida no art. 18-C.
+O Super MEI não é só um aumento de teto: é um projeto de lei complementar com quatro travas embutidas no próprio texto, e três delas estão nas entrelinhas — o art. 3º (a renúncia de receita na LOA), o art. 4º (a dispensa de prazo de avaliação e meta) e a palavra "rural" escondida no art. 18-C.
 
 Nenhuma delas é ilegal. Todas são exatamente o que a engenharia reversa procura: **a diferença entre o que a manchete promete e o que a máquina realmente faz.**
 
@@ -207,7 +237,7 @@ A engenharia reversa está feita. Agora cabe a você decidir o que faz com ela.
 ## Caixa de ferramentas
 
 1. **Raio-X:** descubra se sua atividade é "no âmbito rural". Isso decide, sozinho, se você tem direito ao segundo empregado.
-2. **Simulador:** pegue seu DAS atual e multiplique por 46. É mais ou menos o tamanho médio da dívida anistiada.
+2. **Ordem de grandeza:** o valor médio por beneficiário equivale a cerca de quatro anos do seu DAS. Serve para dimensionar o pacote, não para prever o seu caso — peça a certidão.
 3. **Acompanhe a LOA, não o Congresso:** entre 2027 e 2029, o que decide o seu teto novo é o capítulo de renúncia de receita da lei orçamentária. É onde o esforço real de lobby deveria estar.
 4. **Confira os dois números:** como a responsabilidade do MEI é ilimitada, a mesma dívida aparece sob o CNPJ e sob o seu CPF. Compare os dois valores da certidão — se divergirem, o problema é maior do que a tela mostra.
 5. **Leia as atas:** os requerimentos de apensamento e a votação do requerimento de retirada estão em ata pública. Cinco pedidos para grudar projeto é sinal claro de que alguém sabe que o caminho até a sanção é longo.
@@ -222,20 +252,23 @@ A engenharia reversa está feita. Agora cabe a você decidir o que faz com ela.
 
 **Legislação citada no artigo**
 
-2. **Lei Complementar nº 123/2006** — art. 18, § 6º e § 7º, II (desenquadramento de ofício e obrigatório por excesso de receita), art. 18-A, art. 18-C e art. 26.
-3. **Lei Complementar nº 101/2000** (LRF) — art. 14 e 14-A.
-4. **Lei Complementar nº 224/2025**, art. 5º; **Lei nº 15.321/2025**, art. 149.
+2. **Lei Complementar nº 123/2006** — art. 18-A, §§ 7º e 8º (desenquadramento por excesso de receita e de ofício) e art. 18-C.
+3. **Lei Complementar nº 101/2000** (LRF) — **art. 14-A na íntegra**: quantitativo de beneficiários, prazo de 5 anos, metas objetivas e quantificáveis, impacto nas desigualdades regionais, mecanismos de transparência e monitoramento, e a vedação de prorrogar benefício cujas metas não foram atingidas (§ 2º). O art. 14 é a regra da renúncia de receita, à qual o art. 3º do PLP se refere.
+4. **Lei Complementar nº 224/2025**, art. 5º (estimativa de renúncias nas diretrizes orçamentárias) — cuja redação deu ao art. 14 da LRF.
+5. **Lei nº 15.321/2025** — é a **LDO 2026**. Seu art. 149 repete a exigência de cláusula de vigência de no máximo cinco anos, acompanhada de metas e objetivos.
+6. **Resolução CGSN nº 140/2018** — art. 100 (condições de permanência no MEI) e art. 115, § 8º (DAS de excesso de receita).
 
 **Sobre a responsabilidade patrimonial**
 
-5. **Código Civil, Lei nº 10.406/2002** — art. 966 (conceito de empresário) e arts. 972 a 977 (capacidade do empresário). Repare que **não há, nesses artigos, qualquer limite de responsabilidade**: a limitação do art. 1.005 e seguintes é da sociedade limitada, não do empresário individual. É essa a base da responsabilidade ilimitada do MEI.
-6. **Portal do Empreendedor (gov.br)** — MEI como empresário individual, ausência de separação patrimonial e equiparação à pessoa física, que é o fundamento da negativa de gratuidade de justiça automática.
+7. **Código Civil, Lei nº 10.406/2002** — art. 966 (conceito de empresário) e arts. 972 a 977 (capacidade do empresário). Repare que **não há, nesses artigos, qualquer limite de responsabilidade**: a limitação do art. 1.005 e seguintes é da sociedade limitada, não do empresário individual. É essa a base da responsabilidade ilimitada do MEI.
+8. **Portal do Empreendedor (gov.br)** — MEI como empresário individual, ausência de separação patrimonial e equiparação à pessoa física, que é o fundamento da negativa de gratuidade de justiça automática. É lá também que está a regra das três faixas de excesso de receita descritas na Engrenagem 1.
+9. **Manual de Desenquadramento do SIMEI (Receita Federal)** — procedimento, prazos e efeitos do desenquadramento.
 
 **Sobre o anúncio de outubro**
 
-7. **Ministério da Fazenda** — comunicação do pacote enviado ao Congresso em outubro de 2026, incluindo o perdão de R$ 12,6 bilhões e o teto de R$ 140 mil.
-8. **Agência Brasil** — cobertura do anúncio, com as versões de teto, perdão e Pix/MEI.
+10. **Ministério da Fazenda** — comunicação do pacote enviado ao Congresso em outubro de 2026, incluindo o perdão de R$ 12,6 bilhões e o teto de R$ 140 mil.
+11. **Agência Brasil** — cobertura do anúncio, com as versões de teto, perdão e Pix/MEI.
 
-**Consulta**
+**Sobre a recorrência da cláusula do art. 4º**
 
-9. **Receita Federal** — Simples Nacional / MEI: apuração do teto, tabela do DAS e procedimentos de dívida ativa.
+12. **Proposições de 2026 sobre benefícios tributários** que contêm a mesma enumeração de dispositivos dispensados (arts. 14 e 14-A da LRF, art. 5º da LC 224/2025, inciso I do art. 29 e arts. 140 a 149 da Lei 15.321/2025). É o que sustenta a afirmação de que a cláusula é de série, e não uma manoba deste projeto.

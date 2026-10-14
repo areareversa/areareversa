@@ -23,6 +23,25 @@ export function BlogIndexClient({ initialData }: { initialData: { posts: any[]; 
   const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(() => Math.max(1, parseInt(initialData.searchParams.pagina ?? "1", 10) || 1));
 
+  /**
+   * A pagina do servidor e estatica e nao conhece a query string. Quando
+   * alguem chega por /blog?categoria=... ou /blog?q=..., lemos a URL aqui e
+   * buscamos os dados correspondentes. O custo sai do caminho critico: o HTML
+   * chega pronto e so entao a lista troca.
+   */
+  useEffect(() => {
+    const usp = new URLSearchParams(window.location.search);
+    const q = usp.get("q") ?? undefined;
+    const categoria = usp.get("categoria") ?? undefined;
+    const pagina = usp.get("pagina") ?? undefined;
+    if (!q && !categoria && (!pagina || pagina === "1")) return;
+    const alvo: SearchParams = { ...(q ? { q } : {}), ...(categoria ? { categoria } : {}), ...(pagina ? { pagina } : {}) };
+    setSearchParams(alvo);
+    setPage(Math.max(1, parseInt(pagina ?? "1", 10) || 1));
+    fetchData(alvo, Math.max(1, parseInt(pagina ?? "1", 10) || 1));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const fetchData = async (newParams: SearchParams, newPage: number) => {
     setLoading(true);
     try {
@@ -45,6 +64,16 @@ export function BlogIndexClient({ initialData }: { initialData: { posts: any[]; 
     }
   };
 
+  /** Escreve o filtro na URL sem recarregar a pagina. */
+  const pushUrl = (p: SearchParams, page: number) => {
+    const usp = new URLSearchParams();
+    if (p.q) usp.set("q", p.q);
+    if (p.categoria) usp.set("categoria", p.categoria);
+    if (page > 1) usp.set("pagina", String(page));
+    const url = usp.toString() ? `/blog?${usp.toString()}` : "/blog";
+    window.history.pushState({}, "", url);
+  };
+
   const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -53,6 +82,7 @@ export function BlogIndexClient({ initialData }: { initialData: { posts: any[]; 
       categoria: formData.get("categoria") as string || undefined,
     };
     setSearchParams(newParams);
+    pushUrl(newParams, 1);
     fetchData(newParams, 1);
   };
 
@@ -63,12 +93,14 @@ export function BlogIndexClient({ initialData }: { initialData: { posts: any[]; 
   const handleCategoryClick = (categoria: string | undefined) => {
     const newParams = { ...searchParams, categoria };
     setSearchParams(newParams);
+    pushUrl(newParams, 1);
     fetchData(newParams, 1);
   };
 
   const handleClearSearch = () => {
     const newParams = { categoria: searchParams.categoria };
     setSearchParams(newParams);
+    pushUrl(newParams, 1);
     fetchData(newParams, 1);
   };
 

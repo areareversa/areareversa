@@ -1,103 +1,100 @@
-"use client";
-
-import Script from "next/script";
 import { site } from "@/lib/site";
 
-interface WebSiteSchema {
-  "@context": "https://schema.org";
-  "@type": "WebSite";
-  name: string;
-  url: string;
-  potentialAction?: {
-    "@type": "SearchAction";
-    target: { "@type": "EntryPoint"; urlTemplate: string };
-    "query-input": string;
-  };
-}
+/**
+ * Dados estruturados (schema.org) para o Google.
+ *
+ * Estes componentes são SERVER por um motivo específico: antes eram "use
+ * client" com next/script, que injeta o JSON-LD via JavaScript depois do
+ * primeiro paint. O Google encontra o conteúdo, mas perder dados
+ * estruturados custa muito em rich results — e o Rich Result Test não os via
+ * de primeira, a menos que estejam no HTML inicial.
+ */
 
-interface OrganizationSchema {
-  "@context": "https://schema.org";
-  "@type": "Organization";
-  name: string;
-  url: string;
-  logo: string;
-  sameAs: string[];
-}
+type Crumb = { name: string; url: string };
 
-interface BreadcrumbItem {
-  "@type": "ListItem";
-  position: number;
-  name: string;
-  item: string;
-}
-
-interface BreadcrumbSchema {
-  "@context": "https://schema.org";
-  "@type": "BreadcrumbList";
-  itemListElement: BreadcrumbItem[];
+function JsonLd({ data }: { data: unknown }) {
+  return (
+    <script
+      type="application/ld+json"
+      // O conteúdo vem de dados do site, nunca de entrada do usuário.
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+    />
+  );
 }
 
 export function StructuredDataWebSite() {
-  const schema: WebSiteSchema = {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    name: site.name,
-    url: site.url,
-    potentialAction: {
-      "@type": "SearchAction",
-      target: {
-        "@type": "EntryPoint",
-        urlTemplate: `${site.url}/blog?q={search_term_string}`,
-      },
-      "query-input": "required name=search_term_string",
-    },
-  };
-
   return (
-    <Script
-      id="schema-website"
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    <JsonLd
+      data={{
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        name: site.name,
+        alternateName: `${site.name} — ${site.tagline}`,
+        url: site.url,
+        inLanguage: "pt-BR",
+        description: site.description,
+        publisher: {
+          "@type": "Organization",
+          name: site.name,
+          url: site.url,
+          logo: {
+            "@type": "ImageObject",
+            url: `${site.url}/icon-512.png`,
+          },
+        },
+        potentialAction: {
+          "@type": "SearchAction",
+          target: {
+            "@type": "EntryPoint",
+            urlTemplate: `${site.url}/blog?q={search_term_string}`,
+          },
+          "query-input": "required name=search_term_string",
+        },
+      }}
     />
   );
 }
 
 export function StructuredDataOrganization() {
-  const schema: OrganizationSchema = {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    name: site.name,
-    url: site.url,
-    logo: `${site.url}/logo-areareversa-preto.svg`,
-    sameAs: Object.values(site.links),
-  };
-
   return (
-    <Script
-      id="schema-organization"
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    <JsonLd
+      data={{
+        "@context": "https://schema.org",
+        "@type": "NewsMediaOrganization",
+        name: site.name,
+        url: site.url,
+        logo: {
+          "@type": "ImageObject",
+          url: `${site.url}/icon-512.png`,
+          width: 512,
+          height: 512,
+        },
+        sameAs: [
+          site.links.youtube,
+          site.links.instagram,
+          site.links.tiktok,
+          site.links.facebook,
+          site.links.pinterest,
+          site.links.spotify,
+        ],
+      }}
     />
   );
 }
 
-export function StructuredDataBreadcrumb({ items }: { items: Array<{ name: string; url: string }> }) {
-  const schema: BreadcrumbSchema = {
-    "@context": "https://schema.org",
-    "@type": "BreadcrumbList",
-    itemListElement: items.map((item, index) => ({
-      "@type": "ListItem",
-      position: index + 1,
-      name: item.name,
-      item: item.url,
-    })),
-  };
-
+export function StructuredDataBreadcrumb({ items }: { items: Crumb[] }) {
   return (
-    <Script
-      id="schema-breadcrumb"
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    <JsonLd
+      data={{
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        itemListElement: items.map((item, i) => ({
+          "@type": "ListItem",
+          position: i + 1,
+          name: item.name,
+          item: item.url,
+        })),
+      }}
     />
   );
 }

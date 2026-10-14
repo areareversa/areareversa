@@ -1,12 +1,15 @@
 import { publishedFilter } from "@/lib/posts";
 import { prisma } from "@/lib/prisma";
 import { BlogIndexClient } from "@/components/BlogIndexClient";
+import { StructuredDataBreadcrumb } from "@/components/StructuredData";
+import { site } from "@/lib/site";
 
 export const revalidate = 60;
 
 const PAGE_SIZE = 9;
 
 export const metadata = {
+  alternates: { canonical: `${site.url}/blog` },
   title: "Blog",
   description: "Análises e desconstrução de narrativas — engenharia reversa de ideias, discursos e políticas.",
 };
@@ -56,14 +59,22 @@ export default async function BlogIndex() {
       .catch(() => []),
   ]);
 
+  const breadcrumbs = [
+    { name: "Início", url: site.url },
+    { name: "Blog", url: `${site.url}/blog` },
+  ];
+
   return (
-    <BlogIndexClient
-      initialData={{
-        posts,
-        total,
-        grouped,
-        searchParams: {},
-      }}
-    />
+    <>
+      <StructuredDataBreadcrumb items={breadcrumbs} />
+      <BlogIndexClient
+        initialData={{
+          posts,
+          total,
+          grouped,
+          searchParams: {},
+        }}
+      />
+    </>
   );
 }

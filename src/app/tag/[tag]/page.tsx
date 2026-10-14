@@ -9,7 +9,11 @@ export const revalidate = 60;
 
 export async function generateMetadata({ params }: { params: Promise<{ tag: string }> }) {
   const { tag } = await params;
-  return { title: `#${tag}`, description: `Posts com a tag ${tag}.` };
+  return {
+    title: `#${tag}`,
+    description: `Posts com a tag ${tag}.`,
+    alternates: { canonical: `${site.url}/tag/${encodeURIComponent(tag)}` },
+  };
 }
 
 /**

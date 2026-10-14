@@ -6,6 +6,10 @@ import Link from "next/link";
 import { site } from "@/lib/site";
 import { prisma } from "@/lib/prisma";
 
+export const metadata = {
+  alternates: { canonical: site.url },
+};
+
 export const revalidate = 60;
 
 export default async function Home() {

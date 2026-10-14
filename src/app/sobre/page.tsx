@@ -1,4 +1,10 @@
-export const metadata = { title: "Sobre", description: "O que é a área reversa." };
+import { site } from "@/lib/site";
+
+export const metadata = {
+  title: "Sobre",
+  description: "O que é a área reversa: engenharia reversa de narrativas e discursos públicos.",
+  alternates: { canonical: `${site.url}/sobre` },
+};
 
 export default function Sobre() {
   return (

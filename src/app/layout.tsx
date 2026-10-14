@@ -19,16 +19,57 @@ const GA_ID = "G-FRTNFD1KQD";
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
-  title: { default: `${site.name} — ${site.tagline}`, template: `%s · ${site.name}` },
-  description: site.description,
+  /**
+   * O título é o que ensina ao Google o que a marca significa.
+   *
+   * "área reversa" sozinho é ambíguo: quem procura essa palavra no Google cai
+   * em logística reversa, um termo de indústria com volume enorme e trinta anos
+   * de conteúdo. Dizer explicitamente do que o site trata dá o sinal que
+   * faltava — sem precisar mudar o nome.
+   */
+  title: {
+    default: `${site.name} — engenharia reversa de narrativas e políticas públicas`,
+    template: `%s · ${site.name}`,
+  },
+  description:
+    "Engenharia reversa de ideias, discursos e políticas públicas: urna eletrônica, orçamento secreto, fundo partidário. Desmontando narrativas com método, contexto e sem filtro.",
+  keywords: [
+    "engenharia reversa",
+    "urna eletrônica",
+    "orçamento público",
+    "fundo partidário",
+    "narrativas políticas",
+    "análise política",
+    "TCU",
+    "centrão",
+  ],
+  authors: [{ name: site.name, url: site.url }],
+  creator: site.name,
+  publisher: site.name,
+  alternates: {
+    types: {
+      "application/rss+xml": "/rss.xml",
+      "text/markdown": "/llms.txt",
+    },
+  },
   openGraph: {
     siteName: site.name,
-    title: `${site.name} — ${site.tagline}`,
+    title: `${site.name} — engenharia reversa de narrativas e políticas públicas`,
     description: site.description,
     locale: "pt_BR",
     type: "website",
+    url: "/",
   },
-  alternates: { types: { "application/rss+xml": "/rss.xml" } },
+  twitter: {
+    card: "summary_large_image",
+    title: `${site.name} — engenharia reversa de narrativas`,
+    description: site.description,
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1 },
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

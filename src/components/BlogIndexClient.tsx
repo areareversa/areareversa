@@ -3,8 +3,6 @@
 import { useState, useEffect } from "react";
 import { PostGrid } from "@/components/PostGrid";
 import { BlogGridSkeleton } from "@/components/Skeletons";
-import { StructuredDataBreadcrumb } from "@/components/StructuredData";
-import { site } from "@/lib/site";
 import Link from "next/link";
 
 const PAGE_SIZE = 9;
@@ -106,14 +104,8 @@ export function BlogIndexClient({ initialData }: { initialData: { posts: any[]; 
 
   const pages = Math.max(1, Math.ceil(total / PAGE_SIZE));
 
-  const breadcrumbs = [
-    { name: "Início", url: site.url },
-    { name: "Blog", url: `${site.url}/blog` },
-  ];
-
   return (
     <div className="flex flex-col gap-8">
-      <StructuredDataBreadcrumb items={breadcrumbs} />
       <h1 className="text-5xl font-bold tracking-[-0.04em]">blog</h1>
 
       <form onSubmit={handleSearch} className="flex gap-2">

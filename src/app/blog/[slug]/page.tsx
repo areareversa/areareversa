@@ -3,8 +3,14 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
 import PostPageClient from "./PostPageClient";
+import { StructuredDataBreadcrumb } from "@/components/StructuredData";
 
 export const revalidate = 60;
+
+const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "https://areareversa.com.br").replace(
+  /\/+$/,
+  ""
+);
 
 export async function generateMetadata({
   params,
@@ -25,7 +31,10 @@ export async function generateMetadata({
       webmention: `${siteUrl}/api/webmention`,
       "llms-txt": `${siteUrl}/llms.txt`,
     },
+    // URL canônica: impede que o Google indexe o .md, versões com query ou
+    // duplicatas do mesmo post como páginas diferentes.
     alternates: {
+      canonical: `${siteUrl}/blog/${post.slug}`,
       types: {
         "text/html": [{ url: `${siteUrl}/blog/${post.slug}` }],
         // a mesma página em markdown limpo, para agentes (llmstxt.org)
@@ -37,6 +46,18 @@ export async function generateMetadata({
       description: post.excerpt,
       url: `${siteUrl}/blog/${post.slug}`,
       type: "article",
+      publishedTime: post.createdAt.toISOString(),
+      modifiedTime: post.updatedAt?.toISOString() ?? post.createdAt.toISOString(),
+      authors: [post.author],
+      tags: post.tags,
+      images: post.coverImage
+        ? [{ url: post.coverImage, width: 1200, height: 630, alt: post.title }]
+        : undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.excerpt,
       images: post.coverImage ? [post.coverImage] : undefined,
     },
   };
@@ -98,15 +119,24 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
       .catch(() => []),
   ]);
 
+  const crumbs = [
+    { name: "Início", url: `${SITE_URL}/` },
+    { name: "Blog", url: `${SITE_URL}/blog` },
+    { name: post.title, url: `${SITE_URL}/blog/${post.slug}` },
+  ];
+
   return (
-    <PostPageClient
-      initialPost={{
-        ...post,
-        createdAt: post.createdAt.toISOString(),
-        updatedAt: post.updatedAt?.toISOString(),
-      }}
-      initialComments={comments}
-      initialMentions={mentions.map((m) => ({ ...m, createdAt: m.createdAt.toISOString() }))}
-    />
+    <>
+      <StructuredDataBreadcrumb items={crumbs} />
+      <PostPageClient
+        initialPost={{
+          ...post,
+          createdAt: post.createdAt.toISOString(),
+          updatedAt: post.updatedAt?.toISOString(),
+        }}
+        initialComments={comments}
+        initialMentions={mentions.map((m) => ({ ...m, createdAt: m.createdAt.toISOString() }))}
+      />
+    </>
   );
 }

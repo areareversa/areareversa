@@ -71,11 +71,6 @@ export default function PostPageClient({ initialPost, initialComments = [], init
     }
   }, [initialPost]);
 
-  const breadcrumbs = post ? [
-    { name: "Início", url: site.url },
-    { name: "Blog", url: `${site.url}/blog` },
-    { name: post.title, url: `${site.url}/blog/${post.slug}` },
-  ] : [];
 
   if (loading) return <PostPageSkeleton />;
 
@@ -83,7 +78,6 @@ export default function PostPageClient({ initialPost, initialComments = [], init
 
   return (
     <article className="mx-auto flex max-w-2xl flex-col gap-6 h-entry">
-      <StructuredDataBreadcrumb items={breadcrumbs} />
       <ReadingProgress />
       {/* microformats2: permite que sites que implementam webmention
           extraiam título, autor, data e conteúdo deste post */}

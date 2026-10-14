@@ -84,7 +84,16 @@ export default function PostPageClient({ initialPost, initialComments = [], init
       <a className="u-url sr-only" href={`${site.url}/blog/${post.slug}`}>
         {post.title}
       </a>
-      <a className="u-webmention sr-only" href={`${site.url}/api/webmention`} />
+      {/*
+        Endpoint de webmention em formato de microformat, como pede a
+        especificação. O texto não pode ser vazio: um link sem texto é um
+        "item sem nome" tanto para leitor de tela quanto para o Search Console,
+        que o reportou na inspeção de URL. sr-only esconde da tela mas mantém
+        o texto no HTML.
+      */}
+      <a className="u-webmention sr-only" href={`${site.url}/api/webmention`}>
+        receber menções neste post
+      </a>
       <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#9333ea]">
         {post.category} · <span className="p-author h-card"><a className="u-url p-name" href={`${site.url}/sobre`}>{post.author}</a></span> ·{" "}
         <time className="dt-published" dateTime={post.createdAt}>

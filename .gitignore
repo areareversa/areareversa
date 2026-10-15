@@ -50,6 +50,12 @@ backups/
 tmp_*.cjs
 tmp_*.mjs
 
+# rascunhos de artigo: area de preparo, antes de publicar no banco.
+# Fica FORA de public/ de proposito — o que estiver em public/ e servido
+# pelo site e versionado no git. A fonte do conteudo publicado e o Postgres.
+rascunhos/
+public/artigos/
+
 # rascunho de conteudo: a fonte unica do artigo e o banco de producao (Neon),
 # que tem backup diario. Versionar uma copia em .md aqui criaria uma segunda
 # versao que diverge em silencio quando o post for editado pelo /admin.

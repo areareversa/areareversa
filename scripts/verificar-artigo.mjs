@@ -53,6 +53,10 @@ if (lixo) {
 const estrangeiras = [
   "childcare", "default", "agencies", "negotiation", "payroll", "placeholder",
   "the", "and", "with", "from", "should", "would",
+  // espanhol que ja escapou em revisoes anteriores
+  "condiciones", "ley", "dato", "plazo de",
+  // lixo recorrente de digitacao / traducao automatica
+  "demean", "custo_", "aengenharia", "ro'tina",
 ];
 const encontradas = estrangeiras.filter((p) => new RegExp("\\b" + p + "\\b", "i").test(t));
 if (encontradas.length) avisos.push("palavras em ingles: " + encontradas.join(", "));

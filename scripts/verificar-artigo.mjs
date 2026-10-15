@@ -35,6 +35,10 @@ try {
   process.exit(2);
 }
 
+// front matter do publicar-artigo.mjs nao faz parte do artigo
+const fm = t.match(/^---\n[\s\S]*?\n---\n?/);
+if (fm) t = t.slice(fm[0].length);
+
 const falhas = [];
 const avisos = [];
 

@@ -14,10 +14,35 @@ export function middleware(request: NextRequest) {
    */
   const mdMatch = pathname.match(/^\/blog\/([^/]+)\.md$/);
 
-  const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
+  const isDev = process.env.NODE_ENV === "development";
   const cspHeader = [
     "default-src 'self'",
-    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' https://www.googletagmanager.com`,
+    /**
+     * Sem nonce, e sem 'strict-dynamic'.
+     *
+     * O site usava `script-src 'self' 'nonce-…' 'strict-dynamic'`, com o nonce
+     * gerado aqui. Isso desligava o site inteiro — e foi um bug silencioso,
+     * porque o HTML se renderiza igual:
+     *
+     *  - 'strict-dynamic' faz o navegador **ignorar 'self'**. Só passa script
+     *    com nonce, e nenhum <script> tinha: 0 de 18 na home, 0 de 21 no post.
+     *  - o nonce precisa chegar no header da **requisição** (docs do Next,
+     *    "How nonces work in Next.js"). Aqui ele ia no header da resposta.
+     *  - nonce exige renderização **dinâmica** (docs, "Static vs Dynamic
+     *    Rendering with CSP"), e o build marca /blog como estático e os posts
+     *    como SSG. Script gerado em build não tem nonce para carimbar.
+     *
+     * Resultado: 16–17 violações de CSP por página, zero hidratação. Busca,
+     * modo escuro, modo leitura, TTS, sumário, salvos, comentários, share e
+     * newsletter não funcionavam — e o useScrollDepth por isso nunca registrava
+     * evento. Entrou em c1dac30, em 09/10.
+     *
+     * A troca: perde-se a proteção estrita de script inline. Em troca o site
+     * volta a ser estático, cacheável e rápido. Para voltar atrás: usar SRI
+     * (experimental.sri no next.config, hash dos arquivos no build) ou aceitar
+     * renderização dinâmica em todas as rotas.
+     */
+    `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""} https://www.googletagmanager.com`,
     "style-src 'self' 'unsafe-inline'",
     "img-src 'self' https: data:",
     "font-src 'self'",
@@ -44,8 +69,7 @@ export function middleware(request: NextRequest) {
   response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
   response.headers.set("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
 
-  // Pass nonce to client via header for Script components
-  response.headers.set("x-nonce", nonce);
+  // Sem x-nonce: sem nonce na política, o header não serve para nada.
 
   /**
    * Header Link: para agentes, conforme a especificação llms.txt.

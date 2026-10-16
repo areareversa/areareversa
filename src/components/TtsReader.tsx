@@ -13,6 +13,24 @@ export function TtsReader({ text }: { text: string }) {
   const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
   const textRef = useRef(text);
   const chunksRef = useRef<string[]>([]);
+  /**
+   * `null` ainda significa "não sei".
+   *
+   * O servidor não tem `window.speechSynthesis`. Decidir isso durante o
+   * render faz o HTML do servidor divergir do primeiro render do cliente, o
+   * React detecta a divergência e **descarta a árvore inteira**, refazendo
+   * tudo no cliente. Com o `TtsReader` dentro do `<article>`, isso derrubava
+   * a hidratação do post inteiro — e o `TableOfContents`, que só monta depois
+   * de um efeito, nunca aparecia.
+   *
+   * A saída é o estado de três valores: durante o primeiro render servidor e
+   * cliente desenham a mesma coisa, e o veredito chega no efeito.
+   */
+  const [suportado, setSuportado] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    setSuportado(typeof window !== "undefined" && !!window.speechSynthesis);
+  }, []);
 
   // Keep text ref updated
   useEffect(() => {
@@ -218,7 +236,9 @@ export function TtsReader({ text }: { text: string }) {
     } catch {}
   }, [voices]);
 
-  if (typeof window === "undefined" || !window.speechSynthesis) {
+  // Só sai daqui quando já sabemos que o navegador não fala. Enquanto
+  // `suportado` é null, desenha o leitor normal — é o que o servidor fez.
+  if (suportado === false) {
     return (
       <button
         disabled

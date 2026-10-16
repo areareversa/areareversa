@@ -62,11 +62,30 @@ export function TableOfContents() {
   if (headings.length === 0) return null;
 
   return (
+    /**
+     * O sumário mora na margem direita do artigo, e a conta é apertada.
+     *
+     * O artigo é `max-w-2xl` (672 px) centralizado, então a borda direita dele
+     * está em `50% + 336 px`. Para caber, o sumário precisa de 256 px de
+     * largura mais uma folga de 16 px: borda direita em `50% + 608 px`.
+     * Isso só cabe se a janela tiver 2 × 608 = 1216 px ou mais.
+     *
+     * Antes o `left` era `50% + 34rem` (544 px) e o aparecimento vinha em
+     * `lg:` (1024 px). Entre 1024 e 1599 px o painel saía da tela: numa janela
+     * de 1366 px, que é a resolução clássica de desktop, só 139 dos 256 px
+     * apareciam — o sumário saía pela metade. Aqui a folga encolhe para 16 px
+     * e o corte vai para 1280 px, a menor largura com sobra real.
+     *
+     * Abaixo de 1280 px não há margem que caiba: sobra 176 px de cada lado do
+     * artigo numa tela de 1024, e o painel precisa de 256. Esconder é a única
+     * saída honesta — sobrepor o artigo seria pior. `xl` do Tailwind já é
+     * 1280 px, então não precisa de variante arbitrária.
+     */
     <nav
       ref={containerRef}
       aria-label="Sumário"
-      className="hidden lg:block fixed left-[calc(50%+40rem)] top-24 w-64 max-h-[calc(100vh-8rem)] overflow-y-auto px-4 py-4 border-l border-[#e5e7eb] dark:border-[#2a2a30]"
-      style={{ left: "calc(50% + 34rem)" }}
+      className="hidden xl:block fixed top-24 w-64 max-h-[calc(100vh-8rem)] overflow-y-auto border-l border-[#e5e7eb] px-4 py-4 dark:border-[#2a2a30]"
+      style={{ left: "calc(50% + 22rem)" }}
     >
       <h3 className="text-xs font-semibold uppercase tracking-[0.2em] text-[#9ca3af] mb-3 sticky top-0 bg-white/90 backdrop-blur dark:bg-[#0f0f12]/90 pb-2 border-b border-[#e5e7eb] dark:border-[#2a2a30]">
         Sumário

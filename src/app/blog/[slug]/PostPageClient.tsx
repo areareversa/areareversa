@@ -20,6 +20,7 @@ import { MarkdownErrorBoundary, TTSErrorBoundary, CommentsErrorBoundary } from "
 import { site } from "@/lib/site";
 import { GAEvents } from "@/lib/gaEvents";
 import { WebmentionList, type Mention } from "@/components/WebmentionList";
+import EpisodeBlock, { type EpisodeForPost } from "@/components/EpisodeBlock";
 
 type Post = {
   slug: string;
@@ -43,7 +44,7 @@ type Comment = {
   adminReply?: string | null;
 };
 
-export default function PostPageClient({ initialPost, initialComments = [], initialMentions = [] }: { initialPost: Post | null; initialComments: Comment[]; initialMentions?: Mention[] }) {
+export default function PostPageClient({ initialPost, initialComments = [], initialMentions = [], episode }: { initialPost: Post | null; initialComments: Comment[]; initialMentions?: Mention[]; episode?: EpisodeForPost | null }) {
   const [post, setPost] = useState<Post | null>(initialPost);
   const [comments, setComments] = useState<Comment[]>(initialComments);
   const [related, setRelated] = useState<Post[]>([]);
@@ -135,7 +136,19 @@ export default function PostPageClient({ initialPost, initialComments = [], init
           alt={post.title}
           width={1200}
           height={675}
-          className="aspect-video w-full rounded-2xl object-cover"
+          /*
+            Capa em qualquer proporção.
+            As capas do site variam de 0,67 (retrato) a 2,07 (widescreen), e o
+            `aspect-video` + `object-cover` antigo cortava todas elas para 16:9
+            — no retrato, cortava 62% da altura.
+
+            h-auto devolve a altura ao navegador, que a recalcula pela proporção
+            real do arquivo. max-w-full impede a imagem de passar da coluna.
+            Sem w-full de propósito: capa pequena não é ampliada.
+            Trocar qualquer um destes dois por aspect-video devolve o corte.
+          */
+          className="h-auto max-w-full rounded-2xl"
+          sizes="(max-width: 768px) 100vw, 672px"
           placeholder="blur"
           blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="
         />
@@ -162,6 +175,7 @@ export default function PostPageClient({ initialPost, initialComments = [], init
           <Markdown>{post.content}</Markdown>
         </div>
       </MarkdownErrorBoundary>
+      {episode && <EpisodeBlock episode={episode} />}
       <ShareButtons title={post.title} url={`${site.url}/blog/${post.slug}`} />
       <BookmarkButton slug={post.slug} title={post.title} />
       <CommentsErrorBoundary>

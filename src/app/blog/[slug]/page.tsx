@@ -4,6 +4,8 @@ import type { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
 import PostPageClient from "./PostPageClient";
 import { StructuredDataBreadcrumb } from "@/components/StructuredData";
+import { fetchEpisodes } from "@/lib/podcast";
+import { resolveEpisode } from "@/lib/podcast-match";
 
 export const revalidate = 60;
 
@@ -133,10 +135,29 @@ export default async function PostPage({ params }: { params: Promise<{ slug: str
     { name: post.title, url: `${SITE_URL}/blog/${post.slug}` },
   ];
 
+  // Episódio do podcast: o de mesmo título do post; sem correspondência, o mais
+  // recente do canal (ver src/lib/podcast-match.ts). O feed é cacheado por 10
+  // minutos — a página revalida a cada 60s, mas não precisa do feed novo antes.
+  // Feed fora do ar não pode derrubar o artigo: aí o bloco simplesmente não
+  // aparece, e o post continua abrindo.
+  const feed = await fetchEpisodes({ revalidate: 600 }).catch(() => null);
+  const achado = feed?.episodes?.length ? resolveEpisode(post.title, feed.episodes) : null;
+  const episode = achado
+    ? {
+        title: achado.episode.title,
+        link: achado.episode.link,
+        pubDate: achado.episode.pubDate,
+        audioUrl: achado.episode.audioUrl!,
+        duration: achado.episode.duration,
+        matched: achado.matched,
+      }
+    : null;
+
   return (
     <>
       <StructuredDataBreadcrumb items={crumbs} />
       <PostPageClient
+        episode={episode}
         initialPost={{
           ...post,
           createdAt: post.createdAt.toISOString(),

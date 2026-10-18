@@ -55,9 +55,12 @@ export function PostForm({
       </label>
       {cover && (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={cover} alt="Pré-visualização da capa" className="aspect-video w-full max-w-md rounded-lg object-cover" onError={(e) => ((e.target as HTMLImageElement).style.display = "none")} />
+        /* pré-visualização com a proporção real: é aqui que se julga se a capa
+           está boa, e o crop antigo (aspect-video + object-cover) enganava —
+           mostrava um recorte 16:9 de uma imagem widescreen ou retrato */
+        <img src={cover} alt="Pré-visualização da capa" className="h-auto max-w-md rounded-lg" onError={(e) => ((e.target as HTMLImageElement).style.display = "none")} />
       )}
-      <p className="text-xs text-neutral-400">Dica: no Pinterest, clique com o botão direito na imagem → &quot;Copiar endereço da imagem&quot;.</p>
+      <p className="text-xs text-neutral-400">Dica: no Pinterest, clique com o botão direito na imagem → &quot;Copiar endereço da imagem&quot;. A capa aparece inteira na página do post, na proporção em que foi enviada.</p>
 
       <div className="flex gap-2 text-xs">
         <button type="button" onClick={() => setTab("escrever")} className={`rounded-full border px-3 py-1 ${tab === "escrever" ? "border-[#9333ea] text-[#9333ea]" : "border-neutral-300 dark:border-[#2a2a30]"}`}>escrever</button>

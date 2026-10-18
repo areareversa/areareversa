@@ -78,7 +78,14 @@ export function PostGrid({ posts, q }: { posts: Post[]; q?: string }) {
                   alt=""
                   width={640}
                   height={360}
-                  className="aspect-video w-full object-cover"
+                  /*
+                    O card mantém a caixa 16:9 para o grid ficar alinhado, mas
+                    usa object-contain: capa widescreen ou retrato aparece
+                    inteira, com a barra da caixa aparecendo nas laterais. Antes
+                    era object-cover, que cortava.
+                  */
+                  className="aspect-video w-full bg-[#f9f7fa] object-contain dark:bg-[#1a1a20]"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   placeholder="blur"
                   blurDataURL="data:image/png;base64,iVBwVC0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="
                 />

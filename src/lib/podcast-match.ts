@@ -49,7 +49,10 @@ export const EPISODE_MODE: EpisodeMode = "mais-recente";
  * Correções pontuais quando o feed e o post divergirem de um jeito que o token
  * não resolve. Chave: título normalizado do post. Valor: título do episódio.
  */
-export const ESCAPE_HATCH: Record<string, string> = {};
+export const ESCAPE_HATCH: Record<string, string> = {
+  "fim da 6x1 a engenharia reversa da emenda que o congresso promulgou":
+    "Ep.05 - Fim da 6x1: A Engenharia Reversa da Emenda que o Congresso Promulgou.mp3",
+};
 
 /** Remove acentos, pontuação e as marcas que o feed acrescenta ao título. */
 export function normalizeTitle(input: string): string {

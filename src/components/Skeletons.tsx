@@ -72,3 +72,18 @@ export function BlogGridSkeleton({ count = 6 }: { count?: number }) {
     </div>
   );
 }
+
+export function SkeletonList({ count = 5 }: { count?: number }) {
+  return (
+    <div className="space-y-6">
+      {Array.from({ length: count }).map((_, i) => (
+        <div key={i} className="animate-pulse flex flex-col gap-3 rounded-2xl border border-[#e5e7eb] p-5 dark:border-[#2a2a30] dark:bg-[#17171c]">
+          <div className="h-6 bg-[#e5e7eb] rounded w-3/4 dark:bg-[#2a2a30]" />
+          <div className="h-4 bg-[#e5e7eb] rounded w-1/2 dark:bg-[#2a2a30]" />
+          <div className="h-4 bg-[#e5e7eb] rounded w-1/4 dark:bg-[#2a2a30]" />
+          <div className="h-12 bg-[#e5e7eb] rounded w-full dark:bg-[#2a2a30]" />
+        </div>
+      ))}
+    </div>
+  );
+}

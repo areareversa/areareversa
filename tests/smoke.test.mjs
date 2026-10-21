@@ -12,6 +12,11 @@ const cases = [
   { path: "/sobre", expect: 200, name: "sobre" },
   { path: "/rss.xml", expect: 200, name: "rss feed" },
   { path: "/sitemap.xml", expect: 200, name: "sitemap" },
+  // rotas traduzidas: o prefixo do locale precisa chegar até o App Router
+  { path: "/en-US", expect: 200, name: "home em inglês" },
+  { path: "/es-ES", expect: 200, name: "home em espanhol" },
+  { path: "/en-US/blog", expect: 200, name: "blog em inglês" },
+  { path: "/es-ES/podcast", expect: 200, name: "podcast em espanhol" },
 ];
 
 let failed = 0;

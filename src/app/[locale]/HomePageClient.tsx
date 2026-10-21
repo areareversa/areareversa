@@ -1,10 +1,12 @@
 "use client";
 
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
+import NextLink from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { readingTimeMinutes } from "@/lib/readingTime";
-import { useTranslations, useFormatter, useLocale } from "next-intl";
+import { useTranslations, useFormatter } from "next-intl";
+import { usePlayer } from "@/lib/PlayerContext";
 
 type Post = {
   id: string;
@@ -44,10 +46,8 @@ export default function HomePageClient({
   const [episode, setEpisode] = useState<Episode | null>(initialEpisode);
   const [loading, setLoading] = useState(!initialPosts?.length);
   const t = useTranslations("home");
-  const blogT = useTranslations("blog");
-  const commonT = useTranslations("common");
   const fmt = useFormatter();
-  const currentLocale = useLocale();
+  const { play } = usePlayer();
 
   useEffect(() => {
     if (initialPosts?.length) {
@@ -106,15 +106,20 @@ export default function HomePageClient({
               </h2>
             </div>
             <p className="text-xs text-[#9ca3af]">
-              <time dateTime={episode.pubDate}>{episode.pubDate ? (new Date(episode.pubDate)).toLocaleDateString("pt-BR") : ""}</time>
-              {episode.duration ? ` · {episode.duration}` : ""}
+              <time dateTime={episode.pubDate}>{episode.pubDate ? fmt.dateTime(new Date(episode.pubDate), { dateStyle: "medium" }) : ""}</time>
+              {episode.duration ? ` · ${episode.duration}` : ""}
             </p>
             <div className="flex flex-wrap gap-3">
               {episode.audioUrl && (
                 <button
                   onClick={() => {
-                    const event = new CustomEvent("play-podcast", { detail: episode });
-                    window.dispatchEvent(event);
+                    play({
+                      title: episode.title,
+                      audioUrl: episode.audioUrl!,
+                      pubDate: episode.pubDate,
+                      link: episode.link,
+                      contentSnippet: episode.contentSnippet,
+                    });
                   }}
                   className="w-full sm:w-auto rounded-xl border border-[#e5e7eb] bg-white px-4 py-3 text-left text-sm font-medium transition hover:border-[#9333ea]/60 hover:text-[#9333ea] dark:border-[#2a2a30] dark:bg-[#17171c] dark:hover:text-[#9333ea]"
                 >
@@ -134,7 +139,7 @@ export default function HomePageClient({
       <section className="mb-12" aria-labelledby="latest-posts">
         <div className="flex items-center justify-between mb-6">
           <h2 id="latest-posts" className="text-2xl font-bold tracking-[-0.02em]">{t("latestPosts")}</h2>
-          <Link href={`/\${currentLocale === "pt-BR" ? "" : locale + "/" }blog`} className="text-sm text-[#9333ea] hover:underline">
+          <Link href="/blog" className="text-sm text-[#9333ea] hover:underline">
             {t("allPosts")}
           </Link>
         </div>
@@ -146,7 +151,7 @@ export default function HomePageClient({
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {posts.map((post) => (
               <article key={post.slug} className="group relative flex flex-col overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white text-left transition hover:-translate-y-0.5 hover:shadow-[0_8px_24px_#0f172a1f] dark:border-[#2a2a30] dark:bg-[#17171c] dark:hover:shadow-[0_8px_24px_#00000066]">
-                <Link href={`/\${currentLocale === "pt-BR" ? "" : locale + "/" }blog/${post.slug}`} className="flex flex-col rounded-2xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-[#9333ea]">
+                <Link href={{ pathname: "/blog/[slug]", params: { slug: post.slug } }} className="flex flex-col rounded-2xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-[#9333ea]">
                   {post.coverImage ? (
                     <Image
                       src={post.coverImage}
@@ -198,15 +203,15 @@ export default function HomePageClient({
       <section aria-labelledby="tags">
         <div className="flex items-center justify-between mb-6">
           <h2 id="tags" className="text-2xl font-bold tracking-[-0.02em]">{t("tags")}</h2>
-          <Link href={`/\${currentLocale === "pt-BR" ? "" : locale + "/" }blog`} className="text-sm text-[#9333ea] hover:underline">
+          <Link href="/blog" className="text-sm text-[#9333ea] hover:underline">
             {t("allPosts")}
           </Link>
         </div>
         <div className="flex flex-wrap gap-2">
           {["urna eletrônica", "orçamento", "fundo partidário", "narrativas", "TCU", "centrão", "MEI", "previdência", "eleições"].map((tag) => (
-            <Link key={tag} href={`/\${currentLocale === "pt-BR" ? "" : locale + "/" }tag/${encodeURIComponent(tag)}`} className="rounded-full border border-[#e5e7eb] px-3 py-1 text-xs text-[#4b5563] transition hover:border-[#9333ea] hover:text-[#9333ea] dark:border-[#2a2a30] dark:text-[#d4d4d8]">
+            <NextLink key={tag} href={`/tag/${encodeURIComponent(tag)}`} prefetch={false} className="rounded-full border border-[#e5e7eb] px-3 py-1 text-xs text-[#4b5563] transition hover:border-[#9333ea] hover:text-[#9333ea] dark:border-[#2a2a30] dark:text-[#d4d4d8]">
               #{tag}
-            </Link>
+            </NextLink>
           ))}
         </div>
       </section>

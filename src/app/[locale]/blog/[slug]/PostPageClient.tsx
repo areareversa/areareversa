@@ -3,8 +3,8 @@
 import { useState, useEffect } from "react";
 import { PostPageSkeleton } from "@/components/Skeletons";
 import { readingTimeMinutes } from "@/lib/readingTime";
-import Link from "next/link";
 import Image from "next/image";
+import NextLink from "next/link";
 import { Markdown } from "@/components/Markdown";
 import { ShareButtons } from "@/components/ShareButtons";
 import { ReadingProgress } from "@/components/ReadingProgress";
@@ -22,7 +22,7 @@ import { GAEvents } from "@/lib/gaEvents";
 import { WebmentionList, type Mention } from "@/components/WebmentionList";
 import EpisodeBlock, { type EpisodeForPost } from "@/components/EpisodeBlock";
 import { useTranslations, useFormatter, useLocale } from "next-intl";
-import { usePathname } from "@/i18n/routing";
+import { Link } from "@/i18n/routing";
 
 type Post = {
   id: string;
@@ -64,9 +64,9 @@ export default function PostPageClient({
   const [related, setRelated] = useState<Post[]>([]);
   const [loading, setLoading] = useState(!initialPost);
   const t = useTranslations("blog");
-  const commonT = useTranslations("common");
   const fmt = useFormatter();
   const currentLocale = useLocale();
+  const localePrefix = currentLocale === "pt-BR" ? "" : `/${currentLocale}`;
 
   useEffect(() => {
     if (initialPost) {
@@ -95,7 +95,7 @@ export default function PostPageClient({
   return (
     <article className="mx-auto flex max-w-2xl flex-col gap-6 h-entry">
       <ReadingProgress />
-      <a className="u-url sr-only" href={`${site.url}/\${currentLocale === "pt-BR" ? "" : locale + "/" }blog/${post.slug}`}>
+      <a className="u-url sr-only" href={`${site.url}${localePrefix}/blog/${post.slug}`}>
         {post.title}
       </a>
       <a className="u-webmention sr-only" href={`${site.url}/api/webmention`}>
@@ -131,7 +131,7 @@ export default function PostPageClient({
             },
             mainEntityOfPage: {
               "@type": "WebPage",
-              "@id": `${site.url}/\${currentLocale === "pt-BR" ? "" : locale + "/" }blog/${post.slug}`,
+              "@id": `${site.url}${localePrefix}/blog/${post.slug}`,
             },
           }),
         }}
@@ -151,13 +151,14 @@ export default function PostPageClient({
       {post.tags.length > 0 && (
         <div className="flex flex-wrap gap-2">
           {post.tags.map((tag) => (
-            <Link
+            <NextLink
               key={tag}
-              href={`/\${currentLocale === "pt-BR" ? "" : locale + "/" }tag/${encodeURIComponent(tag)}`}
+              href={`/tag/${encodeURIComponent(tag)}`}
+              prefetch={false}
               className="rounded-full border border-[#e5e7eb] px-3 py-1 text-xs text-[#4b5563] transition hover:border-[#9333ea] hover:text-[#9333ea] dark:border-[#2a2a30] dark:text-[#d4d4d8]"
             >
               #{tag}
-            </Link>
+            </NextLink>
           ))}
         </div>
       )}
@@ -175,7 +176,7 @@ export default function PostPageClient({
         </div>
       </MarkdownErrorBoundary>
       {episode && <EpisodeBlock episode={episode} />}
-      <ShareButtons title={post.title} url={`${site.url}/\${currentLocale === "pt-BR" ? "" : locale + "/" }blog/${post.slug}`} />
+      <ShareButtons title={post.title} url={`${site.url}${localePrefix}/blog/${post.slug}`} />
       <BookmarkButton slug={post.slug} title={post.title} />
       <CommentsErrorBoundary>
         <CommentSection slug={post.slug} initialComments={comments} />
@@ -186,7 +187,7 @@ export default function PostPageClient({
         <section className="flex flex-col gap-4">
           <h2 className="text-sm font-semibold uppercase tracking-[0.22em] text-[#9ca3af]">{t("relatedPosts")}</h2>
           {related.map((r) => (
-            <Link key={r.slug} href={`/\${currentLocale === "pt-BR" ? "" : locale + "/" }blog/${r.slug}`} className="rounded-2xl border border-[#e5e7eb] p-5 transition hover:border-[#9333ea]/60 dark:border-[#2a2a30]">
+            <Link key={r.slug} href={{ pathname: "/blog/[slug]", params: { slug: r.slug } }} className="rounded-2xl border border-[#e5e7eb] p-5 transition hover:border-[#9333ea]/60 dark:border-[#2a2a30]">
               <h3 className="font-semibold leading-snug tracking-tight">{r.title}</h3>
               <p className="mt-1 text-sm text-[#4b5563] dark:text-[#d4d4d8]">{r.excerpt}</p>
             </Link>

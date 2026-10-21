@@ -1,10 +1,10 @@
 "use client";
 
-import Link from "next/link";
+import { Link } from "@/i18n/routing";
 import Image from "next/image";
 import { readingTimeMinutes } from "@/lib/readingTime";
 import { useState, useEffect } from "react";
-import { useTranslations, useFormatter, useLocale } from "next-intl";
+import { useTranslations } from "next-intl";
 
 type Post = {
   id: string;
@@ -26,9 +26,6 @@ export default function BlogPageClient({ initialLocale, initialPosts }: { initia
   const [posts, setPosts] = useState<Post[]>(initialPosts);
   const [loading, setLoading] = useState(!initialPosts?.length);
   const t = useTranslations("blog");
-  const commonT = useTranslations("common");
-  const fmt = useFormatter();
-  const currentLocale = useLocale();
 
   useEffect(() => {
     if (initialPosts?.length) {
@@ -76,7 +73,7 @@ export default function BlogPageClient({ initialLocale, initialPosts }: { initia
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
           {posts.map((post) => (
             <article key={post.slug} className="group relative flex flex-col overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white text-left transition hover:-translate-y-0.5 hover:shadow-[0_8px_24px_#0f172a1f] dark:border-[#2a2a30] dark:bg-[#17171c] dark:hover:shadow-[0_8px_24px_#00000066]">
-              <Link href={`/\${currentLocale === "pt-BR" ? "" : locale + "/" }blog/${post.slug}`} className="flex flex-col rounded-2xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-[#9333ea]">
+              <Link href={{ pathname: "/blog/[slug]", params: { slug: post.slug } }} className="flex flex-col rounded-2xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-3px] focus-visible:outline-[#9333ea]">
                 {post.coverImage ? (
                   <Image
                     src={post.coverImage}

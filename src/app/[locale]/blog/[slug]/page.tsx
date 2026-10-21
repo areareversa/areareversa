@@ -3,6 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { publishedFilter, isVisible } from "@/lib/posts";
+import { locales } from "@/i18n/routing";
 import PostPageClient from "./PostPageClient";
 import { StructuredDataBreadcrumb } from "@/components/StructuredData";
 import { fetchEpisodes } from "@/lib/podcast";
@@ -25,11 +26,12 @@ export async function generateMetadata({
   if (!post) return { title: t("notFound") };
 
   const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || "https://areareversa.com.br").replace(/\/+$/, "");
-  const postUrl = `${siteUrl}/${locale === "pt-BR" ? "" : locale + "/" }blog/${post.slug}`;
+  const pref = locale === "pt-BR" ? "" : `/${locale}`;
+  const postUrl = `${siteUrl}${pref}/blog/${post.slug}`;
 
   return {
-    title: post.title,
-    description: post.excerpt,
+    title: (post as any)[`title_${locale}`] || post.title,
+    description: (post as any)[`excerpt_${locale}`] || post.excerpt,
     other: {
       webmention: `${siteUrl}/api/webmention`,
       "llms-txt": `${siteUrl}/llms.txt`,
@@ -72,7 +74,12 @@ export async function generateStaticParams() {
   const posts = await prisma.post
     .findMany({ where: publishedFilter(), select: { slug: true } })
     .catch(() => []);
-  return posts.map((p) => ({ slug: p.slug }));
+  /**
+   * A rota é `[locale]/blog/[slug]` — sem o locale aqui o Next não sabe qual
+   * idioma pré-renderizar e cai em `DYNAMIC_SERVER_USAGE` em produção (500 na
+   * página do artigo). O produto cartesiano cobre os três idiomas.
+   */
+  return locales.flatMap((locale) => posts.map((p) => ({ locale, slug: p.slug })));
 }
 
 export default async function PostPage({
@@ -81,9 +88,7 @@ export default async function PostPage({
   params: Promise<{ locale: string; slug: string }>;
 }) {
   const { locale, slug } = await params;
-  const t = await getTranslations({ locale, namespace: "blog" });
-  const commonT = await getTranslations({ locale, namespace: "common" });
-  const postT = await getTranslations({ locale, namespace: "post" });
+  const navT = await getTranslations({ locale, namespace: "nav" });
 
   const post = await prisma.post.findUnique({ where: { slug } }).catch(() => null);
   if (!post || !isVisible(post)) notFound();
@@ -122,10 +127,16 @@ export default async function PostPage({
       }
     : null;
 
+  /**
+   * O pt-BR é o locale padrão e vive sem prefixo (localePrefix: "as-needed").
+   * Um `pref` montado à mão evita as URLs quebradas com barra dupla e espaço
+   * no fim que existiam aqui antes.
+   */
+  const pref = locale === "pt-BR" ? "" : `/${locale}`;
   const crumbs = [
-    { name: commonT("nav.home"), url: `${SITE_URL}/${locale === "pt-BR" ? "" : locale + "/"} ` },
-    { name: commonT("nav.blog"), url: `${SITE_URL}/${locale === "pt-BR" ? "" : locale + "/" }blog` },
-    { name: title, url: `${SITE_URL}/${locale === "pt-BR" ? "" : locale + "/" }blog/${post.slug}` },
+    { name: navT("home"), url: `${SITE_URL}${pref}/` },
+    { name: navT("blog"), url: `${SITE_URL}${pref}/blog` },
+    { name: title, url: `${SITE_URL}${pref}/blog/${post.slug}` },
   ];
 
   return (

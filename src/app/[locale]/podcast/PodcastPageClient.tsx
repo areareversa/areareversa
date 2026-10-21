@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useTranslations, useFormatter, useLocale } from "next-intl";
+import { useTranslations, useFormatter } from "next-intl";
 import { usePlayer } from "@/lib/PlayerContext";
 import { SkeletonList } from "@/components/Skeletons";
 import { Episode as PodcastEpisode } from "@/lib/podcast";
@@ -13,9 +13,7 @@ export default function PodcastPageClient({ initialLocale, initialEpisodes }: { 
   const [loading, setLoading] = useState(!initialEpisodes?.length);
   const [error, setError] = useState<string | null>(null);
   const t = useTranslations("podcast");
-  const commonT = useTranslations("common");
   const fmt = useFormatter();
-  const currentLocale = useLocale();
   const { play, setQueueEpisodes } = usePlayer();
 
   useEffect(() => {
@@ -52,7 +50,7 @@ export default function PodcastPageClient({ initialLocale, initialEpisodes }: { 
         {ep.title}
       </a>
       <p className="flex flex-wrap gap-x-3 text-xs text-[#9ca3af]">
-        {ep.pubDate && <time dateTime={ep.pubDate}>{new Date(ep.pubDate).toLocaleDateString("pt-BR")}</time>}
+        {ep.pubDate && <time dateTime={ep.pubDate}>{fmt.dateTime(new Date(ep.pubDate), { dateStyle: "medium" })}</time>}
         {ep.duration && <span>{ep.duration}</span>}
       </p>
       {ep.contentSnippet && <p className="text-sm text-[#4b5563] dark:text-[#d4d4d8]">{ep.contentSnippet}...</p>}

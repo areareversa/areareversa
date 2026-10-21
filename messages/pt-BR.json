@@ -61,7 +61,10 @@
       "title": "Artigo disponível apenas em português",
       "message": "Este artigo ainda não foi traduzido. Você pode ler a versão original em português:",
       "readOriginal": "Ler em português"
-    }
+    },
+    "latestPosts": "Últimos artigos",
+    "notFound": "Artigo não encontrado",
+    "webmentionEndpoint": "receber menções neste post"
   },
   "home": {
     "heroTitle": "Engenharia reversa de narrativas e políticas públicas",
@@ -74,10 +77,16 @@
       "placeholder": "seu@email.com",
       "button": "Inscrever",
       "success": "Inscrito! Verifique seu e-mail.",
-      "error": "Erro ao inscrever. Tente novamente."
+      "error": "Erro ao inscrever. Tente novamente.",
+      "subscribe": "Inscrever"
     },
     "tags": "Temas",
-    "allPosts": "Todos os artigos"
+    "allPosts": "Todos os artigos",
+    "play": "▶ Ouvir",
+    "noPosts": "Nenhum artigo encontrado",
+    "podcast": {
+      "openSpotify": "abrir no Spotify →"
+    }
   },
   "post": {
     "notFound": "Artigo não encontrado",
@@ -91,7 +100,8 @@
     "readingProgress": "Progresso de leitura",
     "toc": "Sumário",
     "tocEmpty": "Este artigo não tem títulos para o sumário.",
-    "webmentionEndpoint": "receber men��es neste post",\n    "webmentions": {
+    "webmentionEndpoint": "receber men��es neste post",
+    "webmentions": {
       "title": "O que outros disseram",
       "reply": "Responder",
       "like": "Curtir",
@@ -108,7 +118,9 @@
     "pause": "Pausar",
     "duration": "Duração",
     "openSpotify": "Ouvir no Spotify →",
-    "updatedAt": "Atualizado em"
+    "updatedAt": "Atualizado em",
+    "errorLoading": "Não consegui carregar os episódios",
+    "showingLastKnown": "Mostrando a última lista conhecida."
   },
   "about": {
     "title": "Sobre a Área Reversa",
@@ -122,7 +134,7 @@
     "jsonFeed": "JSON Feed"
   },
   "admin": {
-    "title": "Painel Admin",
+    "title": "Título",
     "login": "Entrar no painel",
     "email": "E-mail",
     "password": "Senha",
@@ -135,7 +147,6 @@
     "posts": "Artigos",
     "newPost": "Novo artigo",
     "editPost": "Editar artigo",
-    "title": "Título",
     "slug": "Slug",
     "excerpt": "Resumo",
     "content": "Conteúdo (Markdown)",
@@ -237,7 +248,11 @@
     "september": "setembro",
     "october": "outubro",
     "november": "novembro",
-    "december": "dezembro"
+    "december": "dezembro",
+    "nav": {
+      "home": "Início",
+      "blog": "Blog"
+    }
   },
   "seo": {
     "article": "Artigo",
@@ -246,8 +261,8 @@
   },
   "errors": {
     "404": "Página não encontrada",
-    "404Description": "Desculpe, não conseguimos encontrar esta página.",
     "500": "Erro interno do servidor",
+    "404Description": "Desculpe, não conseguimos encontrar esta página.",
     "500Description": "Algo deu errado. Tente novamente mais tarde.",
     "networkError": "Erro de conexão. Verifique sua internet.",
     "unknownError": "Erro desconhecido"

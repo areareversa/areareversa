@@ -61,7 +61,10 @@
       "title": "Article available only in Portuguese",
       "message": "This article has not been translated yet. You can read the original version in Portuguese:",
       "readOriginal": "Read in Portuguese"
-    }
+    },
+    "latestPosts": "Latest posts",
+    "notFound": "Post not found",
+    "webmentionEndpoint": "receive mentions for this post"
   },
   "home": {
     "heroTitle": "Reverse engineering of narratives and public policy",
@@ -74,10 +77,16 @@
       "placeholder": "your@email.com",
       "button": "Subscribe",
       "success": "Subscribed! Check your email.",
-      "error": "Error subscribing. Please try again."
+      "error": "Error subscribing. Please try again.",
+      "subscribe": "Subscribe"
     },
     "tags": "Topics",
-    "allPosts": "All articles"
+    "allPosts": "All articles",
+    "play": "▶ Listen",
+    "noPosts": "No posts found",
+    "podcast": {
+      "openSpotify": "open in Spotify →"
+    }
   },
   "post": {
     "notFound": "Article not found",
@@ -91,7 +100,8 @@
     "readingProgress": "Reading progress",
     "toc": "Table of contents",
     "tocEmpty": "This article has no headings for the table of contents.",
-    "webmentionEndpoint": "receive mentions for this post",\n    "webmentions": {
+    "webmentionEndpoint": "receive mentions for this post",
+    "webmentions": {
       "title": "What others said",
       "reply": "Reply",
       "like": "Like",
@@ -108,7 +118,9 @@
     "pause": "Pause",
     "duration": "Duration",
     "openSpotify": "Listen on Spotify →",
-    "updatedAt": "Updated on"
+    "updatedAt": "Updated on",
+    "errorLoading": "Couldn't load episodes",
+    "showingLastKnown": "Showing the last known list."
   },
   "about": {
     "title": "About Área Reversa",
@@ -122,7 +134,7 @@
     "jsonFeed": "JSON Feed"
   },
   "admin": {
-    "title": "Admin Panel",
+    "title": "Title",
     "login": "Sign in to panel",
     "email": "Email",
     "password": "Password",
@@ -135,7 +147,6 @@
     "posts": "Articles",
     "newPost": "New article",
     "editPost": "Edit article",
-    "title": "Title",
     "slug": "Slug",
     "excerpt": "Excerpt",
     "content": "Content (Markdown)",
@@ -237,7 +248,11 @@
     "september": "September",
     "october": "October",
     "november": "November",
-    "december": "December"
+    "december": "December",
+    "nav": {
+      "home": "Home",
+      "blog": "Blog"
+    }
   },
   "seo": {
     "article": "Article",
@@ -246,8 +261,8 @@
   },
   "errors": {
     "404": "Page not found",
-    "404Description": "Sorry, we couldn't find this page.",
     "500": "Internal server error",
+    "404Description": "Sorry, we couldn't find this page.",
     "500Description": "Something went wrong. Please try again later.",
     "networkError": "Network error. Check your connection.",
     "unknownError": "Unknown error"

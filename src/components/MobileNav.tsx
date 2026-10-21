@@ -2,12 +2,23 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { SearchModal } from "./SearchModal";
 import { ThemeToggle } from "./ThemeToggle";
+import LanguageSwitcher from "./LanguageSwitcher";
+
+const LOCALES = ["pt-BR", "en-US", "es-ES"];
 
 export function MobileNav() {
   const [open, setOpen] = useState(false);
   const botaoRef = useRef<HTMLButtonElement>(null);
+  const pathname = usePathname() ?? "/";
+
+  // Mesma regra do header desktop: o prefixo de idioma sai da URL atual para o
+  // menu não jogar quem está em /en-US de volta no português.
+  const first = pathname.split("/")[1] ?? "";
+  const locale = LOCALES.includes(first) ? first : "pt-BR";
+  const pref = locale === "pt-BR" ? "" : `/${locale}`;
 
   // Esc fecha o menu, e o foco volta para o botão que o abriu — sem isso o
   // teclado continua "perdido" no menu que acabou de sumir da tela.
@@ -45,10 +56,10 @@ export function MobileNav() {
           <div className="mb-2 flex justify-center">
             <SearchModal />
           </div>
-          <Link href="/blog" className="rounded-lg px-3 py-2.5 hover:bg-[#9333ea]/10">
+          <Link href={`${pref}/blog`} className="rounded-lg px-3 py-2.5 hover:bg-[#9333ea]/10">
             blog
           </Link>
-          <Link href="/podcast" className="rounded-lg px-3 py-2.5 hover:bg-[#9333ea]/10">
+          <Link href={`${pref}/podcast`} className="rounded-lg px-3 py-2.5 hover:bg-[#9333ea]/10">
             podcast
           </Link>
           <Link href="/salvos" className="rounded-lg px-3 py-2.5 hover:bg-[#9333ea]/10">
@@ -58,11 +69,14 @@ export function MobileNav() {
             contato
           </a>
           <Link
-            href="/blog"
+            href={`${pref}/blog`}
             className="mt-1 rounded-[14px] bg-[#0f0f12] px-4 py-2.5 text-center font-semibold text-white dark:bg-white dark:text-[#0f0f12]"
           >
             Começar →
           </Link>
+          <div className="mt-2 flex justify-center">
+            <LanguageSwitcher />
+          </div>
           <div className="mt-2 flex justify-center">
             <ThemeToggle />
           </div>

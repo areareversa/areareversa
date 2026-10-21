@@ -4,12 +4,14 @@ import { site } from "@/lib/site";
 import { ThemeToggle } from "./ThemeToggle";
 import { MobileNav } from "./MobileNav";
 import { SearchModal } from "./SearchModal";
+import LanguageSwitcher from "./LanguageSwitcher";
+import { LocaleLinks, LocaleStartButton, LocaleBrandLink } from "./LocaleLinks";
 
 export function Header() {
   return (
     <header className="fixed inset-x-0 top-0 z-40 border-b border-[#e5e7eb] bg-white/80 backdrop-blur-md dark:border-[#2a2a30] dark:bg-[#0f0f12]/80">
       <div className="mx-auto flex h-[72px] w-full max-w-6xl items-center justify-between px-6">
-        <Link href="/" aria-label="área reversa" className="flex items-center gap-3 text-lg font-bold tracking-tight">
+        <LocaleBrandLink className="flex items-center gap-3 text-lg font-bold tracking-tight">
           <Image
             src="/logo-areareversa-preto.svg"
             alt=""
@@ -28,20 +30,13 @@ export function Header() {
           />
           <span className="text-[#9ca3af] font-light">|</span>
           <span>área<span className="text-[#9333ea]">reversa</span></span>
-        </Link>
-        <nav aria-label="Navegação principal" className="hidden items-center gap-6 text-sm sm:flex">
-          <Link href="/blog" className="text-[#4b5563] hover:text-[#9333ea] dark:text-[#d4d4d8]">blog</Link>
-          <Link href="/podcast" className="text-[#4b5563] hover:text-[#9333ea] dark:text-[#d4d4d8]">podcast</Link>
-          <Link href="/salvos" className="text-[#4b5563] hover:text-[#9333ea] dark:text-[#d4d4d8]">salvos</Link>
-          <a href="#contato" className="text-[#4b5563] hover:text-[#9333ea] dark:text-[#d4d4d8]">contato</a>
+        </LocaleBrandLink>
+        <LocaleLinks className="hidden items-center gap-6 text-sm sm:flex" />
+        <nav aria-label="Ações" className="hidden items-center gap-6 text-sm sm:flex">
+          <LanguageSwitcher />
           <ThemeToggle />
           <SearchModal />
-          <Link
-            href="/blog"
-            className="rounded-full bg-[#0f0f12] px-4 py-2 text-sm font-semibold text-white transition hover:scale-105 active:scale-95 dark:bg-white dark:text-[#0f0f12]"
-          >
-            Começar →
-          </Link>
+          <LocaleStartButton />
         </nav>
         <div className="flex items-center gap-3 sm:hidden">
           <SearchModal />

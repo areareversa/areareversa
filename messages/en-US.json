@@ -86,6 +86,29 @@
     "noPosts": "No posts found",
     "podcast": {
       "openSpotify": "open in Spotify →"
+    },
+    "landing": {
+      "badge": "Method · Context · No filter",
+      "subtitle": "Reverse engineering ideas, speeches, and policies. From any side.",
+      "start": "Start now →",
+      "listenPodcast": "Listen to the podcast",
+      "latestPodcast": "Latest podcast episode",
+      "listenEpisode": "▶ Listen to the episode",
+      "openSpotify": "open in Spotify →",
+      "latestPosts": "Latest from the blog",
+      "readingMinutes": "{minutes} min read",
+      "noPosts": "The first posts are coming soon.",
+      "topPosts": "Most read this week",
+      "findUs": "Where to find us",
+      "share": "Share área reversa",
+      "shareTitle": "área reversa — Dismantling narratives",
+      "newsletterTitle": "Get the analyses by email",
+      "newsletterDescription": "No spam. Only when a new post goes live.",
+      "ctaTitle": "Every narrative has a source code. Let's dismantle it together.",
+      "ctaButton": "Explore the blog →",
+      "heroTitle": "Reverse engineering of narratives and public policy",
+      "newsletterPlaceholder": "your@email.com",
+      "newsletterButton": "Subscribe"
     }
   },
   "post": {

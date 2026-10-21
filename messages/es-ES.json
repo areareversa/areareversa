@@ -86,6 +86,29 @@
     "noPosts": "No se encontraron artículos",
     "podcast": {
       "openSpotify": "abrir en Spotify →"
+    },
+    "landing": {
+      "badge": "Método · Contexto · Sin filtro",
+      "subtitle": "Ingeniería inversa de ideas, discursos y políticas. De cualquier lado.",
+      "start": "Empezar ahora →",
+      "listenPodcast": "Escuchar el podcast",
+      "latestPodcast": "Último episodio del podcast",
+      "listenEpisode": "▶ Escuchar el episodio",
+      "openSpotify": "abrir en Spotify →",
+      "latestPosts": "Últimas del blog",
+      "readingMinutes": "{minutes} min de lectura",
+      "noPosts": "Pronto llegarán las primeras publicaciones.",
+      "topPosts": "Más leídas de la semana",
+      "findUs": "Dónde encontrarnos",
+      "share": "Comparte área reversa",
+      "shareTitle": "área reversa — Desmontando narrativas",
+      "newsletterTitle": "Recibe los análisis por correo",
+      "newsletterDescription": "Sin spam. Solo cuando salga un post nuevo.",
+      "ctaTitle": "Toda narrativa tiene un código fuente. Vamos a desmontarlo juntos.",
+      "ctaButton": "Explorar el blog →",
+      "heroTitle": "Ingeniería inversa de narrativas y políticas públicas",
+      "newsletterPlaceholder": "tu@email.com",
+      "newsletterButton": "Suscribirse"
     }
   },
   "post": {

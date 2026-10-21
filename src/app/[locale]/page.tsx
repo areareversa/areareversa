@@ -31,7 +31,7 @@ export async function generateMetadata({
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
 
-  const [latestPosts, latestEpisode] = await Promise.all([
+  const [latestPosts, latestEpisode, categories, topClicks] = await Promise.all([
     prisma.post
       .findMany({
         where: publishedFilter(),
@@ -55,7 +55,43 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       })
       .catch(() => []),
     fetchEpisodes({ revalidate: 600 }).catch(() => null),
+    prisma.post
+      .groupBy({
+        by: ["category"],
+        where: publishedFilter(),
+        _count: { _all: true },
+        orderBy: { category: "asc" },
+      })
+      .catch(() => []),
+    prisma.event
+      .groupBy({
+        by: ["target"],
+        where: { type: "click", createdAt: { gte: new Date(Date.now() - 7 * 86400000) } },
+        _count: { _all: true },
+        orderBy: { _count: { target: "desc" } },
+        take: 5,
+      })
+      .catch(() => []),
   ]);
 
-  return <HomePageClient initialLocale={locale} initialPosts={latestPosts.map(p => ({ ...p, createdAt: p.createdAt.toISOString(), updatedAt: p.updatedAt?.toISOString() }))} initialEpisode={latestEpisode?.episodes?.[0] ?? null} />;
+  const topSlugs = topClicks.map((t) => t.target).filter(Boolean) as string[];
+  const topPosts = topSlugs.length
+    ? await prisma.post
+        .findMany({ where: { slug: { in: topSlugs } }, select: { slug: true, title: true, excerpt: true } })
+        .catch(() => [])
+    : [];
+
+  return (
+    <HomePageClient
+      initialLocale={locale}
+      initialPosts={latestPosts.map((p) => ({
+        ...p,
+        createdAt: p.createdAt.toISOString(),
+        updatedAt: p.updatedAt?.toISOString(),
+      }))}
+      initialEpisode={latestEpisode?.episodes?.[0] ?? null}
+      initialCategories={categories.map((c) => c.category)}
+      initialTopPosts={topPosts}
+    />
+  );
 }

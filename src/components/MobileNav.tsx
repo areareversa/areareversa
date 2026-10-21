@@ -62,6 +62,12 @@ export function MobileNav() {
           <Link href={`${pref}/podcast`} className="rounded-lg px-3 py-2.5 hover:bg-[#9333ea]/10">
             podcast
           </Link>
+          <Link href="/tags" className="rounded-lg px-3 py-2.5 hover:bg-[#9333ea]/10">
+            tags
+          </Link>
+          <Link href="/sobre" className="rounded-lg px-3 py-2.5 hover:bg-[#9333ea]/10">
+            sobre
+          </Link>
           <Link href="/salvos" className="rounded-lg px-3 py-2.5 hover:bg-[#9333ea]/10">
             salvos
           </Link>

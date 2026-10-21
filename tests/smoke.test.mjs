@@ -10,6 +10,7 @@ const cases = [
   { path: "/blog/post-que-nao-existe", expect: 404, name: "post inexistente 404" },
   { path: "/salvos", expect: 200, name: "salvos" },
   { path: "/sobre", expect: 200, name: "sobre" },
+  { path: "/tags", expect: 200, name: "tags" },
   { path: "/rss.xml", expect: 200, name: "rss feed" },
   { path: "/sitemap.xml", expect: 200, name: "sitemap" },
   // rotas traduzidas: o prefixo do locale precisa chegar até o App Router

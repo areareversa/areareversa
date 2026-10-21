@@ -18,6 +18,7 @@ export default async function sitemap() {
     { url: `${site.url}/blog`, lastModified: new Date(), changeFrequency: "daily" as const, priority: 0.9 },
     { url: `${site.url}/podcast`, lastModified: new Date(), changeFrequency: "weekly" as const, priority: 0.7 },
     { url: `${site.url}/sobre`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.5 },
+    { url: `${site.url}/tags`, lastModified: new Date(), changeFrequency: "weekly" as const, priority: 0.5 },
     { url: `${site.url}/salvos`, lastModified: new Date(), changeFrequency: "weekly" as const, priority: 0.5 },
   ];
 

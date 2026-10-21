@@ -17,7 +17,7 @@ const LOCALES = ["pt-BR", "en-US", "es-ES"];
  * `NextIntlClientProvider` nas rotas em português, então `useTranslations`
  * estouraria lá. Os rótulos do menu são os mesmos em qualquer idioma.
  *
- * As rotas que só existem em português (`/sobre`, `/salvos`, `/tag`) não são
+ * As rotas que só existem em português (`/tags`, `/sobre`, `/salvos`) não são
  * afetadas: sem tradução, o prefixo não é aplicado e o link continua válido.
  */
 export function LocaleLinks({ className }: { className?: string }) {
@@ -46,6 +46,12 @@ export function LocaleLinks({ className }: { className?: string }) {
       </Link>
       <Link href={href("/podcast")} className={cls}>
         podcast
+      </Link>
+      <Link href="/tags" className={cls}>
+        tags
+      </Link>
+      <Link href="/sobre" className={cls}>
+        sobre
       </Link>
       <Link href="/salvos" className={cls}>
         salvos

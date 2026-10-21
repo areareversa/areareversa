@@ -9,10 +9,11 @@ export const revalidate = 60;
 
 export async function generateMetadata({ params }: { params: Promise<{ tag: string }> }) {
   const { tag } = await params;
+  const decoded = decodeURIComponent(tag);
   return {
-    title: `#${tag}`,
-    description: `Posts com a tag ${tag}.`,
-    alternates: { canonical: `${site.url}/tag/${encodeURIComponent(tag)}` },
+    title: `#${decoded}`,
+    description: `Posts com a tag ${decoded}.`,
+    alternates: { canonical: `${site.url}/tag/${encodeURIComponent(decoded)}` },
   };
 }
 
@@ -30,9 +31,10 @@ export async function generateStaticParams() {
 
 export default async function TagPage({ params }: { params: Promise<{ tag: string }> }) {
   const { tag } = await params;
+  const decoded = decodeURIComponent(tag);
   const posts = await prisma.post
     .findMany({
-      where: { ...publishedFilter(), tags: { has: tag } },
+      where: { ...publishedFilter(), tags: { has: decoded } },
       orderBy: { createdAt: "desc" },
       // Sem select o Prisma traz o markdown inteiro de cada post; o PostGrid
       // so precisa do resumo e do tempo de leitura.
@@ -53,13 +55,13 @@ export default async function TagPage({ params }: { params: Promise<{ tag: strin
   const breadcrumbs = [
     { name: "Início", url: site.url },
     { name: "Blog", url: `${site.url}/blog` },
-    { name: `Tag: ${tag}`, url: `${site.url}/tag/${encodeURIComponent(tag)}` },
+    { name: `Tag: ${decoded}`, url: `${site.url}/tag/${encodeURIComponent(decoded)}` },
   ];
 
   return (
     <div className="flex flex-col gap-8">
       <StructuredDataBreadcrumb items={breadcrumbs} />
-      <h1 className="text-5xl font-bold tracking-[-0.04em]">#{tag}</h1>
+      <h1 className="text-5xl font-bold tracking-[-0.04em]">#{decoded}</h1>
       <PostGrid posts={posts} />
       {posts.length === 0 && <p className="text-[#4b5563] dark:text-[#d4d4d8]">Nenhum post com esta tag.</p>}
       <Link href="/blog" className="text-[#9333ea] underline underline-offset-4">← voltar ao blog</Link>

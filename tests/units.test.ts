@@ -1,4 +1,4 @@
-import { isVisible, publishedFilter } from "../src/lib/posts";
+import { isVisible, publishedFilter, localizePost, translationSuffix } from "../src/lib/posts";
 import { readingTimeMinutes } from "../src/lib/readingTime";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
@@ -17,6 +17,34 @@ check("rascunho não é visível", !isVisible({ published: false, publishAt: nul
 check("publishedFilter tem published: true", publishedFilter(now).published === true);
 check("readingTime mínimo 1 min", readingTimeMinutes("oi") === 1);
 check("readingTime de texto longo", readingTimeMinutes("palavra ".repeat(800)) >= 3);
+
+/**
+ * Traduções dos posts.
+ *
+ * O campo certo é `titleEn` (nome do Prisma), não `title_en` (nome da coluna).
+ * Usar o errado devolve `undefined` para sempre e a página cai no português sem
+ * erro nenhum — foi o que aconteceu na primeira versão. Estes testes fixam a
+ * conversão de locale e o fallback.
+ */
+check("locale en-US vira sufixo en", translationSuffix("en-US") === "en");
+check("locale es-ES vira sufixo es", translationSuffix("es-ES") === "es");
+check("pt-BR não tem sufixo (português é o original)", translationSuffix("pt-BR") === null);
+
+const postBase = {
+  title: "Título em português",
+  excerpt: "Resumo em português",
+  content: "# Conteúdo em português",
+  titleEn: "English title",
+  excerptEn: "English excerpt",
+  contentEn: "# English body",
+  titleEs: null,
+  excerptEs: "",
+  contentEs: null,
+};
+check("en-US lê titleEn/excerptEn/contentEn", localizePost(postBase, "en-US").title === "English title" && localizePost(postBase, "en-US").content === "# English body");
+check("es-ES vazio cai no português", localizePost(postBase, "es-ES").title === "Título em português");
+check("pt-BR devolve o original intacto", localizePost(postBase, "pt-BR").title === "Título em português");
+check("tradução ausente não inventa campo", localizePost({ title: "só pt", excerpt: "e", content: "c" }, "en-US").title === "só pt");
 
 /**
  * Arquivo de tradução com JSON inválido derruba o layout `[locale]` inteiro

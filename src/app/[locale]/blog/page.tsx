@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { prisma } from "@/lib/prisma";
-import { publishedFilter } from "@/lib/posts";
+import { publishedFilter, localizePost } from "@/lib/posts";
 import BlogPageClient from "./BlogPageClient";
 
 export const revalidate = 60;
@@ -52,5 +52,5 @@ export default async function BlogPage({ params }: { params: Promise<{ locale: s
     })
     .catch(() => []);
 
-  return <BlogPageClient initialLocale={locale} initialPosts={posts.map(p => ({ ...p, createdAt: p.createdAt.toISOString(), updatedAt: p.updatedAt?.toISOString() }))} />;
+  return <BlogPageClient initialLocale={locale} initialPosts={posts.map(p => ({ ...localizePost(p, locale), createdAt: p.createdAt.toISOString(), updatedAt: p.updatedAt?.toISOString() }))} />;
 }

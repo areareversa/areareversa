@@ -24,6 +24,15 @@ model Post {
   updatedAt   DateTime @updatedAt
   searchVector String?  @db.Text // tsvector for full-text search
   readingMinutes Int?   // calculado por trigger no banco (evita enviar o post inteiro só para contar palavras)
+
+  // Traduções. Nulo = ainda não traduzido, e a página cai no texto em português.
+  titleEn   String? @map("title_en")
+  excerptEn String? @map("excerpt_en") @default("")
+  contentEn String? @map("content_en")
+  titleEs   String? @map("title_es")
+  excerptEs String? @map("excerpt_es") @default("")
+  contentEs String? @map("content_es")
+
   comments    Comment[]
 
   @@map("posts")

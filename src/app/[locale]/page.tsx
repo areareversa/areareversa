@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { prisma } from "@/lib/prisma";
-import { publishedFilter } from "@/lib/posts";
+import { publishedFilter, localizePost } from "@/lib/posts";
 import HomePageClient from "./HomePageClient";
 import { fetchEpisodes } from "@/lib/podcast";
 
@@ -85,7 +85,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
     <HomePageClient
       initialLocale={locale}
       initialPosts={latestPosts.map((p) => ({
-        ...p,
+        ...localizePost(p, locale),
         createdAt: p.createdAt.toISOString(),
         updatedAt: p.updatedAt?.toISOString(),
       }))}

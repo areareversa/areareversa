@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { publishedFilter, isVisible } from "@/lib/posts";
+import { publishedFilter, isVisible, localizePost } from "@/lib/posts";
 import { locales, defaultLocale } from "@/i18n/routing";
 import PostPageClient from "./PostPageClient";
 import { StructuredDataBreadcrumb } from "@/components/StructuredData";
@@ -28,10 +28,11 @@ export async function generateMetadata({
   const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || "https://areareversa.com.br").replace(/\/+$/, "");
   const pref = locale === "pt-BR" ? "" : `/${locale}`;
   const postUrl = `${siteUrl}${pref}/blog/${post.slug}`;
+  const loc = localizePost(post, locale);
 
   return {
-    title: (post as any)[`title_${locale}`] || post.title,
-    description: (post as any)[`excerpt_${locale}`] || post.excerpt,
+    title: loc.title,
+    description: loc.excerpt,
     other: {
       webmention: `${siteUrl}/api/webmention`,
       "llms-txt": `${siteUrl}/llms.txt`,
@@ -45,8 +46,8 @@ export async function generateMetadata({
     },
     openGraph: {
       siteName: siteT("name"),
-      title: post.title,
-      description: post.excerpt,
+      title: loc.title,
+      description: loc.excerpt,
       locale: locale.replace("-", "_"),
       type: "article",
       publishedTime: post.createdAt.toISOString(),
@@ -56,7 +57,7 @@ export async function generateMetadata({
       ...(post.coverImage
         ? {
             images: [
-              { url: post.coverImage, width: 1200, height: 630, alt: post.title },
+              { url: post.coverImage, width: 1200, height: 630, alt: loc.title },
             ],
           }
         : {}),
@@ -99,10 +100,11 @@ export default async function PostPage({
   const post = await prisma.post.findUnique({ where: { slug } }).catch(() => null);
   if (!post || !isVisible(post)) notFound();
 
-  // Resolve localized content if available
-  const title: string = (post as any)[`title_${locale}`] || post.title;
-  const excerpt: string = (post as any)[`excerpt_${locale}`] || post.excerpt;
-  const content: string = (post as any)[`content_${locale}`] || post.content;
+  // Resolve o texto no idioma pedido, caindo no português se não houver tradução
+  const loc = localizePost(post, locale);
+  const title: string = loc.title;
+  const excerpt: string = loc.excerpt;
+  const content: string = loc.content;
 
   const localizedPost = {
     id: post.id,

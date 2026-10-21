@@ -26,6 +26,18 @@ function slugify(s: string) {
     .replace(/(^-|-$)/g, "");
 }
 
+/**
+ * Campo de tradução vazio vira `null`, não string vazia.
+ *
+ * `null` é o que o site entende como "não traduzido" e faz cair no português;
+ * uma string vazia passaria pelo `||` do fallback, mas polui o banco e some
+ * qualquer distinção entre "não preenchido" e "preenchido com nada".
+ */
+function optional(v: FormDataEntryValue | null) {
+  const s = String(v ?? "").trim();
+  return s ? s : null;
+}
+
 export async function createPost(formData: FormData) {
   if (!(await isAuthed())) redirect("/admin/login");
   const title = String(formData.get("title") ?? "").trim();
@@ -48,6 +60,12 @@ export async function createPost(formData: FormData) {
       published,
       publishAt,
       tags,
+      titleEn: optional(formData.get("titleEn")),
+      excerptEn: String(formData.get("excerptEn") ?? ""),
+      contentEn: optional(formData.get("contentEn")),
+      titleEs: optional(formData.get("titleEs")),
+      excerptEs: String(formData.get("excerptEs") ?? ""),
+      contentEs: optional(formData.get("contentEs")),
     },
   });
   if (published && (!publishAt || publishAt <= new Date())) {
@@ -79,6 +97,12 @@ export async function updatePost(id: string, formData: FormData) {
       published,
       publishAt,
       tags,
+      titleEn: optional(formData.get("titleEn")),
+      excerptEn: String(formData.get("excerptEn") ?? ""),
+      contentEn: optional(formData.get("contentEn")),
+      titleEs: optional(formData.get("titleEs")),
+      excerptEs: String(formData.get("excerptEs") ?? ""),
+      contentEs: optional(formData.get("contentEs")),
     },
   });
   revalidatePath("/blog");

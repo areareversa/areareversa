@@ -11,6 +11,7 @@
         "postinstall": "prisma generate",
         "seed": "tsx scripts/seed.mjs",
         "backup": "node scripts/backup.mjs",
+    "sync:md": "node scripts/sync-md.mjs",
         "restore": "node scripts/restore.mjs"
     },
     "dependencies": {

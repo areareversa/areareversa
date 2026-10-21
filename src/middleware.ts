@@ -5,43 +5,37 @@ import { routing, locales } from "@/i18n/routing";
 const intlMiddleware = createMiddleware(routing);
 
 /**
- * Rotas que vivem fora da árvore `[locale]` (o site antigo, em português,
- * ainda serve `/admin`, `/sobre`, `/salvos` e `/tag`). Sem esta lista o
- * segmento dinâmico `[locale]` engolia esses caminhos, tentava tratá-los como
- * um idioma e devolvia 404.
+ * O português é o idioma de origem e vive sem prefixo (`localePrefix:
+ * "as-needed"`). As rotas em pt-BR são arquivos normais do App Router
+ * (`src/app/page.tsx`, `src/app/blog`, `src/app/podcast`, ...) — a landing
+ * original, com as seções que sempre existiram, é a de `/`.
+ *
+ * O `[locale]` existe para os idiomas traduzidos (`/en-US/...`, `/es-ES/...`).
+ * Se o next-intl reescrevesse `/` para `/pt-BR`, ele cairia na home traduzida e
+ * a landing original sumiria. Por isso deixamos os caminhos sem prefixo
+ * seguirem direto para o App Router e só entregamos ao next-intl o que tem
+ * prefixo de idioma de verdade.
  */
-const NON_LOCALIZED_PREFIXES = ["/admin", "/sobre", "/salvos", "/tag", "/api", "/blog-md"];
-
 function hasLocalePrefix(pathname: string) {
   const first = pathname.split("/")[1] ?? "";
   return (locales as readonly string[]).includes(first);
 }
 
-function isNonLocalized(pathname: string) {
-  if (hasLocalePrefix(pathname)) return false;
-  return NON_LOCALIZED_PREFIXES.some(
-    (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`)
-  );
-}
-
 export default function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Rotas sem tradução seguem direto para o App Router.
-  if (isNonLocalized(pathname)) {
-    return NextResponse.next();
+  // Já tem prefixo de idioma: next-intl resolve (`/en-US/...`, `/es-ES/...`).
+  if (hasLocalePrefix(pathname)) {
+    return intlMiddleware(request);
   }
 
   /**
-   * O next-intl já resolve `/` para o locale padrão em `localePrefix:
-   * "as-needed"` (reescreve para /pt-BR por dentro, sem mudar a URL). Só
-   * aproveitamos a resposta dele para gravar o cookie de idioma, que o
-   * requests.ts do next-intl lê nas próximas visitas.
+   * Sem prefixo = pt-BR (idioma padrão). Segue direto para o App Router, que
+   * tem a landing, o blog e o podcast originais. O cookie de idioma só orienta
+   * as próximas visitas de quem trocar de idioma no seletor.
    */
-  const response = intlMiddleware(request);
-  if (pathname === "/") {
-    response.cookies.set("NEXT_LOCALE", routing.defaultLocale, { path: "/", sameSite: "lax" });
-  }
+  const response = NextResponse.next();
+  response.cookies.set("NEXT_LOCALE", routing.defaultLocale, { path: "/", sameSite: "lax" });
   return response;
 }
 

@@ -3,7 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { publishedFilter, isVisible } from "@/lib/posts";
-import { locales } from "@/i18n/routing";
+import { locales, defaultLocale } from "@/i18n/routing";
 import PostPageClient from "./PostPageClient";
 import { StructuredDataBreadcrumb } from "@/components/StructuredData";
 import { fetchEpisodes } from "@/lib/podcast";
@@ -77,9 +77,15 @@ export async function generateStaticParams() {
   /**
    * A rota é `[locale]/blog/[slug]` — sem o locale aqui o Next não sabe qual
    * idioma pré-renderizar e cai em `DYNAMIC_SERVER_USAGE` em produção (500 na
-   * página do artigo). O produto cartesiano cobre os três idiomas.
+   * página do artigo).
+   *
+   * O pt-BR não entra: o artigo em português é servido por
+   * `src/app/blog/[slug]/page.tsx`, sem prefixo. Aqui ficam só os idiomas
+   * traduzidos.
    */
-  return locales.flatMap((locale) => posts.map((p) => ({ locale, slug: p.slug })));
+  return locales
+    .filter((locale) => locale !== defaultLocale)
+    .flatMap((locale) => posts.map((p) => ({ locale, slug: p.slug })));
 }
 
 export default async function PostPage({

@@ -1,15 +1,21 @@
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages } from "next-intl/server";
 import { notFound } from "next/navigation";
-import { locales } from "@/i18n/routing";
+import { locales, defaultLocale } from "@/i18n/routing";
 
 /**
  * Diz ao Next quais locales existem. Sem isto o segmento `[locale]` fica sem
  * parâmetros estáticos e, em produção, o `notFound()`/`getMessages()` aqui
  * dispara `DYNAMIC_SERVER_USAGE` (500 nas páginas de artigo).
+ *
+ * O pt-BR fica de fora: ele é o idioma padrão e vive sem prefixo (a landing e
+ * as rotas de origem são arquivos do App Router). Aqui só entram os idiomas
+ * traduzidos, que existem em `/en-US/...` e `/es-ES/...`.
  */
 export function generateStaticParams() {
-  return locales.map((locale) => ({ locale }));
+  return locales
+    .filter((locale) => locale !== defaultLocale)
+    .map((locale) => ({ locale }));
 }
 
 export default async function LocaleLayout({
